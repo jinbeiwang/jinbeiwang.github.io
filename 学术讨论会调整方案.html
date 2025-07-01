@@ -1,0 +1,947 @@
+<!DOCTYPE html>
+<!-- saved from url=(0176)file:///D:/BaiduSyncdisk/%E5%B7%A5%E4%BD%9C/%E5%AD%A6%E6%9C%AF%E8%AE%A8%E8%AE%BA%E4%BC%9A/%E5%AD%A6%E6%9C%AF%E8%AE%A8%E8%AE%BA%E4%BC%9A%E8%B0%83%E6%95%B4%E6%96%B9%E6%A1%88.html -->
+<html lang="zh-CN"><head><meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+    
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>学术讨论会调整方案</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Microsoft YaHei', 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            line-height: 1.6;
+            color: #2d3748;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+        }
+
+        .container {
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+
+        .header {
+            background: linear-gradient(135deg, #ff6b6b 0%, #feca57 100%);
+            color: white;
+            text-align: center;
+            padding: 40px 20px;
+            border-radius: 20px;
+            margin-bottom: 30px;
+            box-shadow: 0 15px 35px rgba(255, 107, 107, 0.4);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .header::before {
+            content: '';
+            position: absolute;
+            top: -50%;
+            left: -50%;
+            width: 200%;
+            height: 200%;
+            background: linear-gradient(45deg, transparent, rgba(255,255,255,0.1), transparent);
+            transform: rotate(45deg);
+            animation: headerShine 3s ease-in-out infinite;
+        }
+
+        @keyframes headerShine {
+            0%, 100% { transform: translateX(-100%) translateY(-100%) rotate(45deg); }
+            50% { transform: translateX(100%) translateY(100%) rotate(45deg); }
+        }
+
+        .header h1 {
+            font-size: 2.8em;
+            font-weight: 700;
+            letter-spacing: 2px;
+            color: #ffffff;
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.3);
+            position: relative;
+            z-index: 1;
+        }
+
+        .main-content {
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(10px);
+            border-radius: 20px;
+            padding: 40px;
+            box-shadow: 0 15px 35px rgba(0,0,0,0.1);
+            margin-bottom: 30px;
+            border: 1px solid rgba(255,255,255,0.2);
+        }
+
+        .section {
+            margin-bottom: 50px;
+            border-bottom: 2px solid #e2e8f0;
+            padding-bottom: 40px;
+            position: relative;
+        }
+
+        .section:last-child {
+            border-bottom: none;
+            margin-bottom: 0;
+            padding-bottom: 0;
+        }
+
+        .section h2 {
+            background: linear-gradient(135deg, #ff6b6b 0%, #4ecdc4 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            font-size: 1.8em;
+            margin-bottom: 25px;
+            padding-left: 20px;
+            border-left: 5px solid #ff6b6b;
+            font-weight: 700;
+            position: relative;
+        }
+
+        .section h2::after {
+            content: '';
+            position: absolute;
+            bottom: -10px;
+            left: 0;
+            width: 50px;
+            height: 3px;
+            background: linear-gradient(135deg, #ff6b6b 0%, #4ecdc4 100%);
+            border-radius: 2px;
+        }
+
+        .section h3 {
+            color: #2d3748;
+            font-size: 1.4em;
+            margin-bottom: 20px;
+            margin-top: 30px;
+            font-weight: 600;
+        }
+
+        .editable {
+            border: 2px dashed transparent;
+            padding: 15px;
+            border-radius: 12px;
+            transition: all 0.3s ease;
+            min-height: 50px;
+        }
+
+        .editable:hover {
+            border-color: #ff6b6b;
+            background: linear-gradient(135deg, rgba(255, 107, 107, 0.05) 0%, rgba(78, 205, 196, 0.05) 100%);
+            transform: translateY(-2px);
+        }
+
+        .editable:focus {
+            outline: none;
+            border-color: #ff6b6b;
+            background: rgba(255, 255, 255, 0.9);
+            box-shadow: 0 5px 15px rgba(255, 107, 107, 0.2);
+        }
+
+        .topic-categories {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(400px, 1fr));
+            gap: 25px;
+            margin-top: 30px;
+        }
+
+        .topic-card {
+            background: linear-gradient(135deg, #ffffff 0%, rgba(255, 107, 107, 0.05) 100%);
+            border-radius: 16px;
+            padding: 25px;
+            box-shadow: 0 8px 25px rgba(0,0,0,0.1);
+            transition: all 0.3s ease;
+            border: 2px solid transparent;
+            border-left: 5px solid #ff6b6b;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .topic-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: linear-gradient(135deg, rgba(255, 107, 107, 0.1) 0%, rgba(78, 205, 196, 0.1) 100%);
+            opacity: 0;
+            transition: opacity 0.3s ease;
+        }
+
+        .topic-card:hover {
+            transform: translateY(-5px) scale(1.02);
+            box-shadow: 0 15px 35px rgba(255, 107, 107, 0.2);
+            border-color: #ff6b6b;
+        }
+
+        .topic-card:hover::before {
+            opacity: 1;
+        }
+
+        .topic-card h4 {
+            color: #2d3748;
+            margin-bottom: 15px;
+            font-size: 1.3em;
+            font-weight: 700;
+            position: relative;
+            z-index: 1;
+        }
+
+        .topic-card .topic-description {
+            color: #4a5568;
+            font-size: 0.95em;
+            line-height: 1.6;
+            position: relative;
+            z-index: 1;
+        }
+
+        .implementation-flow {
+            background: linear-gradient(135deg, rgba(78, 205, 196, 0.1) 0%, rgba(255, 107, 107, 0.1) 100%);
+            border-radius: 16px;
+            padding: 30px;
+            margin-top: 30px;
+            border: 2px solid rgba(78, 205, 196, 0.3);
+        }
+
+        .flow-steps {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 20px;
+            margin-top: 25px;
+        }
+
+        .step {
+            background: linear-gradient(135deg, #ffffff 0%, rgba(78, 205, 196, 0.1) 100%);
+            border-radius: 16px;
+            padding: 25px;
+            flex: 1;
+            min-width: 280px;
+            text-align: center;
+            box-shadow: 0 8px 25px rgba(0,0,0,0.1);
+            position: relative;
+            border: 2px solid transparent;
+            transition: all 0.3s ease;
+        }
+
+        .step:hover {
+            transform: translateY(-3px);
+            border-color: #4ecdc4;
+            box-shadow: 0 12px 30px rgba(78, 205, 196, 0.3);
+        }
+
+        .step::after {
+            content: '🚀';
+            position: absolute;
+            right: -25px;
+            top: 50%;
+            transform: translateY(-50%);
+            font-size: 2em;
+            animation: bounce 2s ease-in-out infinite;
+        }
+
+        .step:last-child::after {
+            display: none;
+        }
+
+        @keyframes bounce {
+            0%, 20%, 50%, 80%, 100% { transform: translateY(-50%); }
+            40% { transform: translateY(-60%); }
+            60% { transform: translateY(-55%); }
+        }
+
+        .step-number {
+            background: linear-gradient(135deg, #ff6b6b 0%, #4ecdc4 100%);
+            color: white;
+            width: 60px;
+            height: 60px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 0 auto 15px;
+            font-weight: bold;
+            font-size: 1.5em;
+            box-shadow: 0 5px 15px rgba(255, 107, 107, 0.3);
+            animation: pulse 2s ease-in-out infinite;
+        }
+
+        @keyframes pulse {
+            0%, 100% { transform: scale(1); }
+            50% { transform: scale(1.05); }
+        }
+
+        .benefits-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 20px;
+            margin-top: 25px;
+        }
+
+        .benefit-item {
+            background: linear-gradient(135deg, rgba(78, 205, 196, 0.1) 0%, rgba(255, 255, 255, 0.9) 100%);
+            border-left: 5px solid #4ecdc4;
+            padding: 25px;
+            border-radius: 12px;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.08);
+            transition: all 0.3s ease;
+        }
+
+        .benefit-item:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 10px 25px rgba(78, 205, 196, 0.2);
+            border-left-width: 8px;
+        }
+
+        .benefit-item h4 {
+            color: #2d3748;
+            margin-bottom: 15px;
+            font-size: 1.2em;
+            font-weight: 700;
+        }
+
+        .highlight-box {
+            background: linear-gradient(135deg, #ff9a9e 0%, #fecfef 100%);
+            color: #2d3748;
+            padding: 30px;
+            border-radius: 16px;
+            margin: 25px 0;
+            text-align: center;
+            box-shadow: 0 10px 30px rgba(255, 154, 158, 0.3);
+            border: 2px solid rgba(255, 255, 255, 0.3);
+        }
+
+        .highlight-box h3 {
+            margin-bottom: 15px;
+            font-size: 1.4em;
+            color: #2d3748;
+            font-weight: 700;
+        }
+
+        .toolbar {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            background: linear-gradient(135deg, #ffffff 0%, rgba(255, 107, 107, 0.1) 100%);
+            padding: 15px;
+            border-radius: 16px;
+            box-shadow: 0 8px 25px rgba(0,0,0,0.15);
+            z-index: 1000;
+            border: 2px solid rgba(255, 107, 107, 0.2);
+            backdrop-filter: blur(10px);
+        }
+
+        .toolbar button {
+            background: linear-gradient(135deg, #ff6b6b 0%, #4ecdc4 100%);
+            color: white;
+            border: none;
+            padding: 10px 18px;
+            margin: 0 5px;
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 0.9em;
+            transition: all 0.3s ease;
+            font-weight: 600;
+            box-shadow: 0 3px 10px rgba(255, 107, 107, 0.3);
+        }
+
+        .toolbar button:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 15px rgba(255, 107, 107, 0.4);
+        }
+
+        .status-indicator {
+            display: inline-block;
+            width: 14px;
+            height: 14px;
+            border-radius: 50%;
+            margin-right: 8px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.2);
+        }
+
+        .status-indicator:hover {
+            transform: scale(1.3);
+            box-shadow: 0 3px 8px rgba(0,0,0,0.3);
+        }
+
+        .status-pending {
+            background: linear-gradient(135deg, #ffa726 0%, #ff9800 100%);
+        }
+
+        .status-progress {
+            background: linear-gradient(135deg, #42a5f5 0%, #2196f3 100%);
+        }
+
+        .status-complete {
+            background: linear-gradient(135deg, #66bb6a 0%, #4caf50 100%);
+        }
+
+        .dynamic-table {
+            margin-top: 20px;
+            border-radius: 16px;
+            overflow: hidden;
+            box-shadow: 0 8px 25px rgba(0,0,0,0.1);
+            border: 2px solid rgba(255, 107, 107, 0.2);
+        }
+
+        .table-controls {
+            background: linear-gradient(135deg, #ff6b6b 0%, #4ecdc4 100%);
+            padding: 20px;
+            display: flex;
+            gap: 12px;
+            flex-wrap: wrap;
+        }
+
+        .table-controls button {
+            background: rgba(255, 255, 255, 0.9);
+            color: #2d3748;
+            border: none;
+            padding: 10px 18px;
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 0.9em;
+            transition: all 0.3s ease;
+            font-weight: 600;
+            box-shadow: 0 3px 10px rgba(0,0,0,0.2);
+        }
+
+        .table-controls button:hover {
+            background: white;
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(0,0,0,0.3);
+        }
+
+        .table-controls button.danger {
+            background: linear-gradient(135deg, #ef5350 0%, #f44336 100%);
+            color: white;
+        }
+
+        .table-controls button.danger:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(244, 67, 54, 0.4);
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            background: white;
+        }
+
+        th, td {
+            padding: 18px;
+            text-align: left;
+            border-bottom: 1px solid #e2e8f0;
+            vertical-align: top;
+        }
+
+        th {
+            background: linear-gradient(135deg, #2d3748 0%, #4a5568 100%);
+            color: white;
+            font-weight: 700;
+            font-size: 0.95em;
+        }
+
+        td {
+            font-size: 0.9em;
+        }
+
+        tr:hover {
+            background: linear-gradient(135deg, rgba(255, 107, 107, 0.05) 0%, rgba(78, 205, 196, 0.05) 100%);
+        }
+
+        .editable-cell {
+            background: transparent;
+            border: 2px solid transparent;
+            padding: 10px;
+            border-radius: 6px;
+            min-height: 20px;
+            width: 100%;
+            transition: all 0.3s ease;
+        }
+
+        .editable-cell:hover {
+            border-color: #ff6b6b;
+            background: rgba(255, 107, 107, 0.05);
+        }
+
+        .editable-cell:focus {
+            outline: none;
+            border-color: #ff6b6b;
+            background: white;
+            box-shadow: 0 0 0 3px rgba(255, 107, 107, 0.2);
+        }
+
+        .organizer-info {
+            background: linear-gradient(135deg, rgba(78, 205, 196, 0.1) 0%, rgba(255, 255, 255, 0.9) 100%);
+            border-radius: 16px;
+            padding: 30px;
+            margin: 20px 0;
+            border-left: 5px solid #4ecdc4;
+            box-shadow: 0 5px 15px rgba(78, 205, 196, 0.2);
+        }
+
+        .organizer-info h4 {
+            color: #2d3748;
+            margin-bottom: 15px;
+            font-size: 1.3em;
+            font-weight: 700;
+        }
+
+        /* 注意事项样式 */
+        .notice-section {
+            background: linear-gradient(135deg, #fff3cd 0%, #ffeaa7 100%);
+            border-radius: 16px;
+            padding: 30px;
+            margin: 30px 0;
+            border-left: 5px solid #f39c12;
+            box-shadow: 0 8px 25px rgba(243, 156, 18, 0.2);
+        }
+
+        .notice-section h3 {
+            color: #e67e22;
+            font-size: 1.4em;
+            margin-bottom: 20px;
+            font-weight: 700;
+        }
+
+        .notice-item {
+            background: rgba(255, 255, 255, 0.7);
+            padding: 15px;
+            margin: 15px 0;
+            border-radius: 10px;
+            border-left: 3px solid #f39c12;
+        }
+
+        /* 更新记录样式 */
+        .update-log {
+            background: linear-gradient(135deg, #e8f4fd 0%, #bbdefb 100%);
+            border-radius: 16px;
+            padding: 30px;
+            margin: 30px 0;
+            border-left: 5px solid #2196f3;
+            box-shadow: 0 8px 25px rgba(33, 150, 243, 0.2);
+        }
+
+        .update-log h3 {
+            color: #1976d2;
+            font-size: 1.4em;
+            margin-bottom: 20px;
+            font-weight: 700;
+        }
+
+        .update-item {
+            background: rgba(255, 255, 255, 0.8);
+            padding: 15px;
+            margin: 15px 0;
+            border-radius: 10px;
+            border-left: 3px solid #2196f3;
+            display: flex;
+            align-items: center;
+            gap: 15px;
+        }
+
+        .update-date {
+            background: linear-gradient(135deg, #2196f3 0%, #1976d2 100%);
+            color: white;
+            padding: 5px 12px;
+            border-radius: 20px;
+            font-size: 0.8em;
+            font-weight: 600;
+            min-width: 100px;
+            text-align: center;
+        }
+
+        .row-selected {
+            background: linear-gradient(135deg, rgba(255, 107, 107, 0.15) 0%, rgba(78, 205, 196, 0.15) 100%) !important;
+        }
+
+        .header-editable {
+            background: transparent;
+            color: white;
+            border: 1px solid transparent;
+            padding: 4px;
+            border-radius: 4px;
+            width: 100%;
+        }
+
+        .header-editable:focus {
+            outline: none;
+            border-color: white;
+            background: rgba(255,255,255,0.1);
+        }
+
+        @media (max-width: 768px) {
+            .header h1 {
+                font-size: 2.2em;
+            }
+            
+            .main-content {
+                padding: 25px;
+            }
+            
+            .flow-steps {
+                flex-direction: column;
+            }
+            
+            .step::after {
+                display: none;
+            }
+            
+            .toolbar {
+                position: relative;
+                top: 0;
+                right: 0;
+                margin-bottom: 20px;
+            }
+
+            .table-controls {
+                flex-direction: column;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="toolbar">
+        <button onclick="saveContent()">💾 保存</button>
+        <button onclick="exportContent()">📤 导出</button>
+        <button onclick="toggleEdit()">🔒 锁定</button>
+    </div>
+
+    <div class="container">
+        <div class="header">
+            <h1>🎯 学术讨论会调整方案</h1>
+        </div>
+
+        <div class="main-content">
+            <div class="section">
+                <h2>📋 调整背景与目标</h2>
+                <div class="editable" contenteditable="true">
+                    <p>经过一年的学术讨论会实践，团队成员积极性有所下降，主要表现在主题枯竭、参与度降低、发言意愿不强等方面。为提升团队学术氛围和专业能力，现制定以下调整方案，旨在构建更加积极、互动、实用的学习交流平台。</p>
+                </div>
+
+                <div class="highlight-box">
+                    <h3>✨ 核心理念转变</h3>
+                    <p>从"个人汇报"转向"团队协作" | 从"知识灌输"转向"问题解决" | 从"被动学习"转向"主动参与"</p>
+                </div>
+            </div>
+
+            <div class="section">
+                <h2>🔄 新组织形式</h2>
+                
+                <div class="organizer-info">
+                    <h4>📌 组织安排</h4>
+                    <div class="editable" contenteditable="true">
+                        <p><strong>项目组织者：</strong>Weizhen Huang</p>
+                        <p><strong>活动频率：</strong>每月组织一次学术讨论会</p>
+                        <p><strong>试点启动：</strong>2024年7月份开始第一次试点</p>
+                        <p><strong>选题机制：</strong>各小组从6个主题大类中选择1种进行深入准备</p>
+                    </div>
+                </div>
+
+                <div class="implementation-flow">
+                    <h3>🚀 实施流程</h3>
+                    <div class="flow-steps">
+                        <div class="step">
+                            <div class="step-number">1</div>
+                            <h4>🎯 小组定题</h4>
+                            <div class="editable" contenteditable="true">
+                                <p>从6大主题类别中选择感兴趣的方向，确定具体讨论主题</p>
+                            </div>
+                        </div>
+                        <div class="step">
+                            <div class="step-number">2</div>
+                            <h4>👥 组内分配</h4>
+                            <div class="editable" contenteditable="true">
+                                <p>将主题拆分为子模块，明确每位成员的责任分工</p>
+                            </div>
+                        </div>
+                        <div class="step">
+                            <div class="step-number">3</div>
+                            <h4>💬 开会讨论</h4>
+                            <div class="editable" contenteditable="true">
+                                <p>小组联合展示，全员参与互动讨论，分享经验心得</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <h3>📌 实施示例：ADLB主题分工</h3>
+                <div class="dynamic-table">
+                    <div class="table-controls">
+                        <button onclick="addTableRow(&#39;example-table&#39;)">➕ 添加行</button>
+                        <button onclick="addTableColumn(&#39;example-table&#39;)">➕ 添加列</button>
+                        <button onclick="deleteTableRow(&#39;example-table&#39;)" class="danger">🗑️ 删除选中行</button>
+                        <button onclick="deleteTableColumn(&#39;example-table&#39;)" class="danger">🗑️ 删除选中列</button>
+                    </div>
+                    <table id="example-table">
+                        <thead>
+                            <tr>
+                                <th><input type="text" class="header-editable" value="分工角色"></th>
+                                <th><input type="text" class="header-editable" value="负责内容"></th>
+                                <th><input type="text" class="header-editable" value="时间分配"></th>
+                                <th><input type="text" class="header-editable" value="状态"></th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr onclick="selectRow(this)">
+                                <td><div class="editable-cell" contenteditable="true">成员1</div></td>
+                                <td><div class="editable-cell" contenteditable="true">ADLB整体结构与不同Study Design适配</div></td>
+                                <td><div class="editable-cell" contenteditable="true">20分钟</div></td>
+                                <td><span class="status-indicator status-pending" onclick="toggleStatus(this)"></span>待开始</td>
+                            </tr>
+                            <tr onclick="selectRow(this)">
+                                <td><div class="editable-cell" contenteditable="true">成员2</div></td>
+                                <td><div class="editable-cell" contenteditable="true">Analysis Flag逻辑设计与实现</div></td>
+                                <td><div class="editable-cell" contenteditable="true">15分钟</div></td>
+                                <td><span class="status-indicator status-pending" onclick="toggleStatus(this)"></span>待开始</td>
+                            </tr>
+                            <tr onclick="selectRow(this)">
+                                <td><div class="editable-cell" contenteditable="true">成员3</div></td>
+                                <td><div class="editable-cell" contenteditable="true">Visit Window定义与处理方法</div></td>
+                                <td><div class="editable-cell" contenteditable="true">15分钟</div></td>
+                                <td><span class="status-indicator status-pending" onclick="toggleStatus(this)"></span>待开始</td>
+                            </tr>
+                            <tr onclick="selectRow(this)">
+                                <td><div class="editable-cell" contenteditable="true">成员4</div></td>
+                                <td><div class="editable-cell" contenteditable="true">CTCAE Grade映射与标准化</div></td>
+                                <td><div class="editable-cell" contenteditable="true">15分钟</div></td>
+                                <td><span class="status-indicator status-pending" onclick="toggleStatus(this)"></span>待开始</td>
+                            </tr>
+                            <tr onclick="selectRow(this)">
+                                <td><div class="editable-cell" contenteditable="true">成员5</div></td>
+                                <td><div class="editable-cell" contenteditable="true">实际项目案例分析与经验教训</div></td>
+                                <td><div class="editable-cell" contenteditable="true">15分钟</div></td>
+                                <td><span class="status-indicator status-pending" onclick="toggleStatus(this)"></span>待开始</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+
+            <div class="section">
+                <h2>📚 主题分类体系</h2>
+                <div class="topic-categories">
+                    <div class="topic-card">
+                        <h4>1️⃣ 固定主题 - Regn项目交流会</h4>
+                        <div class="topic-description editable" contenteditable="true">
+                            <p><strong>PD Listing团队+SDTM团队+MA团队</strong></p>
+                            <p>1. 大家可能参与同一个项目，交流下心得和经验；</p>
+                            <p>2. 其他同事可能不了解你们的内容，比如PD Listing怎么做的，REGN的标准，P21 专业版，MA都是哪些内容和挑战</p>
+                        </div>
+                    </div>
+
+                    <div class="topic-card">
+                        <h4>2️⃣ 技术创新 - R/Python应用</h4>
+                        <div class="topic-description editable" contenteditable="true">
+                            <p><strong>R Quarto：</strong>下一代科学出版工具实践</p>
+                            <p><strong>R Shiny App：</strong>交互式数据可视化应用开发</p>
+                            <p><strong>Python临床应用：</strong>机器学习在临床试验中的探索</p>
+                            <p>R和Python 因为开源，生态非常强大，是当前SAS Programmer 必备技能之一</p>
+                        </div>
+                    </div>
+
+                    <div class="topic-card">
+                        <h4>3️⃣ 经验交流 - 项目吐槽大会</h4>
+                        <div class="topic-description editable" contenteditable="true">
+                            <p><strong>痛点分享：</strong>项目执行中的挑战与困惑</p>
+                            <p><strong>解决方案：</strong>团队智慧碰撞与最佳实践</p>
+                            <p><strong>避坑指南：</strong>从失败中总结的宝贵经验</p>
+                            <p>这里是开放讨论，最不好弄，不过最适合与下午茶一起举办，可以是抱怨，也可以是分享，需要暗中引导方向</p>
+                        </div>
+                    </div>
+
+                    <div class="topic-card">
+                        <h4>4️⃣ 标准解读 - 指南文件研读</h4>
+                        <div class="topic-description editable" contenteditable="true">
+                            <p><strong>技术标准：</strong>SDTM IG, ADAM IG, MSG, ODM深度解析</p>
+                            <p><strong>监管指南：</strong>FDA/NMPA/PMDA Guidelines要点梳理</p>
+                            <p><strong>应用指导：</strong>TAUG等实用文档的实践应用</p>
+                            <p>指南文件复盘，结合项目实例，带领大家复盘，系统化和即时更新知识体系</p>
+                        </div>
+                    </div>
+
+                    <div class="topic-card">
+                        <h4>5️⃣ 前沿动态 - 行业顶会文章</h4>
+                        <div class="topic-description editable" contenteditable="true">
+                            <p><strong>PharmaSUG：</strong>制药行业SAS用户组精选文章</p>
+                            <p><strong>PHUSE：</strong>临床数据科学前沿趋势</p>
+                            <p><strong>R Pharma：</strong>R语言在制药行业的创新应用</p>
+                            <p>技术在进步，行业在发展，了解趋势，拓展知识面，很有必要</p>
+                        </div>
+                    </div>
+
+                    <div class="topic-card">
+                        <h4>6️⃣ 问题征集 - 实战难题攻坚</h4>
+                        <div class="topic-description editable" contenteditable="true">
+                            <p><strong>编程难题：</strong>数据集处理、宏程序优化</p>
+                            <p><strong>统计问题：</strong>统计方法、结果解释</p>
+                            <p><strong>协作困境：</strong>跨组跨地区沟通、质量控制</p>
+                            <p>Weizhen 每个月负责发问卷匿名征集，不局限任何问题，可以放到每一个Topic结尾；如果单独成一个Topic，那么要看具体的问题</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="section">
+                <h2>📈 预期收益</h2>
+                <div class="benefits-grid">
+                    <div class="benefit-item">
+                        <h4>🎯 提升参与度</h4>
+                        <div class="editable" contenteditable="true">
+                            <p>团队协作模式降低个人压力，每个人都有明确的贡献角色，参与感更强</p>
+                        </div>
+                    </div>
+                    <div class="benefit-item">
+                        <h4>🔄 知识互补</h4>
+                        <div class="editable" contenteditable="true">
+                            <p>不同经验背景的成员协作，形成知识互补，学习效果倍增</p>
+                        </div>
+                    </div>
+                    <div class="benefit-item">
+                        <h4>💡 实用导向</h4>
+                        <div class="editable" contenteditable="true">
+                            <p>聚焦实际工作中的问题和挑战，学习内容直接服务于工作实践</p>
+                        </div>
+                    </div>
+                    <div class="benefit-item">
+                        <h4>🚀 技能提升</h4>
+                        <div class="editable" contenteditable="true">
+                            <p>既提升专业技能，也锻炼团队协作、演讲表达、项目管理等软技能</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="section">
+                <h2>📅 动态任务分配与主题计划表</h2>
+                <div class="dynamic-table">
+                    <div class="table-controls">
+                        <button onclick="addTableRow(&#39;schedule-table&#39;)">➕ 添加任务</button>
+                        <button onclick="addTableColumn(&#39;schedule-table&#39;)">➕ 添加列</button>
+                        <button onclick="deleteTableRow(&#39;schedule-table&#39;)" class="danger">🗑️ 删除选中</button>
+                        <button onclick="clearCompleted(&#39;schedule-table&#39;)">🧹 清除已完成</button>
+                    </div>
+                    <table id="schedule-table">
+                        <thead>
+                            <tr>
+                                <th><input type="text" class="header-editable" value="月份"></th>
+                                <th><input type="text" class="header-editable" value="主题类别"></th>
+                                <th><input type="text" class="header-editable" value="具体主题"></th>
+                                <th><input type="text" class="header-editable" value="负责小组"></th>
+                                <th><input type="text" class="header-editable" value="组织者"></th>
+                                <th><input type="text" class="header-editable" value="完成状态"></th>
+                                <th><input type="text" class="header-editable" value="备注"></th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr onclick="selectRow(this)">
+                                <td><div class="editable-cell" contenteditable="true">2025年7月</div></td>
+                                <td><div class="editable-cell" contenteditable="true">固定主题 - Regn项目交流会</div></td>
+                                <td><div class="editable-cell" contenteditable="true">XXX</div></td>
+                                <td><div class="editable-cell" contenteditable="true">第一小组</div></td>
+                                <td><div class="editable-cell" contenteditable="true">Guicheng</div></td>
+                                <td><span class="status-indicator status-pending" onclick="toggleStatus(this)"></span>待开始</td>
+                                <td><div class="editable-cell" contenteditable="true">试点启动</div></td>
+                            </tr>
+                            <tr onclick="selectRow(this)">
+                                <td><div class="editable-cell" contenteditable="true">2025年8月</div></td>
+                                <td><div class="editable-cell" contenteditable="true">技术创新 - R/Python应用</div></td>
+                                <td><div class="editable-cell" contenteditable="true">XXX</div></td>
+                                <td><div class="editable-cell" contenteditable="true">第二小组</div></td>
+                                <td><div class="editable-cell" contenteditable="true">Weizhen Huang</div></td>
+                                <td><span class="status-indicator status-pending" onclick="toggleStatus(this)"></span>待开始</td>
+                                <td><div class="editable-cell" contenteditable="true">计划中</div></td>
+                            </tr>
+                            <tr onclick="selectRow(this)">
+                                <td><div class="editable-cell" contenteditable="true">2025年9月</div></td>
+                                <td><div class="editable-cell" contenteditable="true">经验交流 - 项目吐槽大会</div></td>
+                                <td><div class="editable-cell" contenteditable="true">XXX</div></td>
+                                <td><div class="editable-cell" contenteditable="true">第三小组</div></td>
+                                <td><div class="editable-cell" contenteditable="true">Weizhen Huang</div></td>
+                                <td><span class="status-indicator status-pending" onclick="toggleStatus(this)"></span>待开始</td>
+                                <td><div class="editable-cell" contenteditable="true">请编辑</div></td>
+                            </tr>
+                            <tr onclick="selectRow(this)">
+                                <td><div class="editable-cell" contenteditable="true">2025年10月</div></td>
+                                <td><div class="editable-cell" contenteditable="true">顶会文章领读</div></td>
+                                <td><div class="editable-cell" contenteditable="true">XXX</div></td>
+                                <td><div class="editable-cell" contenteditable="true">第四小组</div></td>
+                                <td><div class="editable-cell" contenteditable="true">Weizhen Huang</div></td>
+                                <td><span class="status-indicator status-pending" onclick="toggleStatus(this)"></span>待开始</td>
+                                <td><div class="editable-cell" contenteditable="true">请编辑</div></td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+
+            <div class="section">
+                <h2>⚠️ 注意事项</h2>
+                <div class="notice-section">
+                    <h3>🔔 实施要点</h3>
+                    <div class="notice-item">
+                        <div class="editable" contenteditable="true">
+                            <p><strong>📅 时间管理：</strong>严格控制每个环节的时间分配，避免单一环节过长影响整体节奏</p>
+                        </div>
+                    </div>
+                    <div class="notice-item">
+                        <div class="editable" contenteditable="true">
+                            <p><strong>👥 参与度监控：</strong>关注沉默成员，适时引导发言，确保2/3的成员都有参与机会 （取决于项目紧张情况）</p><p>合作：比如Xinsha， Weizhen的成员不够的时候，可以和其他team合作</p>
+                        </div>
+                    </div>
+                    <div class="notice-item">
+                        <div class="editable" contenteditable="true">
+                            <p><strong>📝 内容质量：</strong>提前审核分享内容，确保信息准确性和实用性</p>
+                        </div>
+                    </div>
+                    <div class="notice-item">
+                        <div class="editable" contenteditable="true">
+                            <p><strong>💬 氛围营造：</strong>鼓励开放讨论，创造安全的学习环境，避免过度正式化</p>
+                        </div>
+                    </div>
+                    <div class="notice-item">
+                        <div class="editable" contenteditable="true">
+                            <p><strong>📊 效果评估：</strong>定期收集反馈，根据实际情况调整形式和内容</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="section">
+                <h2>📝 更新记录</h2>
+                <div class="update-log">
+                    <h3>🔄 版本历史</h3>
+                    <div class="update-item">
+                        <div class="update-date">2025-07-01</div>
+                        <div class="editable" contenteditable="true">
+                            <p><strong>v1.0 初版发布：</strong>完成基础框架设计，包含6大主题分类和实施流程</p>
+                        </div>
+                    </div>
+                    <div class="update-item">
+                        <div class="update-date">待更新</div>
+                        <div class="editable" contenteditable="true">
+                            <p><strong>未来计划：</strong>根据试点反馈继续优化内容和流程</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        let editMode = true;
+        let selectedRow = null;
+        let selectedColumn = null;
+
+        function toggleEdit() {
+            editMode = !editMode;
+            const editables = document.querySelectorAll('.editable, .editable-cell');
+            editables.forEach(el => {
+                el.contentEditable = editMode;
+                if (editMode) {</script></body></html>
