@@ -1,148 +1,144 @@
 <!DOCTYPE html>
-<html lang="zh-CN">
+<html lang="en">
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>Jinbei Wang · 临床统计编程笔记</title>
-<meta name="description" content="临床试验统计编程笔记：线性混合模型、MMRM、竞争风险、SAS/R/Python 实践与临床编程会议论文索引。">
+<title>Clinical statistical programming — Jinbei Wang</title>
+<meta name="description" content="Self-contained notes on clinical trial statistics and their implementation in SAS, R and Python: linear mixed models, MMRM, competing risks, and indexes to clinical programming conference proceedings.">
 <style>
   :root{
-    --ink:#16181c;
-    --ink-2:#3d434c;
-    --ink-3:#6b7480;
-    --ink-4:#98a1ac;
-    --rule:#e4e7eb;
-    --rule-2:#ccd2d9;
+    --ink:#111214;
+    --ink-2:#3c3f44;
+    --ink-3:#6b6f75;
+    --ink-4:#9aa0a6;
+    --rule:#e2e2e2;
+    --rule-2:#cdcdcd;
     --bg:#ffffff;
-    --bg-2:#fafbfc;
-    --accent:#1b4f8a;
-    --accent-2:#6b4fa8;
-    --accent-soft:#eff4f9;
-    --maxw:940px;
+    --bg-2:#fafafa;
+    --accent:#0b4f9e;
+    --serif:Georgia,"Times New Roman","Source Serif 4","Songti SC",serif;
+    --sans:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,"Helvetica Neue",Arial,"PingFang SC","Microsoft YaHei",sans-serif;
+    --mono:ui-monospace,SFMono-Regular,Consolas,"Liberation Mono",monospace;
+    --maxw:790px;
   }
   *{margin:0;padding:0;box-sizing:border-box}
   html{-webkit-text-size-adjust:100%}
   body{
-    background:var(--bg);
-    color:var(--ink);
-    font-family:-apple-system,BlinkMacSystemFont,"Segoe UI","Microsoft YaHei","PingFang SC","Hiragino Sans GB",Roboto,"Helvetica Neue",Arial,sans-serif;
-    font-size:15px;
-    line-height:1.68;
+    background:var(--bg);color:var(--ink);
+    font-family:var(--sans);font-size:15px;line-height:1.7;
     -webkit-font-smoothing:antialiased;
   }
-  .wrap{max-width:var(--maxw);margin:0 auto;padding:0 28px}
+  .wrap{max-width:var(--maxw);margin:0 auto;padding:0 26px}
+  a{color:inherit}
 
   /* ---------- masthead ---------- */
-  header{padding:72px 0 0}
+  header{padding:80px 0 0}
   .kicker{
-    font-size:11px;letter-spacing:.14em;text-transform:uppercase;
-    color:var(--ink-4);font-weight:600;margin-bottom:14px;
+    font-size:11px;font-weight:700;letter-spacing:.18em;text-transform:uppercase;
+    color:var(--accent);margin-bottom:18px;
   }
   h1{
-    font-size:33px;line-height:1.25;font-weight:650;letter-spacing:-.015em;
-    color:var(--ink);
+    font-family:var(--serif);font-size:35px;line-height:1.22;font-weight:600;
+    letter-spacing:-.012em;color:var(--ink);max-width:22ch;
   }
-  h1 .zh{color:var(--accent-2)}
-  .lede{
-    margin-top:16px;max-width:640px;
-    font-size:16px;line-height:1.75;color:var(--ink-2);
+  .deck{
+    margin-top:18px;max-width:62ch;
+    font-size:15.5px;line-height:1.72;color:var(--ink-2);
   }
-  .meta-row{
-    margin-top:22px;display:flex;flex-wrap:wrap;gap:8px 10px;align-items:center;
-    font-size:13px;color:var(--ink-3);
+  .byline{
+    margin-top:24px;font-size:12.5px;color:var(--ink-3);letter-spacing:.03em;
   }
-  .chip{
-    display:inline-block;padding:2px 9px;border:1px solid var(--rule-2);
-    border-radius:2px;font-size:11.5px;letter-spacing:.02em;color:var(--ink-3);
-    background:#fff;
-  }
-  .rule{height:1px;background:var(--rule);border:0;margin:40px 0 0}
+  .byline .nm{color:var(--ink-2);font-weight:600}
+  header .rule{height:1px;background:var(--ink);border:0;margin:28px 0 0}
 
   /* ---------- sections ---------- */
-  main{padding:0 0 8px}
-  section{padding:44px 0 6px}
+  main{padding:0 0 4px}
+  section{padding:42px 0 0}
   .sec-head{
-    display:flex;align-items:baseline;gap:12px;
-    padding-bottom:11px;border-bottom:1.5px solid var(--ink);
+    display:flex;align-items:baseline;gap:10px;
+    border-top:1px solid var(--ink);padding-top:12px;
   }
   .sec-head h2{
-    font-size:13px;font-weight:700;letter-spacing:.05em;
-    color:var(--ink);text-transform:none;
+    font-size:11.5px;font-weight:700;letter-spacing:.15em;text-transform:uppercase;
+    color:var(--ink);
   }
   .sec-head .count{
     font-size:11.5px;color:var(--ink-4);font-variant-numeric:tabular-nums;
     font-feature-settings:"tnum";
   }
   .sec-head .hint{
-    margin-left:auto;font-size:12px;color:var(--ink-4);
+    margin-left:auto;font-family:var(--serif);font-style:italic;
+    font-size:13px;color:var(--ink-4);
   }
+  @media (max-width:560px){ .sec-head .hint{display:none} }
 
-  .grid{
-    display:grid;grid-template-columns:1fr 1fr;gap:0 34px;
-  }
-  @media (max-width:720px){ .grid{grid-template-columns:1fr} }
-
-  .item{
+  /* ---------- entries ---------- */
+  .entry{
     display:block;text-decoration:none;color:inherit;
-    padding:19px 2px 18px;border-bottom:1px solid var(--rule);
-    transition:background .13s ease,color .13s ease;
+    padding:20px 10px 19px;margin:0 -10px;
+    border-bottom:1px solid var(--rule);
+    transition:background .13s ease;
   }
-  .item:hover{background:linear-gradient(90deg,var(--accent-soft) 0%,rgba(239,244,249,0) 82%)}
-  .item:hover .t{color:var(--accent)}
-  .item .t{
-    font-size:15.5px;font-weight:600;line-height:1.45;letter-spacing:-.005em;
-    color:var(--ink);transition:color .13s ease;
-    display:flex;align-items:baseline;gap:8px;
+  .entry:hover{background:var(--bg-2)}
+  .entry .t{
+    font-family:var(--serif);font-size:18px;font-weight:600;line-height:1.36;
+    letter-spacing:-.004em;color:var(--ink);
+    display:flex;align-items:baseline;gap:11px;
+    transition:color .13s ease;
   }
-  .item .t .arw{
-    margin-left:auto;flex:none;font-size:12px;color:var(--ink-4);
-    font-weight:400;transition:transform .13s ease,color .13s ease;
+  .entry:hover .t{color:var(--accent)}
+  .entry .t .tag{
+    flex:none;font-family:var(--sans);font-size:9.5px;font-weight:700;
+    letter-spacing:.1em;text-transform:uppercase;color:var(--ink-4);
+    border:1px solid var(--rule-2);border-radius:2px;padding:2.5px 5px;
+    position:relative;top:-1px;
   }
-  .item:hover .t .arw{color:var(--accent);transform:translateX(2px)}
-  .item .d{
-    margin-top:6px;font-size:13.5px;line-height:1.65;color:var(--ink-3);
+  .entry .t .tag.en{color:var(--accent);border-color:#c6d5ea}
+  .entry .t .arw{
+    margin-left:auto;flex:none;font-family:var(--sans);font-size:13px;
+    font-weight:400;color:var(--ink-4);
+    transition:transform .14s ease,color .14s ease;
   }
-  .item .u{
-    margin-top:8px;font-size:11.5px;color:var(--ink-4);
-    font-family:ui-monospace,SFMono-Regular,Consolas,"Liberation Mono",monospace;
+  .entry:hover .t .arw{color:var(--accent);transform:translateX(3px)}
+  .entry .d{
+    margin-top:8px;max-width:66ch;
+    font-size:14px;line-height:1.68;color:var(--ink-3);
+  }
+  .entry .u{
+    display:block;margin-top:10px;
+    font-family:var(--mono);font-size:11px;letter-spacing:.01em;color:var(--ink-4);
     overflow-wrap:anywhere;
   }
-  .lang{
-    flex:none;font-size:10px;font-weight:700;letter-spacing:.07em;
-    padding:1.5px 5px;border-radius:2px;text-transform:uppercase;
-    border:1px solid var(--rule-2);color:var(--ink-4);background:#fff;
-  }
-  .lang.en{border-color:#c8d6e8;color:var(--accent);background:#f4f8fc}
 
   /* ---------- footer ---------- */
   footer{
-    margin-top:52px;border-top:1.5px solid var(--ink);
-    padding:22px 0 64px;font-size:12.5px;color:var(--ink-3);
+    margin-top:56px;border-top:1px solid var(--ink);
+    padding:20px 0 76px;font-size:12.5px;color:var(--ink-3);
     display:flex;flex-wrap:wrap;gap:10px 18px;align-items:baseline;
   }
-  footer a{color:var(--accent);text-decoration:none;border-bottom:1px solid #c8d6e8}
-  footer a:hover{border-bottom-color:var(--accent)}
+  footer a{color:var(--accent);text-decoration:none}
+  footer a:hover{text-decoration:underline}
   footer .sp{margin-left:auto;color:var(--ink-4)}
+
+  @media (max-width:600px){
+    header{padding-top:54px}
+    h1{font-size:27px;max-width:none}
+    .entry .t{font-size:16.5px}
+    footer .sp{margin-left:0}
+  }
 </style>
 </head>
 <body>
 <div class="wrap">
 
   <header>
-    <div class="kicker">Clinical Statistical Programming</div>
-    <h1>Jinbei Wang · <span class="zh">临床统计编程笔记</span></h1>
-    <p class="lede">
-      把临床试验统计里那些「书上看不到、做完才明白」的东西写下来。每一篇都是自包含的单页笔记——
-      打开就能读，不需要翻原书，也不需要装任何东西。
+    <div class="kicker">Notes and resources</div>
+    <h1>Clinical statistical programming</h1>
+    <p class="deck">
+      Self-contained notes on clinical trial statistics and how they are implemented in SAS, R and
+      Python — each one a single page, readable without the source text and without any local setup.
     </p>
-    <div class="meta-row">
-      <span class="chip">SAS</span>
-      <span class="chip">R</span>
-      <span class="chip">Python</span>
-      <span class="chip">CDISC / SDTM / ADaM</span>
-      <span class="chip">ICH E9(R1)</span>
-      <span>南京</span>
-    </div>
+    <div class="byline"><span class="nm">Jinbei Wang</span> · Nanjing, China</div>
     <hr class="rule">
   </header>
 
@@ -150,107 +146,95 @@
 
     <section>
       <div class="sec-head">
-        <h2>统计方法</h2>
+        <h2>Statistical methods</h2>
         <span class="count">3</span>
-        <span class="hint">模型、估计与监管视角</span>
+        <span class="hint">Models, estimation and the regulatory view</span>
       </div>
-      <div class="grid">
 
-        <a class="item" href="https://jinbeiwang.github.io/mmrm-guide/">
-          <div class="t"><span>MMRM 深入理解指南</span><span class="lang">中文</span><span class="arw">→</span></div>
-          <div class="d">重复测量混合模型的完整学习路径：从矩阵基础到监管提交，涵盖协方差结构、REML 与 Kenward-Roger、SAS/R 实现与 ICH E9(R1)。</div>
-          <div class="u">/mmrm-guide/</div>
-        </a>
+      <a class="entry" href="https://jinbeiwang.github.io/mmrm-guide/">
+        <div class="t"><span>Mixed models for repeated measures: a practical guide</span><span class="tag">ZH</span><span class="arw">→</span></div>
+        <div class="d">A learning path from matrix foundations to regulatory submission, covering covariance structures, REML and Kenward–Roger, implementations in SAS and R, and ICH E9(R1).</div>
+        <div class="u">/mmrm-guide/</div>
+      </a>
 
-        <a class="item" href="https://jinbeiwang.github.io/lmm-notes/">
-          <div class="t"><span>线性混合模型 · 临床实战笔记</span><span class="lang">中文</span><span class="arw">→</span></div>
-          <div class="d">以 West 等《Linear Mixed Models》为骨架，结合 ICH E9(R1)、FDA/EMA 缺失数据指南、公开 SAP 与 PharmaSUG/PHUSE 实践文章的自包含笔记。</div>
-          <div class="u">/lmm-notes/</div>
-        </a>
+      <a class="entry" href="https://jinbeiwang.github.io/lmm-notes/">
+        <div class="t"><span>Linear mixed models: notes for clinical practice</span><span class="tag">ZH</span><span class="arw">→</span></div>
+        <div class="d">Built on West et al., <i>Linear Mixed Models</i>, and read alongside ICH E9(R1), the FDA and EMA guidance on missing data, public statistical analysis plans, and practice papers from PharmaSUG and PHUSE.</div>
+        <div class="u">/lmm-notes/</div>
+      </a>
 
-        <a class="item" href="https://jinbeiwang.github.io/cif-vs-km-ci/">
-          <div class="t"><span>竞争风险下的置信区间</span><span class="lang">中文</span><span class="arw">→</span></div>
-          <div class="d">CIF 与 Kaplan–Meier 的统计分析与实现规范：置信区间的变换法与反演法、PROC LIFETEST 选项族逐项拆解、可运行的 SAS 实现。</div>
-          <div class="u">/cif-vs-km-ci/</div>
-        </a>
-
-      </div>
+      <a class="entry" href="https://jinbeiwang.github.io/cif-vs-km-ci/">
+        <div class="t"><span>Confidence intervals under competing risks</span><span class="tag">ZH</span><span class="arw">→</span></div>
+        <div class="d">Cumulative incidence against Kaplan–Meier: transformation-based and inverted confidence intervals, the PROC LIFETEST option family taken apart, and runnable SAS.</div>
+        <div class="u">/cif-vs-km-ci/</div>
+      </a>
     </section>
 
     <section>
       <div class="sec-head">
-        <h2>编程语言与实践</h2>
+        <h2>Languages and practice</h2>
         <span class="count">3</span>
-        <span class="hint">从 SAS 出发的多语言路线</span>
+        <span class="hint">A multi-language path out of SAS</span>
       </div>
-      <div class="grid">
 
-        <a class="item" href="https://jinbeiwang.github.io/clinical-python-roadmap/">
-          <div class="t"><span>临床统计程序员的 Python 进阶路线图</span><span class="lang">中文</span><span class="arw">→</span></div>
-          <div class="d">面向「熟 SAS、Python 只会一点点」的程序员：25 章教程 + 13 个可运行案例，全部基于 CDISC 公开真实数据，从语法速通到 AI Agent 开发与部署。</div>
-          <div class="u">/clinical-python-roadmap/</div>
-        </a>
+      <a class="entry" href="https://jinbeiwang.github.io/clinical-python-roadmap/">
+        <div class="t"><span>Python for clinical statistical programmers: a roadmap</span><span class="tag">ZH</span><span class="arw">→</span></div>
+        <div class="d">For programmers fluent in SAS and new to Python: 25 chapters and 13 runnable case studies on public CDISC data, from syntax to building and deploying AI agents.</div>
+        <div class="u">/clinical-python-roadmap/</div>
+      </a>
 
-        <a class="item" href="https://jinbeiwang.github.io/learn-r-clinical/">
-          <div class="t"><span>从 SAS 到 R · 临床数据分析与制药实践</span><span class="lang">中文</span><span class="arw">→</span></div>
-          <div class="d">写给临床 SAS Programmer 的 R 进阶教程：CDISC、统计分析、TLF、包开发、Shiny，以及六大公开数据实战案例。</div>
-          <div class="u">/learn-r-clinical/</div>
-        </a>
+      <a class="entry" href="https://jinbeiwang.github.io/learn-r-clinical/">
+        <div class="t"><span>From SAS to R: clinical data analysis in practice</span><span class="tag">ZH</span><span class="arw">→</span></div>
+        <div class="d">An R course for clinical SAS programmers: CDISC data, statistical analysis, tables and figures, package development and Shiny, with six worked studies on public data.</div>
+        <div class="u">/learn-r-clinical/</div>
+      </a>
 
-        <a class="item" href="https://jinbeiwang.github.io/sas-pattern-notes/">
-          <div class="t"><span>Chained Kit Replacement with the SAS Hash Object</span><span class="lang en">EN</span><span class="arw">→</span></div>
-          <div class="d">De-identified, reusable write-ups of clinical statistical programming patterns — this one resolving a replacement chain of unknown depth in a single DATA step pass, and why a hash and not a merge.</div>
-          <div class="u">/sas-pattern-notes/</div>
-        </a>
-
-      </div>
+      <a class="entry" href="https://jinbeiwang.github.io/sas-pattern-notes/">
+        <div class="t"><span>Chained kit replacement with the SAS hash object</span><span class="tag en">EN</span><span class="arw">→</span></div>
+        <div class="d">De-identified, reusable write-ups of clinical statistical programming patterns. This one resolves a replacement chain of unknown depth in a single DATA step pass, and sets out why a hash object rather than a merge.</div>
+        <div class="u">/sas-pattern-notes/</div>
+      </a>
     </section>
 
     <section>
       <div class="sec-head">
-        <h2>索引与工具</h2>
+        <h2>Indexes and tools</h2>
         <span class="count">2</span>
-        <span class="hint">给日常查资料用的</span>
+        <span class="hint">For everyday reference</span>
       </div>
-      <div class="grid">
 
-        <a class="item" href="https://jinbeiwang.github.io/Proceedings/">
-          <div class="t"><span>ClinProc · 临床编程会议论文索引</span><span class="lang en">EN</span><span class="arw">→</span></div>
-          <div class="d">Searchable index of clinical programming conference papers from PharmaSUG, PHUSE, SAS Global Forum, SAS Innovate, R/Pharma and more — one search across all of them.</div>
-          <div class="u">/Proceedings/</div>
-        </a>
+      <a class="entry" href="https://jinbeiwang.github.io/Proceedings/">
+        <div class="t"><span>ClinProc: a searchable index of conference papers</span><span class="tag en">EN</span><span class="arw">→</span></div>
+        <div class="d">One search across clinical programming conference papers from PharmaSUG, PHUSE, SAS Global Forum, SAS Innovate, R/Pharma and others.</div>
+        <div class="u">/Proceedings/</div>
+      </a>
 
-        <a class="item" href="https://jinbeiwang.github.io/github-radar/">
-          <div class="t"><span>GitHub Radar · 每周热榜</span><span class="lang">中文</span><span class="arw">→</span></div>
-          <div class="d">每周自动抓取趋势数据并生成可视化榜单：热榜、主题榜、新星榜与跨期趋势，数据长期归档。</div>
-          <div class="u">/github-radar/</div>
-        </a>
-
-      </div>
+      <a class="entry" href="https://jinbeiwang.github.io/github-radar/">
+        <div class="t"><span>GitHub Radar: weekly trending repositories</span><span class="tag">ZH</span><span class="arw">→</span></div>
+        <div class="d">Trending, topic and rising-star rankings rebuilt each week from scraped trend data, with the underlying data archived over time.</div>
+        <div class="u">/github-radar/</div>
+      </a>
     </section>
 
     <section>
       <div class="sec-head">
-        <h2>学习簿</h2>
+        <h2>Learning log</h2>
         <span class="count">1</span>
-        <span class="hint">边学边记，公开进行</span>
+        <span class="hint">Built in the open</span>
       </div>
-      <div class="grid">
 
-        <a class="item" href="https://jinbeiwang.github.io/agent_harness/">
-          <div class="t"><span>agent_harness · 临床 × AI Agent</span><span class="lang">中文</span><span class="arw">→</span></div>
-          <div class="d">一名 SAS 统计程序员系统学习 AI Agent 开发的公开学习簿：先造后读，先手写迷你框架建立第一性原理理解，再解剖生产级开源项目，最终落地临床领域。</div>
-          <div class="u">/agent_harness/</div>
-        </a>
-
-      </div>
+      <a class="entry" href="https://jinbeiwang.github.io/agent_harness/">
+        <div class="t"><span>agent_harness: clinical practice meets AI agents</span><span class="tag">ZH</span><span class="arw">→</span></div>
+        <div class="d">An open learning log on agent development: write a minimal framework first to establish the underlying principles, dissect production open-source projects next, then apply what holds up to clinical work.</div>
+        <div class="u">/agent_harness/</div>
+      </a>
     </section>
 
   </main>
 
   <footer>
-    <span>全部内容以 MIT 风格自由取用，<a href="https://github.com/jinbeiwang">源码在 GitHub</a>。</span>
-    <span class="sp">由 GitHub Pages 托管</span>
+    <span>All material may be reused freely under an MIT-style licence; <a href="https://github.com/jinbeiwang">source on GitHub</a>.</span>
+    <span class="sp">Hosted on GitHub Pages</span>
   </footer>
 
 </div>
