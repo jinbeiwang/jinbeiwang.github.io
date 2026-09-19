@@ -10,16 +10,29 @@
    is imported by the note layout only; the dashboard and the tag pages keep
    the editorial tokens untouched.
 
-   Two hues, two jobs:
+   ---------------------------------------------------------------------------
+   Two hues, two jobs — equal in weight, never interchangeable
 
-     indigo  #1b4f8a   structure — section numerals, links, code-block spines,
-                       the way back, the kicker
-     emerald #0f7b5f   evidence — the tick above a section heading, the
-                       conclusion box, the [doc] / [lit] / [实践] provenance
-                       tags, the contents entry you are reading, table rules
+     indigo  #1b4f8a   structure and navigation
+                       the way back, the kicker, section numerals, body links,
+                       the code-block spine, code keywords, the scope panel,
+                       everything you click to move around
 
-   Everything emerald was added on top of the notes' own palette; nothing was
-   recoloured away from it except the three table rules, which were ink.
+     emerald #0f7b5f   evidence and conclusions
+                       the tick above a section heading, the conclusion box,
+                       the [doc] / [lit] / [实践] provenance tags, the metadata
+                       labels, the figure number, table rules and header wash,
+                       list markers, quotes, the contents entry you are
+                       reading, the closing rule — and the green "ok" pill,
+                       because a pass is a conclusion too
+
+   The masthead rule is the one place the two meet, half and half, because
+   that is what they are: two halves of one page.
+
+   Where a choice existed, the emerald won the element that says "this is what
+   we found"; the indigo kept every element that says "here is how to get
+   somewhere". Nothing was recoloured away from the notes' own palette except
+   the table rules and the masthead rule, which were ink.
 
    Every selector below is prefixed with .note or body > .wrap so it outranks
    the base.css rule it replaces without needing !important. Delete the import
@@ -42,6 +55,12 @@
   /* the second hue */
   --emerald:#0f7b5f;
   --emerald-soft:#f0f7f4;
+
+  /* base.css keeps a separate green for the "pass" pill (#2b6b45/#f2f8f4).
+     Two greens a few degrees apart read as a mistake, so the pill joins the
+     second hue here: a pass is a conclusion, and conclusions are emerald. */
+  --ok:var(--emerald);
+  --ok-bg:var(--emerald-soft);
 
   --maxw:880px;
   --sbw:272px;              /* contents panel width */
@@ -89,10 +108,17 @@ body > .wrap{max-width:var(--maxw);padding:0}
   margin:0 0 22px;max-width:780px;
   font-size:16px;line-height:1.6;color:var(--ink-2);
 }
-/* the provenance strip — used to be the masthead's .meta-row */
+/* The provenance strip, and the rule that closes the masthead. That rule used
+   to be 2px of ink; it is now the one place the two hues meet, indigo for the
+   left half and emerald for the right. Drawn as a background bar rather than a
+   border so the hard stop lands cleanly — and the bottom padding absorbs the
+   2px the border used to contribute, so the masthead is exactly as tall as it
+   was. */
 .note .note-byline{
-  margin-top:0;padding:16px 0 20px;border-top:1px solid var(--rule-soft, #eaeef2);
-  border-bottom:2px solid var(--ink);
+  margin-top:0;padding:16px 0 22px;border-top:1px solid var(--rule-soft, #eaeef2);
+  border-bottom:0;
+  background-image:linear-gradient(90deg,var(--accent) 0 50%,var(--emerald) 50% 100%);
+  background-repeat:no-repeat;background-position:0 100%;background-size:100% 2px;
   font-size:12.5px;color:var(--ink-2);
 }
 .note .note-byline .tagset{font-family:var(--sans);font-size:11.5px;color:var(--ink-2)}
@@ -120,10 +146,11 @@ body > .wrap{max-width:var(--maxw);padding:0}
   margin:56px 0 6px;padding-top:0;border-top:0;
 }
 /* The emerald tick sits in the white space the heading already had, so the
-   section rhythm is untouched — it is positioned, not laid out. */
+   section rhythm is untouched — it is positioned, not laid out. 28px wide:
+   long enough to read as a deliberate mark rather than a stray dash. */
 .note .prose h2::before{
   content:"";position:absolute;top:-20px;left:0;
-  width:18px;height:3px;border-radius:2px;background:var(--emerald);
+  width:28px;height:3px;border-radius:2px;background:var(--emerald);
 }
 .note .prose h2 .n{color:var(--accent);margin-right:10px;font-variant-numeric:tabular-nums}
 .note .prose h3{
@@ -141,17 +168,25 @@ body > .wrap{max-width:var(--maxw);padding:0}
   margin:0 0 20px;padding-bottom:14px;border-bottom:1px solid var(--rule-soft, #eaeef2);
 }
 
-/* bullet lists: the notes use real markers, not the dashboard's em dashes */
+/* bullet lists: the notes use real markers, not the dashboard's em dashes.
+   The markers are emerald — a list is an enumeration of findings, and that is
+   what the second hue is for. */
 .note .prose ul,.note .prose ol{padding-left:24px;margin:11px 0;max-width:none}
 .note .prose ul{list-style:disc;padding-left:24px}
 .note .prose ol{list-style:decimal}
 .note .prose ul > li::before{content:none;display:none;width:auto;margin-left:0}
 .note .prose li{margin:5px 0}
 .note .prose li + li{margin-top:5px}
+.note .prose li::marker{color:var(--emerald)}
+.note .prose ol li::marker{font-weight:600}
 
+/* a quote is a second-hand finding, so it carries the same hue */
 .note .prose blockquote{
-  border-left:2px solid var(--rule);padding:2px 0 2px 18px;
+  border-left:2px solid var(--emerald);padding:2px 0 2px 18px;
   color:var(--ink-2);font-style:italic;
+}
+.note .prose blockquote cite,.note .prose blockquote footer{
+  font-style:normal;font-size:12.6px;color:var(--ink-4);
 }
 .note .prose hr{border:0;border-top:1px solid var(--rule-soft, #eaeef2);margin:34px 0}
 
@@ -175,8 +210,13 @@ body > .wrap{max-width:var(--maxw);padding:0}
   font-size:12.4px;line-height:1.65;color:#1f2328;white-space:pre;
 }
 
-/* tables: bracketed in the second hue — the same three rules the notes drew
-   in ink, at the same weights, only recoloured */
+/* tables: bracketed in the second hue, and the header row washed in it, so a
+   table reads as one object rather than a grid.
+
+   The heavy rules are 2px, not the 1.8px the notes wrote. Chromium floors any
+   border under 2px to a single pixel (0.5, 1, 1.5 and 1.8 all compute to 1px),
+   so the notes' "heavy rule" was never heavier than the hairline below it.
+   2px is the smallest value that actually renders as a bracket. */
 .note .prose table{
   width:100%;border-collapse:collapse;margin:18px 0;font-size:13.4px;
   font-variant-numeric:normal;
@@ -187,11 +227,12 @@ body > .wrap{max-width:var(--maxw);padding:0}
 }
 .note .prose th{
   font-family:var(--sans);font-size:12.4px;font-weight:700;letter-spacing:0;
-  text-transform:none;color:var(--ink);white-space:normal;background:none;
+  text-transform:none;color:var(--ink);white-space:normal;
+  background:var(--emerald-soft);
   vertical-align:bottom;padding:9px 12px 8px;
-  border-top:1.8px solid var(--emerald);border-bottom:1px solid var(--emerald);
+  border-top:2px solid var(--emerald);border-bottom:1px solid var(--emerald);
 }
-.note .prose tbody tr:last-child td{border-bottom:1.8px solid var(--emerald)}
+.note .prose tbody tr:last-child td{border-bottom:2px solid var(--emerald)}
 .note .prose td code,.note .prose th code{font-size:12px}
 .note .prose .num{font-variant-numeric:tabular-nums;white-space:nowrap}
 
@@ -204,14 +245,16 @@ body > .wrap{max-width:var(--maxw);padding:0}
   color:var(--ink-2);max-width:none;
   margin-top:12px;padding-top:10px;border-top:1px solid var(--rule-soft, #eaeef2);
 }
-.note .prose figcaption b{color:var(--ink)}
+/* the figure number is a citation, so it belongs to the second hue */
+.note .prose figcaption b{color:var(--emerald)}
 
 /* ---------- the pattern-note vocabulary, back on its own values ---------- */
+/* metadata labels (来源 / 状态 / Source / Status) are provenance, not chrome */
 .note .prose .meta-row{
   display:flex;flex-wrap:wrap;gap:6px 28px;font-size:12.5px;color:var(--ink-2);
   padding-top:14px;border-top:1px solid var(--rule-soft, #eaeef2);
 }
-.note .prose .meta-row b{color:var(--ink);font-weight:600}
+.note .prose .meta-row b{color:var(--emerald);font-weight:600}
 .note .prose .small{font-size:12.8px;line-height:1.68;color:var(--ink-2)}
 .note .prose .small p{margin:6px 0}
 
@@ -227,8 +270,10 @@ body > .wrap{max-width:var(--maxw);padding:0}
 .note .prose .box.note .t{color:var(--accent)}
 .note .prose .box.finding{background:#fff;border:1px solid var(--rule);border-left:3px solid var(--cav)}
 .note .prose .box.finding .t{color:var(--cav)}
-/* the conclusion box — the one block that carries the second hue on its spine */
-.note .prose .box.takeaway{background:#fff;border:1px solid var(--rule);border-left:3px solid var(--emerald)}
+/* the conclusion box — the block a reader is meant to leave with */
+.note .prose .box.takeaway{
+  background:#fff;border:1px solid var(--rule);border-left:3px solid var(--emerald);
+}
 .note .prose .box.takeaway .t{color:var(--emerald)}
 .note .prose .box p{margin:9px 0;max-width:none}
 .note .prose .box > *:first-child{margin-top:0}
@@ -239,14 +284,16 @@ body > .wrap{max-width:var(--maxw);padding:0}
   letter-spacing:.07em;text-transform:uppercase;padding:2px 7px;border-radius:3px;
   border:1px solid;white-space:nowrap;
 }
-.note .prose .pill.ok{color:var(--ok);background:var(--ok-bg);border-color:#c4ddcd}
+.note .prose .pill.ok{color:var(--ok);background:var(--ok-bg);border-color:#c2ddd4}
 .note .prose .pill.cav{color:var(--cav);background:var(--cav-bg);border-color:#e8d3a8}
 .note .prose .pill.bad{color:var(--bad);background:var(--bad-bg);border-color:#ecc4c4}
 
 /* provenance tags — a note writes [doc], [lit] or [实践] inside an
-   <em class="ev">, and the tag reads as a tag instead of as emphasis */
+   <em class="ev">, and the tag reads as a tag instead of as emphasis. The
+   wash is what makes it survive being read past. */
 .note .prose em.ev{
   font-style:normal;font-weight:600;color:var(--emerald);letter-spacing:.01em;
+  background:var(--emerald-soft);border-radius:3px;padding:1px 5px;
 }
 
 /* hand-highlighted code, as written into the notes */
@@ -254,9 +301,10 @@ body > .wrap{max-width:var(--maxw);padding:0}
 .note .prose pre .kw{color:#0b3d68;font-weight:600}
 .note .prose pre .mk{color:#8a5a00;font-weight:700}
 
-/* a note's own provenance footer, not the site's */
+/* a note's own provenance footer, not the site's — closed with the second hue
+   at the same 2px the table rules use, so the note is bookended by it */
 .note .prose footer{
-  margin-top:64px;padding-top:18px;border-top:1px solid var(--rule-soft, #eaeef2);
+  margin-top:64px;padding-top:18px;border-top:2px solid var(--emerald);
   font-size:12.6px;line-height:1.62;color:var(--ink-4);
 }
 .note .prose footer p{margin:6px 0;max-width:none}
@@ -289,10 +337,15 @@ body > .wrap > footer{margin-top:48px;padding:20px 0 76px;border-top:1px solid v
 }
 .spn-toc::-webkit-scrollbar{width:8px}
 .spn-toc::-webkit-scrollbar-thumb{background:#dbe1e8;border-radius:4px}
+/* the panel's own title carries the same tick the sections do */
 .spn-toc-title{
-  margin:0 0 12px;padding-left:10px;
+  position:relative;margin:0 0 12px;padding-left:10px;
   font-size:10.6px;font-weight:700;letter-spacing:.14em;text-transform:uppercase;
   color:var(--ink-4);
+}
+.spn-toc-title::before{
+  content:"";position:absolute;top:-9px;left:10px;
+  width:18px;height:3px;border-radius:2px;background:var(--emerald);
 }
 .spn-toc-nav{font-size:12.9px;line-height:1.42}
 .spn-toc-nav a{
@@ -300,7 +353,7 @@ body > .wrap > footer{margin-top:48px;padding:20px 0 76px;border-top:1px solid v
   padding:4px 10px;border-left:2px solid transparent;border-radius:0 3px 3px 0;
 }
 /* inside the panel the second hue means "here" — pointing at it, or reading it */
-.spn-toc-nav a:hover{color:var(--emerald);background:#f4f8f6}
+.spn-toc-nav a:hover{color:var(--emerald);background:var(--emerald-soft)}
 .spn-toc-nav a.spn-h3{padding-left:24px;font-size:12.2px}
 .spn-toc-nav a.spn-h2{font-weight:600;color:var(--ink)}
 .spn-toc-nav a.active{
@@ -341,5 +394,8 @@ html body.spn-hidden .spn-toc{transform:translateX(-100%)}
   .spn-toc,.spn-toggle,.spn-scrim{display:none !important}
   html body{padding-left:0 !important}
   /* a positioned tick does not survive a page break cleanly — drop it */
-  .note .prose h2::before{display:none}
+  .note .prose h2::before,.spn-toc-title::before{display:none}
+  /* the masthead rule is drawn as a background, which browsers omit by default */
+  .note .note-byline{-webkit-print-color-adjust:exact;print-color-adjust:exact}
+  .note .prose th{background:transparent}
 }

@@ -43,7 +43,7 @@
   {
     "repo": "sas-pattern-notes",
     "title": "Chained Kit Replacement with the SAS Hash Object",
-    "summary": "De-identified, reusable write-ups of coding patterns from clinical statistical programming, each one a single self-contained HTML page.",
+    "summary": "How to resolve a replacement chain of unknown depth in a single pass of a DATA step, why an in-memory hash is the only structure that fits this shape of problem, and what the pattern does when the input is not clean.",
     "category": "SAS patterns",
     "lang": "en",
     "tags": [
