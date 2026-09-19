@@ -1,9 +1,14 @@
 ---
 /**
  * The note page shell. Every note is rendered through this layout, so the
- * presentation lives here and in src/styles/base.css — never in the note file.
+ * presentation lives here, in src/styles/base.css (site chrome) and in
+ * src/styles/note.css (the long-form reading layout) — never in the note file.
+ *
+ * The contents panel is built from the headings at runtime, so a new note
+ * needs no table of contents of its own.
  */
 import '../styles/base.css';
+import '../styles/note.css';
 import site from '../data/site.json';
 import { fmtDate, tagSlug } from '../lib/notes';
 
@@ -32,6 +37,17 @@ const day = fmtDate(date);
   {summary && <meta name="description" content={summary} />}
 </head>
 <body>
+  <button class="spn-toggle" type="button" aria-controls="spnToc"
+          aria-expanded="true" title="Show or hide the contents (Esc)">
+    <span class="bars" aria-hidden="true">&#9776;</span><span class="lbl">Contents</span>
+  </button>
+  <aside class="spn-toc" id="spnToc" aria-label="Contents">
+    <div class="spn-toc-title">Contents</div>
+    <nav class="spn-toc-nav"></nav>
+    <div class="spn-toc-foot">目录由正文标题在打开时生成，无需手工维护。</div>
+  </aside>
+  <div class="spn-scrim" aria-hidden="true"></div>
+
   <div class="wrap">
     <article class="note">
       <a class="back" href="/">&#8592; {site.kicker}</a>
@@ -68,5 +84,122 @@ const day = fmtDate(date);
       <span class="sp">{site.author} · {site.location}</span>
     </footer>
   </div>
+
+  <script>
+    /* Contents panel: builds the list from the note's own headings, highlights
+       the one being read, and remembers whether the panel is open. No
+       dependency, no hand-maintained list — a new note gets it for free. */
+    (function () {
+      var HIDDEN = 'spn-hidden';
+      var KEY = 'spn.toc.hidden';
+      var NARROW = 1080;
+
+      var body = document.body;
+      var toggle = document.querySelector('.spn-toggle');
+      var toc = document.querySelector('.spn-toc');
+      var nav = document.querySelector('.spn-toc-nav');
+      var scrim = document.querySelector('.spn-scrim');
+      if (!toggle || !toc || !nav) return;
+
+      /* ---------- collect headings ---------- */
+      var heads = [].slice.call(document.querySelectorAll('.note .prose h2, .note .prose h3'))
+        .filter(function (h) { return !h.classList.contains('spn-skip'); });
+
+      if (!heads.length) {                 /* nothing to navigate: get out of the way */
+        toc.style.display = 'none';
+        toggle.style.display = 'none';
+        if (scrim) scrim.style.display = 'none';
+        return;
+      }
+
+      var used = {};
+      function slug(text) {
+        var base = text.toLowerCase()
+          .replace(/[^a-z0-9\s-]/g, '')
+          .trim().replace(/\s+/g, '-').replace(/-+/g, '-');
+        if (!base) base = 'section';
+        var n = used[base] = (used[base] || 0) + 1;
+        return n > 1 ? base + '-' + n : base;
+      }
+      function label(h) {
+        var text = h.textContent.replace(/\s+/g, ' ').trim();
+        var num = h.querySelector('.n');                 /* the "1" / "2" run-in numeral */
+        if (num) {
+          var t = num.textContent.trim();
+          if (t && text.indexOf(t) === 0) text = t + ' ' + text.slice(t.length).trim();
+        }
+        return text;
+      }
+
+      var links = heads.map(function (h) {
+        if (!h.id) h.id = slug(label(h));
+        var a = document.createElement('a');
+        a.href = '#' + h.id;
+        a.textContent = label(h);
+        a.className = h.tagName === 'H3' ? 'spn-h3' : 'spn-h2';
+        nav.appendChild(a);
+        return a;
+      });
+
+      /* ---------- show / hide ---------- */
+      var lbl = toggle.querySelector('.lbl');
+      function paint() {
+        var hidden = body.classList.contains(HIDDEN);
+        if (lbl) lbl.textContent = hidden ? 'Contents' : 'Hide contents';
+        toggle.setAttribute('aria-expanded', String(!hidden));
+        if (scrim) scrim.setAttribute('aria-hidden', String(hidden));
+      }
+      function setHidden(v, remember) {
+        body.classList.toggle(HIDDEN, !!v);
+        paint();
+        if (remember) { try { localStorage.setItem(KEY, v ? '1' : '0'); } catch (e) {} }
+      }
+      toggle.addEventListener('click', function () {
+        setHidden(!body.classList.contains(HIDDEN), true);
+      });
+      if (scrim) scrim.addEventListener('click', function () { setHidden(true, true); });
+      document.addEventListener('keydown', function (e) {
+        if (e.key === 'Escape' && !body.classList.contains(HIDDEN) && window.innerWidth <= NARROW) {
+          setHidden(true, true);
+        }
+      });
+      nav.addEventListener('click', function (e) {
+        if (e.target.closest && e.target.closest('a') && window.innerWidth <= NARROW) setHidden(true, true);
+      });
+
+      /* ---------- restore ---------- */
+      var saved = null;
+      try { saved = localStorage.getItem(KEY); } catch (e) {}
+      setHidden(saved === null ? window.innerWidth <= NARROW : saved === '1', false);
+
+      /* ---------- reading position ---------- */
+      var ticking = false;
+      function sync() {
+        ticking = false;
+        var y = window.pageYOffset || document.documentElement.scrollTop;
+        var current = 0, i;
+        for (i = 0; i < heads.length; i++) {
+          if (heads[i].getBoundingClientRect().top <= 96) { current = i; } else { break; }
+        }
+        if (window.innerHeight + y >= document.documentElement.scrollHeight - 4) {
+          current = heads.length - 1;
+        }
+        for (i = 0; i < links.length; i++) links[i].classList.toggle('active', i === current);
+
+        if (!body.classList.contains(HIDDEN)) {              /* keep it in view inside the panel */
+          var el = links[current];
+          var top = el.offsetTop, view = toc.clientHeight;
+          if (top < toc.scrollTop + 24) toc.scrollTop = Math.max(0, top - 24);
+          else if (top + el.offsetHeight > toc.scrollTop + view - 40) toc.scrollTop = top - view + 80;
+        }
+      }
+      function onScroll() {
+        if (!ticking) { ticking = true; window.requestAnimationFrame(sync); }
+      }
+      window.addEventListener('scroll', onScroll, { passive: true });
+      window.addEventListener('resize', onScroll);
+      sync();
+    })();
+  </script>
 </body>
 </html>
