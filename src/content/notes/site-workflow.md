@@ -31,6 +31,36 @@ git add -A && git commit -m "..." && git push    # 3. 发布
 npm run new hash-basics -- --title "SAS hash 对象，从头开始"
 ```
 
+## 从一篇 Markdown 到一页 HTML
+
+这件事只在**构建期**发生。`npm run build` 的时候 Astro 按顺序做四件事，做完就退场：
+
+```
+src/content/notes/*.md
+   │  ①  src/content.config.ts          读集合，按 schema 校验 frontmatter
+   │  ②  Markdown → HTML                代码块交给 Shiki 上色
+   │  ③  src/pages/notes/[...slug].astro  getStaticPaths 为每篇生成一条路由
+   │  ④  src/layouts/Note.astro          套上页头、出处条、目录抽屉
+   ▼
+dist/
+```
+
+| 文件（都在 `src/` 下） | 它负责什么 |
+|---|---|
+| `content.config.ts` | 声明只有一个集合 `notes`，并规定 frontmatter 有哪些字段、哪个必填。**文件名就是 id，id 就是 URL** |
+| `pages/notes/[...slug].astro` | `getStaticPaths()` 遍历集合，为每篇笔记生成一条路径；`render(entry)` 把 Markdown 变成 HTML |
+| `layouts/Note.astro` | 唯一的页面外壳。**版式住在这里和两张 CSS 里，永远不在笔记文件里** |
+| `pages/index.astro` | 首页读的是同一个集合，按 `category` 分组、按 `date` 倒序。**新笔记不用手工登记** |
+
+由此得到几条平时用得上的性质：
+
+- **文件名 = URL**。改名会让已发布的链接失效，要换说法请改 `title`，不要改文件名。
+- **frontmatter 写错在构建期就报错**。`title` 必填、`date` 会被强制解析成日期 —— 不是"上线后才发现"。
+- **目录抽屉由正文的 `h2` / `h3` 在浏览器里现场生成**，所以新笔记免费获得目录，没有任何清单要维护。
+- **`draft: true` 的笔记不生成页面**，也不进首页。
+
+> 值得记住的一点：**生成出来的页面里没有 Astro 的任何东西**。实测 `dist/_astro/` 里只有两张 CSS，`.js` 文件数是 **0**，HTML 里也没有 `astro-island` 之类的标记。Astro 在这里是"生成器"不是"框架"——它把 Markdown 编译成静态 HTML 就退场，浏览器收到的和手写的 HTML 没有区别。所以它省掉的是重复劳动，而不是往页面里加东西：排版、目录、首页收录，这三件以前每篇都要重复做的事，现在都由构建完成。
+
 ## frontmatter 字段
 
 文件顶部用真正的 YAML frontmatter，这是 Markdown 的写法，不用担心它被渲染到页面上。
