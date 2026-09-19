@@ -205,12 +205,15 @@ section[hidden]{display:none}
   background:var(--bg-2);border:1px solid var(--rule);border-radius:2px;padding:.1em .35em;
 }
 .prose pre{
-  background:var(--bg-2);border:1px solid var(--rule);border-radius:2px;
-  padding:15px 17px;overflow-x:auto;
+  background:var(--bg-2);border:1px solid var(--rule);border-left:3px solid var(--accent);
+  border-radius:2px;padding:15px 17px;overflow-x:auto;
 }
 /* Shiki sets its theme background inline on <pre>, so the house tint needs
    to win explicitly rather than through the rule above */
-.prose pre.astro-code{background-color:var(--bg-2) !important;border:1px solid var(--rule)}
+.prose pre.astro-code{
+  background-color:var(--bg-2) !important;
+  border:1px solid var(--rule);border-left:3px solid var(--accent);
+}
 .prose pre code{background:none;border:0;padding:0;font-size:13px;line-height:1.62}
 .prose table{
   width:100%;border-collapse:collapse;font-size:14px;
@@ -232,16 +235,82 @@ section[hidden]{display:none}
   font-size:13px;line-height:1.6;color:var(--ink-4);max-width:68ch;
 }
 .prose .lede{font-size:17px;line-height:1.66;color:var(--ink-2);max-width:64ch}
+/* a section standfirst: the pattern notes put one directly under every h2 */
+.prose h2 + .lede{
+  font-size:14.5px;line-height:1.66;color:var(--ink-3);
+  margin-top:8px;padding-bottom:14px;border-bottom:1px solid var(--rule);
+}
 
-/* ---------- footer ---------- */
-footer{
+/* ---------- pattern-note vocabulary ----------
+   Notes that began life as standalone pattern-note HTML keep their structural
+   classes — callouts, status pills, hand-highlighted code. They are defined
+   once here, in this site's tokens, so those notes join the shared stylesheet
+   instead of shipping a private one. */
+:root{
+  --ok:#2b6b45;  --ok-bg:#f2f8f4;
+  --cav:#8a5a00; --cav-bg:#fdf7ec;
+  --bad:#9a2b2b; --bad-bg:#fdf3f3;
+  --accent-soft:#eef3f8;
+}
+/* the provenance strip that used to sit in the note's masthead */
+.prose .meta-row{
+  display:flex;flex-wrap:wrap;gap:6px 28px;font-size:12.5px;color:var(--ink-3);
+  padding-top:14px;border-top:1px solid var(--rule);
+}
+.prose .meta-row b{color:var(--ink);font-weight:600}
+.prose .small{font-size:12.8px;line-height:1.68;color:var(--ink-3)}
+.prose h2 .n{color:var(--accent);margin-right:10px;font-variant-numeric:tabular-nums}
+/* callouts */
+.prose .box{
+  margin:20px 0;padding:14px 18px;border-radius:3px;
+  background:var(--bg-2);border:1px solid var(--rule);font-size:14px;
+}
+.prose .box .t{
+  display:block;font-family:var(--sans);font-weight:700;font-size:12px;
+  letter-spacing:.08em;text-transform:uppercase;margin-bottom:6px;color:var(--ink-3);
+}
+.prose .box.note{background:var(--accent-soft);border-color:#cfdff0}
+.prose .box.note .t{color:var(--accent)}
+.prose .box.finding{background:#fff;border:1px solid var(--rule);border-left:3px solid var(--cav)}
+.prose .box.finding .t{color:var(--cav)}
+.prose .box p{margin:9px 0;max-width:68ch}
+.prose .box > *:first-child{margin-top:0}
+.prose .box > *:last-child{margin-bottom:0}
+/* status pills */
+.prose .pill{
+  display:inline-block;font-family:var(--sans);font-size:10.6px;font-weight:700;
+  letter-spacing:.07em;text-transform:uppercase;padding:2px 7px;border-radius:3px;
+  border:1px solid;white-space:nowrap;
+}
+.prose .pill.ok{color:var(--ok);background:var(--ok-bg);border-color:#c4ddcd}
+.prose .pill.cav{color:var(--cav);background:var(--cav-bg);border-color:#e8d3a8}
+.prose .pill.bad{color:var(--bad);background:var(--bad-bg);border-color:#ecc4c4}
+/* hand-highlighted code, as written into those notes */
+.prose .num{font-variant-numeric:tabular-nums;white-space:nowrap}
+.prose pre .cm{color:#6f7883}
+.prose pre .kw{color:#0b3d68;font-weight:600}
+.prose pre .mk{color:#8a5a00;font-weight:700}
+.prose figure svg{display:block;width:100%;height:auto}
+.prose h2 + figure,.prose figure{margin:26px 0}
+/* a note's own provenance footer, not the site's */
+.prose footer{
+  margin-top:56px;padding-top:18px;border-top:1px solid var(--rule);
+  font-size:12.6px;line-height:1.62;color:var(--ink-3);
+}
+.prose footer p{margin:9px 0;max-width:68ch}
+.prose footer strong,.prose footer b{color:var(--ink-2)}
+
+/* ---------- footer (site chrome only) ----------
+   A note may carry its own <footer> for provenance; that one is styled as prose
+   further down, so this rule is scoped to the wrapper's own footer. */
+.wrap > footer{
   margin-top:56px;border-top:1px solid var(--ink);
   padding:20px 0 76px;font-size:12.5px;color:var(--ink-3);
   display:flex;flex-wrap:wrap;gap:10px 18px;align-items:baseline;
 }
-footer a{color:var(--accent);text-decoration:none}
-footer a:hover{text-decoration:underline}
-footer .sp{margin-left:auto;color:var(--ink-4)}
+.wrap > footer a{color:var(--accent);text-decoration:none}
+.wrap > footer a:hover{text-decoration:underline}
+.wrap > footer .sp{margin-left:auto;color:var(--ink-4)}
 
 @media (max-width:600px){
   header{padding-top:54px}
