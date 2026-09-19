@@ -1,0 +1,9 @@
+{
+  "title": "Clinical statistical programming",
+  "author": "Jinbei Wang",
+  "description": "Notes on clinical trial statistics and their implementation in SAS, R and Python — linear mixed models, MMRM, competing risks — plus indexes to clinical programming conference proceedings.",
+  "kicker": "Notes",
+  "deck": "Self-contained notes on clinical trial statistics and their implementation in SAS, R and Python, written up as I work through them. Longer projects keep their own site; everything else lives here under /notes/.",
+  "location": "Nanjing",
+  "sourceRepo": "https://github.com/jinbeiwang/jinbeiwang.github.io"
+}

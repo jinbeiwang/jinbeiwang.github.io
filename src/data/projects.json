@@ -1,0 +1,123 @@
+[
+  {
+    "repo": "mmrm-guide",
+    "title": "Mixed models for repeated measures: a practical guide",
+    "summary": "A learning path from matrix foundations to regulatory submission, covering covariance structures, REML and Kenward-Roger, implementations in SAS and R, and ICH E9(R1).",
+    "category": "Statistical methods",
+    "lang": "zh",
+    "tags": [
+      "MMRM",
+      "mixed models",
+      "ICH E9(R1)"
+    ],
+    "url": "https://jinbeiwang.github.io/mmrm-guide/",
+    "source": "https://github.com/jinbeiwang/mmrm-guide"
+  },
+  {
+    "repo": "lmm-notes",
+    "title": "Linear mixed models: notes for clinical practice",
+    "summary": "Built on West et al., Linear Mixed Models, and read alongside ICH E9(R1), the FDA and EMA guidance on missing data, public statistical analysis plans, and PharmaSUG and PHUSE practice papers.",
+    "category": "Statistical methods",
+    "lang": "zh",
+    "tags": [
+      "linear mixed models",
+      "missing data"
+    ],
+    "url": "https://jinbeiwang.github.io/lmm-notes/",
+    "source": "https://github.com/jinbeiwang/lmm-notes"
+  },
+  {
+    "repo": "cif-vs-km-ci",
+    "title": "Confidence intervals under competing risks",
+    "summary": "Cumulative incidence against Kaplan-Meier: transformation-based and inverted confidence intervals, the PROC LIFETEST option family taken apart, and runnable SAS.",
+    "category": "Statistical methods",
+    "lang": "zh",
+    "tags": [
+      "competing risks",
+      "CIF",
+      "Kaplan-Meier"
+    ],
+    "url": "https://jinbeiwang.github.io/cif-vs-km-ci/",
+    "source": "https://github.com/jinbeiwang/cif-vs-km-ci"
+  },
+  {
+    "repo": "sas-pattern-notes",
+    "title": "SAS pattern notes",
+    "summary": "De-identified, reusable write-ups of coding patterns from clinical statistical programming, each one a single self-contained HTML page.",
+    "category": "SAS patterns",
+    "lang": "en",
+    "tags": [
+      "SAS",
+      "clinical programming"
+    ],
+    "url": "https://jinbeiwang.github.io/sas-pattern-notes/",
+    "source": "https://github.com/jinbeiwang/sas-pattern-notes"
+  },
+  {
+    "repo": "clinical-python-roadmap",
+    "title": "Python for clinical statistical programmers: a roadmap",
+    "summary": "For programmers fluent in SAS and new to Python: chapters and runnable case studies on public CDISC data, from syntax to building and deploying AI agents.",
+    "category": "Languages and practice",
+    "lang": "zh",
+    "tags": [
+      "Python",
+      "CDISC"
+    ],
+    "url": "https://jinbeiwang.github.io/clinical-python-roadmap/",
+    "source": "https://github.com/jinbeiwang/clinical-python-roadmap"
+  },
+  {
+    "repo": "learn-r-clinical",
+    "title": "From SAS to R: clinical data analysis in practice",
+    "summary": "An R course for clinical SAS programmers: CDISC data, statistical analysis, tables and figures, package development and Shiny, with worked studies on public data.",
+    "category": "Languages and practice",
+    "lang": "zh",
+    "tags": [
+      "R",
+      "CDISC",
+      "Shiny"
+    ],
+    "url": "https://jinbeiwang.github.io/learn-r-clinical/",
+    "source": "https://github.com/jinbeiwang/learn-r-clinical"
+  },
+  {
+    "repo": "Proceedings",
+    "title": "ClinProc: a searchable index of conference papers",
+    "summary": "One search across clinical programming conference papers from PharmaSUG, PHUSE, SAS Global Forum, SAS Innovate, R/Pharma and others.",
+    "category": "Indexes and tools",
+    "lang": "en",
+    "tags": [
+      "PharmaSUG",
+      "PHUSE",
+      "search"
+    ],
+    "url": "https://jinbeiwang.github.io/Proceedings/",
+    "source": "https://github.com/jinbeiwang/Proceedings"
+  },
+  {
+    "repo": "github-radar",
+    "title": "GitHub Radar: weekly trending repositories",
+    "summary": "Trending, topic and rising-star rankings rebuilt each week from scraped trend data, with the underlying data archived over time.",
+    "category": "Indexes and tools",
+    "lang": "zh",
+    "tags": [
+      "trending",
+      "weekly"
+    ],
+    "url": "https://jinbeiwang.github.io/github-radar/",
+    "source": "https://github.com/jinbeiwang/github-radar"
+  },
+  {
+    "repo": "agent_harness",
+    "title": "agent_harness: clinical practice meets AI agents",
+    "summary": "An open learning log on agent development: write a minimal framework first to establish the underlying principles, dissect production open-source projects next, then apply what holds up to clinical work.",
+    "category": "Learning log",
+    "lang": "zh",
+    "tags": [
+      "AI agents",
+      "learning log"
+    ],
+    "url": "https://jinbeiwang.github.io/agent_harness/",
+    "source": "https://github.com/jinbeiwang/agent_harness"
+  }
+]

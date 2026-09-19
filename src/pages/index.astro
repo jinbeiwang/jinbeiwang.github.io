@@ -1,0 +1,237 @@
+---
+import '../styles/base.css';
+import { getCollection } from 'astro:content';
+import site from '../data/site.json';
+import categories from '../data/categories.json';
+import projects from '../data/projects.json';
+import Entry from '../components/Entry.astro';
+import { fmtDate, noteHref, notePath } from '../lib/notes';
+
+const notes = (await getCollection('notes', ({ data }) => !data.draft))
+  .map((e) => ({
+    href: noteHref(e.id),
+    path: notePath(e.id),
+    title: e.data.title,
+    summary: e.data.summary,
+    date: fmtDate(e.data.date),
+    category: e.data.category,
+    tags: e.data.tags,
+    lang: e.data.lang,
+    source: `${site.sourceRepo}/blob/main/src/content/notes/${e.id}.md`,
+  }))
+  .sort((a, b) => b.date.localeCompare(a.date));
+
+// group by category, in the order declared in categories.json; anything not
+// declared there still gets shown, appended after the known ones
+const groups = new Map(categories.map((c) => [c.name, []]));
+for (const n of notes) {
+  if (!groups.has(n.category)) groups.set(n.category, []);
+  groups.get(n.category).push(n);
+}
+const sections = [...groups.entries()].filter(([, list]) => list.length > 0);
+
+// tag chips cover notes and external projects alike
+const tagCount = new Map();
+for (const item of [...notes, ...projects]) {
+  for (const t of item.tags || []) tagCount.set(t, (tagCount.get(t) || 0) + 1);
+}
+const allTags = [...tagCount.entries()].sort(
+  (a, b) => b[1] - a[1] || String(a[0]).localeCompare(String(b[0]))
+);
+
+const total = notes.length + projects.length;
+---
+
+<!DOCTYPE html>
+<html lang={site.title.match(/[^\x00-\x7F]/) ? 'zh-CN' : 'en'}>
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <link rel="icon" href="/favicon.svg" type="image/svg+xml" />
+  <title>{site.title} — {site.author}</title>
+  <meta name="description" content={site.description} />
+</head>
+<body>
+  <div class="wrap">
+    <header>
+      <div class="kicker">{site.kicker}</div>
+      <h1>{site.title}</h1>
+      <p class="deck">{site.deck}</p>
+      <div class="byline"><span class="nm">{site.author}</span> · Nanjing</div>
+      <hr class="rule" />
+    </header>
+
+    <div class="tools">
+      <input id="q" type="search" placeholder="Search notes and projects" aria-label="Search notes and projects" />
+      <div class="views" role="group" aria-label="Grouping">
+        <button data-view="category" aria-pressed="true">By category</button>
+        <button data-view="date" aria-pressed="false">By date</button>
+      </div>
+      <span class="status" id="status" hidden></span>
+    </div>
+
+    <div class="chips" id="chips">
+      <button class="chip" data-tag="" aria-pressed="true">All</button>
+      {allTags.map(([t]) => (
+        <button class="chip" data-tag={String(t).toLowerCase()} aria-pressed="false">{t}</button>
+      ))}
+    </div>
+
+    <main>
+      {sections.length === 0 && (
+        <section>
+          <div class="empty">No notes in the repository yet — add one under src/content/notes/.</div>
+        </section>
+      )}
+
+      <div id="note-sections">
+        {sections.map(([name, list]) => {
+          const hint = categories.find((c) => c.name === name)?.hint || '';
+          return (
+            <section data-category={name}>
+              <div class="sec-head">
+                <h2>{name}</h2>
+                <span class="count">{list.length}</span>
+                {hint && <span class="hint">{hint}</span>}
+              </div>
+              <div class="body">
+                {list.map((n) => <Entry {...n} category={name} />)}
+              </div>
+            </section>
+          );
+        })}
+      </div>
+
+      <section id="all-notes" hidden>
+        <div class="sec-head">
+          <h2>All notes</h2>
+          <span class="count">{notes.length}</span>
+          <span class="hint">Newest first</span>
+        </div>
+        <div class="body flat-list"></div>
+      </section>
+
+      <section id="projects">
+        <div class="sec-head">
+          <h2>External projects</h2>
+          <span class="count">{projects.length}</span>
+          <span class="hint">Each keeps its own site</span>
+        </div>
+        <div class="body">
+          {projects.map((p) => (
+            <Entry
+              href={p.url}
+              title={p.title}
+              summary={p.summary}
+              lang={p.lang}
+              path={`/${p.repo}/`}
+              tags={p.tags}
+              source={p.source}
+              category={p.category}
+              note={p.category}
+            />
+          ))}
+        </div>
+      </section>
+    </main>
+
+    <footer>
+      <a href={site.sourceRepo}>Source</a>
+      <span>Markdown notes, built with Astro</span>
+      <span class="sp">{site.author} · {site.location}</span>
+    </footer>
+  </div>
+
+  <script>
+    const q = document.getElementById('q') as HTMLInputElement;
+    const status = document.getElementById('status') as HTMLElement;
+    const chipWrap = document.getElementById('chips') as HTMLElement;
+    const projectSection = document.getElementById('projects') as HTMLElement;
+    const allNotes = document.getElementById('all-notes') as HTMLElement;
+    const flatList = allNotes.querySelector('.flat-list') as HTMLElement;
+    const noteSections = [...document.querySelectorAll('#note-sections > section')] as HTMLElement[];
+    const total = document.querySelectorAll('article.entry').length;
+
+    let currentView: 'category' | 'date' = 'category';
+    let activeTag: string | null = null;
+
+    // remember where each note row started, so the category view can be restored
+    const home = new Map<HTMLElement, { sec: HTMLElement; idx: number }>();
+    document.querySelectorAll('#note-sections article.entry').forEach((a) => {
+      const el = a as HTMLElement;
+      const sec = el.closest('section') as HTMLElement;
+      const body = sec.querySelector('.body') as HTMLElement;
+      home.set(el, { sec, idx: [...body.querySelectorAll('article.entry')].indexOf(el) });
+    });
+
+    function apply() {
+      const term = (q.value || '').trim().toLowerCase();
+      let shown = 0;
+      document.querySelectorAll('article.entry').forEach((a) => {
+        const el = a as HTMLElement;
+        const tagOk = !activeTag || (el.dataset.tags || '').split('|').includes(activeTag);
+        // titles, summaries and tags all match, so searching a tag name works
+        const hay = `${el.dataset.title || ''} ${el.dataset.tags || ''}`;
+        const termOk = !term || hay.includes(term);
+        const ok = tagOk && termOk;
+        el.hidden = !ok;
+        if (ok) shown++;
+      });
+
+      const anyVisible = (root: HTMLElement) =>
+        [...root.querySelectorAll('article.entry')].some((a) => !(a as HTMLElement).hidden);
+
+      for (const s of noteSections) s.hidden = currentView === 'date' || !anyVisible(s);
+      allNotes.hidden = currentView !== 'date' || !anyVisible(flatList);
+      projectSection.hidden = !anyVisible(projectSection);
+
+      status.hidden = !(term || activeTag);
+      status.textContent = `${shown} of ${total} shown`;
+    }
+
+    function setView(view: 'category' | 'date') {
+      currentView = view;
+      if (view === 'date') {
+        const list = [...document.querySelectorAll('#note-sections article.entry')] as HTMLElement[];
+        list.sort((a, b) => (b.dataset.date || '').localeCompare(a.dataset.date || ''));
+        for (const a of list) flatList.appendChild(a);
+      } else {
+        const bySec = new Map<HTMLElement, [number, HTMLElement][]>();
+        home.forEach((h, el) => {
+          if (!bySec.has(h.sec)) bySec.set(h.sec, []);
+          bySec.get(h.sec)!.push([h.idx, el]);
+        });
+        bySec.forEach((rows, sec) => {
+          rows.sort((x, y) => x[0] - y[0]);
+          const body = sec.querySelector('.body') as HTMLElement;
+          for (const [, el] of rows) body.appendChild(el);
+        });
+      }
+      apply();
+    }
+
+    q.addEventListener('input', apply);
+
+    chipWrap.addEventListener('click', (ev) => {
+      const btn = (ev.target as HTMLElement).closest('.chip') as HTMLElement | null;
+      if (!btn) return;
+      const t = btn.dataset.tag || null;
+      activeTag = activeTag === t ? null : t;
+      chipWrap.querySelectorAll('.chip').forEach((c) => {
+        const el = c as HTMLElement;
+        el.setAttribute('aria-pressed', String((el.dataset.tag || null) === activeTag));
+      });
+      apply();
+    });
+
+    document.querySelectorAll('.views button').forEach((b) =>
+      b.addEventListener('click', () => {
+        document.querySelectorAll('.views button').forEach((x) => x.setAttribute('aria-pressed', String(x === b)));
+        setView((b as HTMLElement).dataset.view as 'category' | 'date');
+      })
+    );
+
+    apply();
+  </script>
+</body>
+</html>

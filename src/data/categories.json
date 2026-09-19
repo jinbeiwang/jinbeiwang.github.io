@@ -1,0 +1,8 @@
+[
+  { "name": "Site notes", "hint": "Written directly in this repository" },
+  { "name": "Statistical methods", "hint": "Models, estimation and the regulatory view" },
+  { "name": "SAS patterns", "hint": "De-identified, reusable code shapes" },
+  { "name": "Languages and practice", "hint": "A multi-language path out of SAS" },
+  { "name": "Indexes and tools", "hint": "For everyday reference" },
+  { "name": "Learning log", "hint": "Built in the open" }
+]

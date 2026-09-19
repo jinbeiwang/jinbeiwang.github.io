@@ -1,0 +1,4 @@
+# Store text files with LF in the repository. The authoring machine is Windows
+# (system-wide core.autocrlf=true) and the build runs on Linux; this keeps the
+# committed blobs identical on both and avoids whole-file diffs.
+* text=auto

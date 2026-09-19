@@ -1,0 +1,60 @@
+---
+/**
+ * One row in the dashboard list. Used for both notes and external projects,
+ * so a project entry can carry a `note` (its category) where a note entry
+ * carries a date.
+ */
+import { tagSlug } from '../lib/notes';
+
+interface Props {
+  href: string;
+  title: string;
+  summary?: string;
+  lang?: string;
+  date?: string;
+  path?: string;
+  tags?: string[];
+  source?: string;
+  category?: string;
+  note?: string;
+}
+
+const { href, title, summary, lang, date, path, tags = [], source, category = '', note } = Astro.props;
+const badge = String(lang || '').toUpperCase();
+const cleanTags = tags.filter(Boolean);
+---
+
+<article
+  class="entry"
+  data-date={date || ''}
+  data-cat={category}
+  data-tags={cleanTags.map((t) => t.toLowerCase()).join('|')}
+  data-title={`${title} ${summary || ''}`.toLowerCase()}
+>
+  <div class="t">
+    <a href={href}>{title}</a>
+    {badge && <span class={`tag${badge === 'EN' ? ' en' : ''}`}>{badge}</span>}
+    <span class="arw">&#8594;</span>
+  </div>
+  {summary && <div class="d">{summary}</div>}
+  <div class="u">
+    {path && <span class="p">{path}</span>}
+    {date && <span class="d">{date}</span>}
+    {note && <span class="from">{note}</span>}
+    {cleanTags.length > 0 && (
+      <span class="tg">
+        {cleanTags.map((t, i) => (
+          <>
+            {i > 0 && ' · '}
+            <a class="tg-link" href={`/tags/${tagSlug(t)}.html`}>{t}</a>
+          </>
+        ))}
+      </span>
+    )}
+    {source && (
+      <a class="src" href={source} title="Source on GitHub">
+        source
+      </a>
+    )}
+  </div>
+</article>

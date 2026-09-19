@@ -1,0 +1,72 @@
+---
+/**
+ * The note page shell. Every note is rendered through this layout, so the
+ * presentation lives here and in src/styles/base.css — never in the note file.
+ */
+import '../styles/base.css';
+import site from '../data/site.json';
+import { fmtDate, tagSlug } from '../lib/notes';
+
+interface Props {
+  title: string;
+  summary?: string;
+  date: Date;
+  category: string;
+  tags: string[];
+  lang: string;
+  sourceUrl?: string;
+}
+
+const { title, summary, date, category, tags, lang, sourceUrl } = Astro.props;
+const htmlLang = lang === 'en' ? 'en' : 'zh-CN';
+const day = fmtDate(date);
+---
+
+<!DOCTYPE html>
+<html lang={htmlLang}>
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <link rel="icon" href="/favicon.svg" type="image/svg+xml" />
+  <title>{title} — {site.title}</title>
+  {summary && <meta name="description" content={summary} />}
+</head>
+<body>
+  <div class="wrap">
+    <article class="note">
+      <a class="back" href="/">&#8592; {site.kicker}</a>
+
+      <header>
+        <div class="kicker">{category}</div>
+        <h1>{title}</h1>
+        {summary && <p class="deck">{summary}</p>}
+      </header>
+
+      <div class="note-byline">
+        <span>{day}</span>
+        {tags.length > 0 && (
+          <span class="tagset">
+            {tags.map((t, i) => (
+              <>{i > 0 && ' · '}<a href={`/tags/${tagSlug(t)}.html`}>{t}</a></>
+            ))}
+          </span>
+        )}
+        {sourceUrl && (
+          <span style="margin-left:auto">
+            <a href={sourceUrl} style="color:var(--accent);text-decoration:none">source</a>
+          </span>
+        )}
+      </div>
+
+      <div class="prose">
+        <slot />
+      </div>
+    </article>
+
+    <footer>
+      <a href="/">{site.kicker}</a>
+      <span class="sp">{site.author} · {site.location}</span>
+    </footer>
+  </div>
+</body>
+</html>

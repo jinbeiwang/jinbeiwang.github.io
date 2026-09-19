@@ -1,0 +1,18 @@
+{
+  "name": "jinbeiwang-notes",
+  "type": "module",
+  "version": "1.0.0",
+  "private": true,
+  "description": "jinbeiwang.github.io — notes dashboard built with Astro",
+  "engines": {
+    "node": ">=20"
+  },
+  "scripts": {
+    "dev": "astro dev",
+    "build": "astro build",
+    "preview": "astro preview"
+  },
+  "dependencies": {
+    "astro": "7.3.3"
+  }
+}

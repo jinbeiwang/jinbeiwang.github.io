@@ -1,0 +1,78 @@
+---
+import '../../styles/base.css';
+import { getCollection } from 'astro:content';
+import site from '../../data/site.json';
+import Entry from '../../components/Entry.astro';
+import { fmtDate, noteHref, notePath, tagSlug } from '../../lib/notes';
+
+export async function getStaticPaths() {
+  const notes = await getCollection('notes', ({ data }) => !data.draft);
+  const byTag = new Map<string, { label: string; list: typeof notes }>();
+  for (const e of notes) {
+    for (const t of e.data.tags) {
+      const slug = tagSlug(t);
+      if (!slug) continue;
+      if (!byTag.has(slug)) byTag.set(slug, { label: t, list: [] });
+      byTag.get(slug)!.list.push(e);
+    }
+  }
+  return [...byTag.entries()].map(([tag, v]) => ({
+    params: { tag },
+    props: { label: v.label, list: v.list },
+  }));
+}
+
+const { label, list } = Astro.props;
+const notes = list
+  .map((e: any) => ({
+    href: noteHref(e.id),
+    path: notePath(e.id),
+    title: e.data.title,
+    summary: e.data.summary,
+    date: fmtDate(e.data.date),
+    category: e.data.category,
+    tags: e.data.tags,
+    lang: e.data.lang,
+    source: `${site.sourceRepo}/blob/main/src/content/notes/${e.id}.md`,
+  }))
+  .sort((a: any, b: any) => b.date.localeCompare(a.date));
+---
+
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <link rel="icon" href="/favicon.svg" type="image/svg+xml" />
+  <title>{label} — {site.title}</title>
+  <meta name="description" content={`Notes tagged ${label}.`} />
+</head>
+<body>
+  <div class="wrap">
+    <header>
+      <div class="kicker">Tag</div>
+      <h1>{label}</h1>
+      <p class="deck">{notes.length} {notes.length === 1 ? 'note' : 'notes'} in this repository carry this tag.</p>
+      <hr class="rule" />
+    </header>
+
+    <main>
+      <section>
+        <div class="sec-head">
+          <h2>{label}</h2>
+          <span class="count">{notes.length}</span>
+          <span class="hint">Newest first</span>
+        </div>
+        <div class="body">
+          {notes.map((n: any) => <Entry {...n} />)}
+        </div>
+      </section>
+    </main>
+
+    <footer>
+      <a href="/">&#8592; All notes</a>
+      <span class="sp">{site.author} · {site.location}</span>
+    </footer>
+  </div>
+</body>
+</html>
