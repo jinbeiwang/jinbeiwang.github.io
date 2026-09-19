@@ -19,12 +19,11 @@
                        everything you click to move around
 
      emerald #0f7b5f   evidence and conclusions
-                       the tick above a section heading, the conclusion box,
-                       the [doc] / [lit] / [实践] provenance tags, the metadata
-                       labels, the figure number, table rules and header wash,
-                       list markers, quotes, the contents entry you are
-                       reading, the closing rule — and the green "ok" pill,
-                       because a pass is a conclusion too
+                       the conclusion box, the [doc] / [lit] / [实践] tags,
+                       the metadata labels, the figure number, table rules and
+                       header wash, list markers, quotes, the contents entry
+                       you are reading, the closing rule — and the green "ok"
+                       pill, because a pass is a conclusion too
 
    The masthead rule is the one place the two meet, half and half, because
    that is what they are: two halves of one page.
@@ -140,17 +139,10 @@ body > .wrap{max-width:var(--maxw);padding:0}
 
 /* headings inherit the body's line-height, exactly as they did in the notes */
 .note .prose h2{
-  position:relative;
+  /* no ornament: the numeral and the space above it carry the hierarchy */
   font-family:var(--sans);font-size:20px;font-weight:700;line-height:inherit;
   letter-spacing:-.01em;color:var(--ink);
   margin:56px 0 6px;padding-top:0;border-top:0;
-}
-/* The emerald tick sits in the white space the heading already had, so the
-   section rhythm is untouched — it is positioned, not laid out. 28px wide:
-   long enough to read as a deliberate mark rather than a stray dash. */
-.note .prose h2::before{
-  content:"";position:absolute;top:-20px;left:0;
-  width:28px;height:3px;border-radius:2px;background:var(--emerald);
 }
 .note .prose h2 .n{color:var(--accent);margin-right:10px;font-variant-numeric:tabular-nums}
 .note .prose h3{
@@ -337,7 +329,8 @@ body > .wrap > footer{margin-top:48px;padding:20px 0 76px;border-top:1px solid v
 }
 .spn-toc::-webkit-scrollbar{width:8px}
 .spn-toc::-webkit-scrollbar-thumb{background:#dbe1e8;border-radius:4px}
-/* the panel's own title carries the same tick the sections do */
+/* the section ticks were removed on 2026-09-19; this short one stays, because
+   it marks where the drawer begins and appears exactly once on the page */
 .spn-toc-title{
   position:relative;margin:0 0 12px;padding-left:10px;
   font-size:10.6px;font-weight:700;letter-spacing:.14em;text-transform:uppercase;
@@ -394,7 +387,7 @@ html body.spn-hidden .spn-toc{transform:translateX(-100%)}
   .spn-toc,.spn-toggle,.spn-scrim{display:none !important}
   html body{padding-left:0 !important}
   /* a positioned tick does not survive a page break cleanly — drop it */
-  .note .prose h2::before,.spn-toc-title::before{display:none}
+  .spn-toc-title::before{display:none}
   /* the masthead rule is drawn as a background, which browsers omit by default */
   .note .note-byline{-webkit-print-color-adjust:exact;print-color-adjust:exact}
   .note .prose th{background:transparent}

@@ -64,10 +64,10 @@ Valid categories are listed in `src/data/categories.json`. An unregistered value
 does not break anything; it just adds a new section to the dashboard.
 
 Then the body. Write plain Markdown if you like — but the notes have a small
-vocabulary that carries this site's look: an emerald section tick, evidence tags
-(`[doc]` / `[lit]` / `[实践]`), a conclusion box, tables bracketed in emerald,
-verdict pills. It is all in `templates/new-note.md`, with comments, and it is
-documented in the note **"这个站怎么组织"** at `/notes/site-workflow.html`.
+vocabulary that carries this site's look: evidence tags (`[doc]` / `[lit]` /
+`[实践]`), a conclusion box, tables bracketed in emerald, verdict pills. It is
+all in `templates/new-note.md`, with comments, and it is documented in the note
+**"这个站怎么组织"** at `/notes/site-workflow.html`.
 Nothing about it lives in the note file itself: colours, spacing and the contents
 drawer are decided by `src/styles/note.css`.
 
