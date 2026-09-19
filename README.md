@@ -39,7 +39,8 @@ dashboard.
 ## Local development
 
 ```bash
-npm install
+npm ci           # exact versions from package-lock.json
+npm install      # after editing package.json
 npm run dev      # http://localhost:4321, reloads on save
 npm run build    # writes dist/
 npm run preview  # serve the built output
@@ -47,6 +48,9 @@ npm run preview  # serve the built output
 
 Run `npm run build` before pushing. The dev server is lenient; the build
 validates frontmatter and will fail on a missing `title` or an unparseable `date`.
+
+The lockfile resolves every package from `registry.npmjs.org`, not from a
+mirror, so the versions installed here are the ones the build job gets.
 
 ## Layout
 
@@ -71,30 +75,41 @@ public/               served as-is (favicon, .nojekyll)
 ## Deployment
 
 `.github/workflows/deploy.yml` builds the site and publishes `dist/` on every
-push to `main`.
+push to `main`. A full run — checkout, install, build, deploy — takes about
+thirty seconds. `dist/` is never committed.
 
-**GitHub Pages must be set to build with Actions, not from a branch.** The
-repository started on the legacy build (GitHub running Jekyll server-side),
-which cannot run an Astro build. Switch it once:
+**GitHub Pages is set to build with Actions** (`build_type: workflow`). This is
+required: the other option, the legacy build, runs Jekyll on GitHub's side and
+cannot execute an Astro build. It is already set; this is how it was done:
 
 ```bash
-gh api -X PUT repos/jinbeiwang/jinbeiwang.github.io/pages \
-  -f build_type=workflow
+gh api -X PUT repos/jinbeiwang/jinbeiwang.github.io/pages -f build_type=workflow
 ```
 
 Or in the web UI: Settings → Pages → Source → **GitHub Actions**.
 
-Once that is set, the repository-root `index.html` and `.nojekyll` are no longer
-used — only the uploaded `dist/` is served. They can be deleted, though leaving
-them costs nothing and acts as a fallback if the build type is ever reverted.
+Why it is worth keeping on `workflow`: while the setting is `legacy`, GitHub
+runs its own `pages build and deployment` on every push, **in parallel with this
+workflow**. Both publish a deployment and whichever finishes last wins, so the
+site can silently flip back to the repository-root `index.html`.
 
-### If the workflow file cannot be pushed
+Because of that, the root `index.html` and `.nojekyll` are now dead weight: the
+served site comes entirely from `dist/`. The `index.html` is the previous
+landing page and no longer reflects what is published, which makes it a trap for
+the next person reading the repository. It is recoverable from history
+(`git show bff280d:index.html`) if the build type is ever reverted to legacy.
 
-Creating or updating anything under `.github/workflows/` requires the token to
-carry the **Workflows** permission. A fine-grained PAT without it is rejected
-with `refusing to allow a Personal Access Token to create or update workflow`.
-Either grant that permission on the token, or add the file through the GitHub
-web UI (Add file → Create new file → `.github/workflows/deploy.yml`).
+### Pushing changes to `.github/workflows/`
+
+The "Workflows permission" restriction applies to HTTPS pushes authenticated
+with a personal access token. **Pushing over SSH is not subject to it** — the
+deploy workflow was added with a plain `git push` over an SSH remote, with no
+special token permission. If a push is ever rejected with `refusing to allow a
+Personal Access Token to create or update workflow`, point the remote at SSH:
+
+```bash
+git remote set-url origin git@github.com:jinbeiwang/jinbeiwang.github.io.git
+```
 
 ## Notes on the migration
 
