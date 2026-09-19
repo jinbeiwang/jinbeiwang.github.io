@@ -10,6 +10,17 @@
    is imported by the note layout only; the dashboard and the tag pages keep
    the editorial tokens untouched.
 
+   Two hues, two jobs:
+
+     indigo  #1b4f8a   structure — section numerals, links, code-block spines,
+                       the way back, the kicker
+     emerald #0f7b5f   evidence — the tick above a section heading, the
+                       conclusion box, the [doc] / [lit] / [实践] provenance
+                       tags, the contents entry you are reading, table rules
+
+   Everything emerald was added on top of the notes' own palette; nothing was
+   recoloured away from it except the three table rules, which were ink.
+
    Every selector below is prefixed with .note or body > .wrap so it outranks
    the base.css rule it replaces without needing !important. Delete the import
    in Note.astro and the note pages fall back to the editorial layout.
@@ -27,6 +38,10 @@
   --bg-2:#f7f8f9;           /* notes call this --code-bg */
   --accent:#1b4f8a;
   --accent-soft:#eef3f8;
+
+  /* the second hue */
+  --emerald:#0f7b5f;
+  --emerald-soft:#f0f7f4;
 
   --maxw:880px;
   --sbw:272px;              /* contents panel width */
@@ -99,9 +114,16 @@ body > .wrap{max-width:var(--maxw);padding:0}
 
 /* headings inherit the body's line-height, exactly as they did in the notes */
 .note .prose h2{
+  position:relative;
   font-family:var(--sans);font-size:20px;font-weight:700;line-height:inherit;
   letter-spacing:-.01em;color:var(--ink);
   margin:56px 0 6px;padding-top:0;border-top:0;
+}
+/* The emerald tick sits in the white space the heading already had, so the
+   section rhythm is untouched — it is positioned, not laid out. */
+.note .prose h2::before{
+  content:"";position:absolute;top:-20px;left:0;
+  width:18px;height:3px;border-radius:2px;background:var(--emerald);
 }
 .note .prose h2 .n{color:var(--accent);margin-right:10px;font-variant-numeric:tabular-nums}
 .note .prose h3{
@@ -153,6 +175,8 @@ body > .wrap{max-width:var(--maxw);padding:0}
   font-size:12.4px;line-height:1.65;color:#1f2328;white-space:pre;
 }
 
+/* tables: bracketed in the second hue — the same three rules the notes drew
+   in ink, at the same weights, only recoloured */
 .note .prose table{
   width:100%;border-collapse:collapse;margin:18px 0;font-size:13.4px;
   font-variant-numeric:normal;
@@ -165,9 +189,9 @@ body > .wrap{max-width:var(--maxw);padding:0}
   font-family:var(--sans);font-size:12.4px;font-weight:700;letter-spacing:0;
   text-transform:none;color:var(--ink);white-space:normal;background:none;
   vertical-align:bottom;padding:9px 12px 8px;
-  border-top:1.8px solid var(--ink);border-bottom:1px solid var(--ink);
+  border-top:1.8px solid var(--emerald);border-bottom:1px solid var(--emerald);
 }
-.note .prose tbody tr:last-child td{border-bottom:1.8px solid var(--ink)}
+.note .prose tbody tr:last-child td{border-bottom:1.8px solid var(--emerald)}
 .note .prose td code,.note .prose th code{font-size:12px}
 .note .prose .num{font-variant-numeric:tabular-nums;white-space:nowrap}
 
@@ -203,6 +227,9 @@ body > .wrap{max-width:var(--maxw);padding:0}
 .note .prose .box.note .t{color:var(--accent)}
 .note .prose .box.finding{background:#fff;border:1px solid var(--rule);border-left:3px solid var(--cav)}
 .note .prose .box.finding .t{color:var(--cav)}
+/* the conclusion box — the one block that carries the second hue on its spine */
+.note .prose .box.takeaway{background:#fff;border:1px solid var(--rule);border-left:3px solid var(--emerald)}
+.note .prose .box.takeaway .t{color:var(--emerald)}
 .note .prose .box p{margin:9px 0;max-width:none}
 .note .prose .box > *:first-child{margin-top:0}
 .note .prose .box > *:last-child{margin-bottom:0}
@@ -215,6 +242,12 @@ body > .wrap{max-width:var(--maxw);padding:0}
 .note .prose .pill.ok{color:var(--ok);background:var(--ok-bg);border-color:#c4ddcd}
 .note .prose .pill.cav{color:var(--cav);background:var(--cav-bg);border-color:#e8d3a8}
 .note .prose .pill.bad{color:var(--bad);background:var(--bad-bg);border-color:#ecc4c4}
+
+/* provenance tags — a note writes [doc], [lit] or [实践] inside an
+   <em class="ev">, and the tag reads as a tag instead of as emphasis */
+.note .prose em.ev{
+  font-style:normal;font-weight:600;color:var(--emerald);letter-spacing:.01em;
+}
 
 /* hand-highlighted code, as written into the notes */
 .note .prose pre .cm{color:#6f7883}
@@ -266,12 +299,13 @@ body > .wrap > footer{margin-top:48px;padding:20px 0 76px;border-top:1px solid v
   display:block;text-decoration:none;color:var(--ink-2);
   padding:4px 10px;border-left:2px solid transparent;border-radius:0 3px 3px 0;
 }
-.spn-toc-nav a:hover{color:var(--accent);background:#f6f8fa}
+/* inside the panel the second hue means "here" — pointing at it, or reading it */
+.spn-toc-nav a:hover{color:var(--emerald);background:#f4f8f6}
 .spn-toc-nav a.spn-h3{padding-left:24px;font-size:12.2px}
 .spn-toc-nav a.spn-h2{font-weight:600;color:var(--ink)}
 .spn-toc-nav a.active{
-  color:var(--accent);font-weight:600;background:var(--accent-soft);
-  border-left-color:var(--accent);
+  color:var(--emerald);font-weight:600;background:var(--emerald-soft);
+  border-left-color:var(--emerald);
 }
 .spn-toc-foot{
   margin-top:22px;padding:12px 10px 0;
@@ -306,4 +340,6 @@ html body.spn-hidden .spn-toc{transform:translateX(-100%)}
 @media print{
   .spn-toc,.spn-toggle,.spn-scrim{display:none !important}
   html body{padding-left:0 !important}
+  /* a positioned tick does not survive a page break cleanly — drop it */
+  .note .prose h2::before{display:none}
 }

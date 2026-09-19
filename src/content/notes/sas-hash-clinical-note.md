@@ -18,7 +18,7 @@ lang: zh
   <p class="small">这是一份<strong>语言用法参考</strong>，不是某个研究项目的交付物：研究编号与方案号一律写作 <code>NNNN</code>，
   数据集与变量名使用 CDISC 标准名（<code>USUBJID</code>、<code>PARAMCD</code>、<code>ADT</code>、<code>AVAL</code>、
   <code>AESEQ</code>、<code>CMSEQ</code> 等），公司环境、库名与路径均已剥离。凡涉及 SAS 语言行为的断言，均在正文中以
-  <em>[doc]</em>（官方文档）或 <em>[lit]</em>（文献作者陈述）标记出处；凡属工程判断者标 <em>[实践]</em>。
+  <em class="ev">[doc]</em>（官方文档）或 <em class="ev">[lit]</em>（文献作者陈述）标记出处；凡属工程判断者标 <em class="ev">[实践]</em>。
   本文不包含任何受试者级数据，也没有可复核的衍生结果。</p>
 </div>
 
@@ -361,7 +361,7 @@ FORMAT 则完全没有考虑。</p>
 <div class="box note">
   <span class="t">证据等级声明</span>
   <p class="small">本环境<strong>没有 SAS 会话</strong>，下列行为<strong>均未在本文中执行验证</strong>，而是逐条归因于官方文档或公开会议文献：
-  <em>[doc]</em> 为官方文档既定行为，<em>[lit]</em> 为论文作者的陈述，<em>[实践]</em> 为工程判断而非语言规定。
+  <em class="ev">[doc]</em> 为官方文档既定行为，<em class="ev">[lit]</em> 为论文作者的陈述，<em class="ev">[实践]</em> 为工程判断而非语言规定。
   在有 SAS 会话的验证环境中，建议先用三行数据实测确认每条行为在本机 SAS 版本上的实际表现，再据此固化写法。</p>
 </div>
 
@@ -439,7 +439,7 @@ FORMAT 则完全没有考虑。</p>
   临床数据里最常见的两例：<code>USUBJID</code> 在源数据里是数值 <code>101001</code>、在 SDTM 里是字符 <code>'NNNN-101-001'</code>；
   以及没有写出足够的 <code>length</code>，导致长 ID 被截断后再去匹配一个未被截断的键。
   <strong>防御：</strong>用 <code>if 0 then set</code> 在 DATA 步里把键的长度与类型统一固定下来；跨类型匹配时先用
-  <code>put(..., , best.)</code> / <code>input(..., , best.)</code> 显式转换，不要依赖隐式转换。<em>[实践]</em></p>
+  <code>put(..., , best.)</code> / <code>input(..., , best.)</code> 显式转换，不要依赖隐式转换。<em class="ev">[实践]</em></p>
 </div>
 
 <div class="box finding">
@@ -449,7 +449,7 @@ FORMAT 则完全没有考虑。</p>
   <strong>②</strong> 反过来：想按 BY 组分组处理（每位受试者各自的临时子表），却漏了 <code>clear()</code>，
   于是后一位受试者的表里混进了前一位的条目。<strong>防御：</strong>声明一律放进 <code>if _n_ = 1</code>；
   需要按组重建时，在 <code>first.usubjid</code> 处显式 <code>clear()</code>，并在 <code>last.usubjid</code> 之前把结果取出。
-  <em>[实践]</em></p>
+  <em class="ev">[实践]</em></p>
 </div>
 
 <figure>
@@ -502,7 +502,7 @@ FORMAT 则完全没有考虑。</p>
 
 <!-- ============================================================ -->
 <h2><span class="n">7</span>参考来源</h2>
-<p class="lede">正文中的 <em>[doc]</em> 与 <em>[lit]</em> 指向下列条目。</p>
+<p class="lede">正文中的 <em class="ev">[doc]</em> 与 <em class="ev">[lit]</em> 指向下列条目。</p>
 
 <table>
   <thead><tr><th style="width:210px;">来源</th><th>用于支撑本文的哪些断言</th></tr></thead>
@@ -536,7 +536,7 @@ FORMAT 则完全没有考虑。</p>
 
 <footer>
   本 note 为<strong>静态分析</strong>：撰写环境没有 SAS 会话，所有代码示例均<strong>未编译、未执行</strong>，因此不声称任何运行结果或性能数字。
-  涉及 SAS 语言行为的断言均已归因于上述文献并以 <em>[doc]</em> / <em>[lit]</em> 标记；标 <em>[实践]</em> 者为工程判断而非语言规定。
+  涉及 SAS 语言行为的断言均已归因于上述文献并以 <em class="ev">[doc]</em> / <em class="ev">[lit]</em> 标记；标 <em class="ev">[实践]</em> 者为工程判断而非语言规定。
   示例数据全部虚构：研究编号以 <code>NNNN</code> 占位，数据集与变量名取自 CDISC SDTM/ADaM 通用结构，不含任何受试者级信息。<br>
   特别说明：Finding 2 的“未命中保留旧值”出自论文作者对行为的描述，而非对文档原文的引用。在具备 SAS 会话的验证环境中，
   建议用三行数据实测确认该行为在本机 SAS 版本上的实际表现，再据此确定防御写法的具体位置。<br>

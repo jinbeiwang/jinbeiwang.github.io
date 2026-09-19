@@ -42,7 +42,7 @@
   },
   {
     "repo": "sas-pattern-notes",
-    "title": "SAS pattern notes",
+    "title": "Chained Kit Replacement with the SAS Hash Object",
     "summary": "De-identified, reusable write-ups of coding patterns from clinical statistical programming, each one a single self-contained HTML page.",
     "category": "SAS patterns",
     "lang": "en",
