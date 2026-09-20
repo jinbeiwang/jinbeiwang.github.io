@@ -559,6 +559,7 @@ S17|4|101|1003|LOT-C|B03|KIT REPLACEMENT|KIT|.</code></pre>
 <p>Probes are asserted for every row, which is what distinguishes the two ways a walk can end: S07 must show exactly 100 probes and a status of <code>UNRESOLVED</code>, so a change that made the loop stop early would fail the check instead of looking like a fix.</p>
 
 <h3>7.4 How to run it</h3>
+<p>The file: <a href="https://github.com/jinbeiwang/sas-pattern-notes/blob/main/kit_chain_check.sas"><code>kit_chain_check.sas</code></a>, submitted as it stands.</p>
 
 <pre><code>sas kit_chain_check.sas            <span class="cm"># batch: the log carries the report and the exit code</span>
                                    <span class="cm"># interactive: open the file and submit it</span></code></pre>
