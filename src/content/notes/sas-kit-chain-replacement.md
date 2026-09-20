@@ -498,7 +498,7 @@ rc = h.find();                                        <span class="mk">(6)</span
 <p class="lede">One self-contained SAS program, the dummy data behind every scenario, and what a passing run prints.</p>
 
 <h3>7.1 The verifier</h3>
-<p><a href="https://github.com/jinbeiwang/sas-pattern-notes/blob/main/kit_chain_check.sas"><code>kit_chain_check.sas</code></a> sits beside the note, in the repository that also carries its single-file HTML edition. It is Base SAS only — no study macros, no formats, no external libraries, no input files: every row it reads is a <code>datalines</code> line or the output of a loop inside the program itself. It runs the four chain steps over one scenario at a time and asserts what came out. Five parts, in the order they appear:</p>
+<p><a href="https://github.com/jinbeiwang/sas-pattern-notes/blob/main/kit_chain_check.sas"><code>kit_chain_check.sas</code></a> lives in its own repository, which also carries the fidelity check and the emulation named below. It is Base SAS only — no study macros, no formats, no external libraries, no input files: every row it reads is a <code>datalines</code> line or the output of a loop inside the program itself. It runs the four chain steps over one scenario at a time and asserts what came out. Five parts, in the order they appear:</p>
 <ul>
   <li><strong>Fixture</strong> — one pipe-separated line per row of the IRT extract, for the twelve visit-level rows of §5.2. A <code>.</code> in the last field is a terminal kit.</li>
   <li><strong>Expected results</strong> — one line per visit-level row: the kit, lot, batch, status and probe count it must resolve to. These are the numbers printed in §5.2, and the fidelity check compares the two.</li>
