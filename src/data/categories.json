@@ -4,5 +4,6 @@
   { "name": "SAS patterns", "hint": "De-identified, reusable code shapes" },
   { "name": "Languages and practice", "hint": "A multi-language path out of SAS" },
   { "name": "Indexes and tools", "hint": "For everyday reference" },
-  { "name": "Learning log", "hint": "Built in the open" }
+  { "name": "Learning log", "hint": "Built in the open" },
+  { "name": "Life and travel", "hint": "Plans and references outside work" }
 ]
