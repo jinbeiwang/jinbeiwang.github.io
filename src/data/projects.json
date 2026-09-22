@@ -14,17 +14,32 @@
     "source": "https://github.com/jinbeiwang/mmrm-guide"
   },
   {
-    "repo": "lmm-notes",
-    "title": "Linear mixed models: notes for clinical practice",
-    "summary": "Built on West et al., Linear Mixed Models, and read alongside ICH E9(R1), the FDA and EMA guidance on missing data, public statistical analysis plans, and PharmaSUG and PHUSE practice papers.",
+    "repo": "sas-pattern-notes",
+    "title": "Linear mixed models: the full-book reading note",
+    "summary": "West, Welch and Galecki, chapter by chapter, read for a clinical statistical programmer: what each concept corresponds to in a trial, the SAS that fits it, and where it bites. Six case studies mapped onto multicentre trials, repeated visits, crossed raters and design effect.",
     "category": "Statistical methods",
     "lang": "zh",
     "tags": [
       "linear mixed models",
+      "MMRM",
       "missing data"
     ],
-    "url": "https://jinbeiwang.github.io/lmm-notes/",
-    "source": "https://github.com/jinbeiwang/lmm-notes"
+    "url": "https://jinbeiwang.github.io/sas-pattern-notes/lmm-book-note.html",
+    "source": "https://github.com/jinbeiwang/sas-pattern-notes/blob/main/lmm-book-note.html"
+  },
+  {
+    "repo": "sas-pattern-notes",
+    "title": "MMRM for a longitudinal continuous endpoint",
+    "summary": "The production pattern behind a Phase III primary endpoint: PROC MIXED with no RANDOM statement, TYPE=UN and DDFM=KR, the baseline record leaving the response vector, what each covariance structure costs, and the prespecification in the SAP the model cannot supply for itself. Ships a runnable Base SAS check.",
+    "category": "SAS patterns",
+    "lang": "zh",
+    "tags": [
+      "MMRM",
+      "SAS",
+      "clinical programming"
+    ],
+    "url": "https://jinbeiwang.github.io/sas-pattern-notes/mmrm-clinical-note.html",
+    "source": "https://github.com/jinbeiwang/sas-pattern-notes/blob/main/mmrm-clinical-note.html"
   },
   {
     "repo": "cif-vs-km-ci",
@@ -42,8 +57,8 @@
   },
   {
     "repo": "sas-pattern-notes",
-    "title": "Chained Kit Replacement with the SAS Hash Object",
-    "summary": "How to resolve a replacement chain of unknown depth in a single pass of a DATA step, why an in-memory hash is the only structure that fits this shape of problem, and what the pattern does when the input is not clean.",
+    "title": "SAS patterns: reusable notes and runnable checks",
+    "summary": "De-identified write-ups of coding patterns from clinical statistical programming, each a self-contained HTML file with no dependencies. Includes the SAS hash object note, in Chinese.",
     "category": "SAS patterns",
     "lang": "en",
     "tags": [
