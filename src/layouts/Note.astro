@@ -67,8 +67,9 @@ const day = fmtDate(date);
             ))}
           </span>
         )}
+        <button class="spn-print" type="button" title="Save this note as a PDF">Save as PDF</button>
         {sourceUrl && (
-          <span style="margin-left:auto">
+          <span class="spn-source">
             <a href={sourceUrl} style="color:var(--accent);text-decoration:none">source</a>
           </span>
         )}
@@ -99,6 +100,8 @@ const day = fmtDate(date);
       var toc = document.querySelector('.spn-toc');
       var nav = document.querySelector('.spn-toc-nav');
       var scrim = document.querySelector('.spn-scrim');
+      var printBtn = document.querySelector('.spn-print');
+      if (printBtn) printBtn.addEventListener('click', function () { window.print(); });
       if (!toggle || !toc || !nav) return;
 
       /* ---------- collect headings ---------- */
