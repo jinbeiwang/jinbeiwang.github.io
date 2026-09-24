@@ -2,29 +2,12 @@
 import '../../styles/base.css';
 import { getCollection } from 'astro:content';
 import site from '../../data/site.json';
+import projects from '../../data/projects.json';
 import Entry from '../../components/Entry.astro';
 import { fmtDate, noteHref, notePath, tagSlug } from '../../lib/notes';
 
 export async function getStaticPaths() {
-  const notes = await getCollection('notes', ({ data }) => !data.draft);
-  const byTag = new Map<string, { label: string; list: typeof notes }>();
-  for (const e of notes) {
-    for (const t of e.data.tags) {
-      const slug = tagSlug(t);
-      if (!slug) continue;
-      if (!byTag.has(slug)) byTag.set(slug, { label: t, list: [] });
-      byTag.get(slug)!.list.push(e);
-    }
-  }
-  return [...byTag.entries()].map(([tag, v]) => ({
-    params: { tag },
-    props: { label: v.label, list: v.list },
-  }));
-}
-
-const { label, list } = Astro.props;
-const notes = list
-  .map((e: any) => ({
+  const notes = (await getCollection('notes', ({ data }) => !data.draft)).map((e) => ({
     href: noteHref(e.id),
     path: notePath(e.id),
     title: e.data.title,
@@ -34,8 +17,50 @@ const notes = list
     tags: e.data.tags,
     lang: e.data.lang,
     source: `${site.sourceRepo}/blob/main/src/content/notes/${e.id}.md`,
-  }))
-  .sort((a: any, b: any) => b.date.localeCompare(a.date));
+    kind: 'note' as const,
+  }));
+
+  // External projects carry tags too, and the dashboard's chip bar already counts
+  // them ("tag chips cover notes and external projects alike", index.astro). These
+  // pages used to be built from the note collection alone, so every tag link on a
+  // project row pointed at a URL that was never generated — /tags/ai-agents.html
+  // among them.
+  const siblings = projects.map((p) => ({
+    href: p.url,
+    path: `/${p.repo}/`,
+    title: p.title,
+    summary: p.summary,
+    date: '',
+    category: p.category,
+    tags: p.tags,
+    lang: p.lang,
+    source: p.source,
+    note: p.category,
+    kind: 'project' as const,
+  }));
+
+  const byTag = new Map<string, { label: string; list: any[] }>();
+  for (const item of [...notes, ...siblings]) {
+    for (const t of item.tags || []) {
+      const slug = tagSlug(t);
+      if (!slug) continue;
+      if (!byTag.has(slug)) byTag.set(slug, { label: t, list: [] });
+      byTag.get(slug)!.list.push(item);
+    }
+  }
+  return [...byTag.entries()].map(([tag, v]) => ({
+    params: { tag },
+    props: { label: v.label, list: v.list },
+  }));
+}
+
+const { label, list } = Astro.props;
+// Notes are newest-first; project rows carry no date of their own and follow them.
+const items = [...list].sort((a: any, b: any) =>
+  String(b.date || '').localeCompare(String(a.date || ''))
+);
+const noteCount = items.filter((i: any) => i.kind === 'note').length;
+const projectCount = items.length - noteCount;
 ---
 
 <!DOCTYPE html>
@@ -45,14 +70,14 @@ const notes = list
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <link rel="icon" href="/favicon.svg" type="image/svg+xml" />
   <title>{label} — {site.title}</title>
-  <meta name="description" content={`Notes tagged ${label}.`} />
+  <meta name="description" content={`Notes and projects tagged ${label}.`} />
 </head>
 <body>
   <div class="wrap">
     <header>
       <div class="kicker">Tag</div>
       <h1>{label}</h1>
-      <p class="deck">{notes.length} {notes.length === 1 ? 'note' : 'notes'} in this repository carry this tag.</p>
+      <p class="deck">Tagged in {noteCount} {noteCount === 1 ? 'note' : 'notes'} and {projectCount} external {projectCount === 1 ? 'project' : 'projects'}.</p>
       <hr class="rule" />
     </header>
 
@@ -60,11 +85,11 @@ const notes = list
       <section>
         <div class="sec-head">
           <h2>{label}</h2>
-          <span class="count">{notes.length}</span>
-          <span class="hint">Newest first</span>
+          <span class="count">{items.length}</span>
+          <span class="hint">Notes first, then external projects</span>
         </div>
         <div class="body">
-          {notes.map((n: any) => <Entry {...n} />)}
+          {items.map((n: any) => <Entry {...n} />)}
         </div>
       </section>
     </main>

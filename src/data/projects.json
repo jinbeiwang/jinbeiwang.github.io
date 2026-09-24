@@ -42,6 +42,19 @@
     "source": "https://github.com/jinbeiwang/sas-pattern-notes/blob/main/mmrm-clinical-note.html"
   },
   {
+    "repo": "sas-pattern-notes",
+    "title": "Agent system prompt design: seven dimensions, eighteen shipped prompts",
+    "summary": "How eighteen shipped system prompts are actually written, measured across the seven dimensions they all answer — and the argument the note turns on: every 'never' should be answerable with which layer actually stops the model when it disobeys. Written in Chinese, with twenty-three quoted excerpts, each checked verbatim against the archive it came from.",
+    "category": "Learning log",
+    "lang": "zh",
+    "tags": [
+      "AI agents",
+      "LLM"
+    ],
+    "url": "https://jinbeiwang.github.io/sas-pattern-notes/agent-system-prompt-note.html",
+    "source": "https://github.com/jinbeiwang/sas-pattern-notes/blob/main/agent-system-prompt-note.html"
+  },
+  {
     "repo": "cif-vs-km-ci",
     "title": "Confidence intervals under competing risks",
     "summary": "Cumulative incidence against Kaplan-Meier: transformation-based and inverted confidence intervals, the PROC LIFETEST option family taken apart, and runnable SAS.",
