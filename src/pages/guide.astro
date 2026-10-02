@@ -1,0 +1,242 @@
+---
+/**
+ * /guide.html — the series landing page.
+ *
+ * (`build.format: 'file'` is set site-wide, so this page is emitted as
+ * /guide.html rather than /guide/index.html. Every link to it on the site
+ * points at /guide/index.html, which GitHub Pages resolves to /guide.html by
+ * rewriting extensionless directory requests — the same thing that already
+ * makes /notes/site-workflow.html work. Keeping the canonical link spelled
+ * with /index.html leaves room to switch the format later without breaking a
+ * single published URL.)
+ *
+ * It renders the single guide entry with `kind: index`, which is where the
+ * outline, the dependency table and the progress list are authored. Chapter
+ * stubs (kind: chapter, ready: false) never reach this page's content slot;
+ * they are listed from index.md's own `steps` field, and they exist as pages
+ * only so that next/previous links have somewhere honest to point.
+ */
+import '../styles/base.css';
+import '../styles/note.css';
+import '../styles/guide.css';
+import { getCollection, render } from 'astro:content';
+import site from '../data/site.json';
+import { fmtDate, tagSlug } from '../lib/notes';
+
+const entries = await getCollection('guide', ({ data }) => !data.draft);
+const index = entries.find((e) => e.data.kind === 'index');
+if (!index) throw new Error('the guide collection has no index.md entry');
+
+const { Content } = await render(index);
+const { title, summary, date, tags, lang, steps } = index.data;
+
+const htmlLang = lang === 'en' ? 'en' : 'zh-CN';
+const day = fmtDate(date);
+---
+
+<!DOCTYPE html>
+<html lang={htmlLang}>
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <link rel="icon" href="/favicon.svg" type="image/svg+xml" />
+  <title>{title} — {site.title}</title>
+  {summary && <meta name="description" content={summary} />}
+</head>
+<body>
+  <button class="spn-toggle" type="button" aria-controls="spnToc"
+          aria-expanded="true" title="Show or hide the contents (Esc)">
+    <span class="bars" aria-hidden="true">&#9776;</span><span class="lbl">Contents</span>
+  </button>
+  <aside class="spn-toc" id="spnToc" aria-label="Contents">
+    <div class="spn-toc-title">Contents</div>
+    <nav class="spn-toc-nav"></nav>
+    <div class="spn-toc-foot">目录由正文标题在打开时生成，无需手工维护。</div>
+  </aside>
+  <div class="spn-scrim" aria-hidden="true"></div>
+
+  <div class="wrap">
+    <article class="note">
+      <a class="back" href="/">&#8592; {site.kicker}</a>
+
+      <header>
+        <div class="gseries">计算机科学核心<span class="sep">/</span>系列说明</div>
+        <div class="kicker">Guide</div>
+        <h1>{title}</h1>
+        {summary && <p class="deck">{summary}</p>}
+      </header>
+
+      <div class="note-byline">
+        <span>{day}</span>
+        <span class="tagset">
+          {tags.map((t, i) => (
+            <>{i > 0 && ' · '}<a href={`/tags/${tagSlug(t)}.html`}>{t}</a></>
+          ))}
+        </span>
+        <button class="spn-print" type="button" title="Save this note as a PDF">Save as PDF</button>
+      </div>
+
+      <div class="prose">
+        <Content />
+
+        <h2><span class="n">3</span>系列的进度</h2>
+        <p class="lede">这套笔记一章一章写、一章一章上线。下面这张表就是它的真实状态，不夸大也不占位。</p>
+
+        <div class="gsteps">
+          {steps.map((g) => (
+            <>
+              <div class="gpart">{g.part}</div>
+              {g.items.map((it, i) => (
+                <div class="grow">
+                  <span class="gnum">{it.state === 'current' || it.state === 'next' ? String(i + 1).padStart(2, '0') : ''}</span>
+                  {it.href ? (
+                    <a class="gt" href={it.href}>{it.title}</a>
+                  ) : (
+                    <span class="gt">{it.title}</span>
+                  )}
+                  {it.note && <span class="gnote">{it.note}</span>}
+                  {it.state === 'done' && <span class="gstate done">已写完</span>}
+                  {it.state === 'next' && <span class="gstate next">建议从这里读</span>}
+                  {it.state === 'current' && <span class="gstate current">你在这里</span>}
+                  {it.state === 'planned' && <span class="gstate planned">待写</span>}
+                </div>
+              ))}
+            </>
+          ))}
+        </div>
+
+        <div class="box note" style="margin-top:26px;">
+          <span class="t">读法与反馈</span>
+          <p>建议从<b>第一章</b>开始，它是唯一一章「不读后面会处处受阻」的。每一章末尾都有上一章 / 下一章的直接跳转，
+          左侧目录抽屉会把当前所在的小节标出来。</p>
+          <p>如果某一章读下来觉得 <code>前置</code> 标错了 —— 也就是你在某个地方卡住，但那一章并没有要求你先会这个 ——
+          那说明依赖图画错了，那是这套笔记最需要修的地方。</p>
+        </div>
+
+        <footer>
+          <p><strong>关于取材</strong> 系列骨架参考了 <a href="https://csdiy.wiki/">csdiy.wiki</a> 的 CS 自学规划，并按其依赖关系重排；每章末列出的教材与课程都注明推荐理由、适用阶段与难度。</p>
+          <p><strong>截至</strong> 2026-10。</p>
+        </footer>
+      </div>
+    </article>
+
+    <footer>
+      <a href="/">{site.kicker}</a>
+      <span class="sp">{site.author} · {site.location}</span>
+    </footer>
+  </div>
+
+  <script>
+    /* Contents panel: same behaviour as every other long-form page. */
+    (function () {
+      var HIDDEN = 'spn-hidden';
+      var KEY = 'spn.toc.hidden';
+      var NARROW = 1080;
+
+      var body = document.body;
+      var toggle = document.querySelector('.spn-toggle');
+      var toc = document.querySelector('.spn-toc');
+      var nav = document.querySelector('.spn-toc-nav');
+      var scrim = document.querySelector('.spn-scrim');
+      var printBtn = document.querySelector('.spn-print');
+      if (printBtn) printBtn.addEventListener('click', function () { window.print(); });
+      if (!toggle || !toc || !nav) return;
+
+      var heads = [].slice.call(document.querySelectorAll('.note .prose h2, .note .prose h3'))
+        .filter(function (h) { return !h.classList.contains('spn-skip'); });
+
+      if (!heads.length) {
+        toc.style.display = 'none';
+        toggle.style.display = 'none';
+        if (scrim) scrim.style.display = 'none';
+        return;
+      }
+
+      var used = {};
+      function slug(text) {
+        var base = text.toLowerCase()
+          .replace(/[^a-z0-9\s-]/g, '')
+          .trim().replace(/\s+/g, '-').replace(/-+/g, '-');
+        if (!base) base = 'section';
+        var n = used[base] = (used[base] || 0) + 1;
+        return n > 1 ? base + '-' + n : base;
+      }
+      function label(h) {
+        var text = h.textContent.replace(/\s+/g, ' ').trim();
+        var num = h.querySelector('.n');
+        if (num) {
+          var t = num.textContent.trim();
+          if (t && text.indexOf(t) === 0) text = t + ' ' + text.slice(t.length).trim();
+        }
+        return text;
+      }
+
+      var links = heads.map(function (h) {
+        if (!h.id) h.id = slug(label(h));
+        var a = document.createElement('a');
+        a.href = '#' + h.id;
+        a.textContent = label(h);
+        a.className = h.tagName === 'H3' ? 'spn-h3' : 'spn-h2';
+        nav.appendChild(a);
+        return a;
+      });
+
+      var lbl = toggle.querySelector('.lbl');
+      function paint() {
+        var hidden = body.classList.contains(HIDDEN);
+        if (lbl) lbl.textContent = hidden ? 'Contents' : 'Hide contents';
+        toggle.setAttribute('aria-expanded', String(!hidden));
+        if (scrim) scrim.setAttribute('aria-hidden', String(hidden));
+      }
+      function setHidden(v, remember) {
+        body.classList.toggle(HIDDEN, !!v);
+        paint();
+        if (remember) { try { localStorage.setItem(KEY, v ? '1' : '0'); } catch (e) {} }
+      }
+      toggle.addEventListener('click', function () {
+        setHidden(!body.classList.contains(HIDDEN), true);
+      });
+      if (scrim) scrim.addEventListener('click', function () { setHidden(true, true); });
+      document.addEventListener('keydown', function (e) {
+        if (e.key === 'Escape' && !body.classList.contains(HIDDEN) && window.innerWidth <= NARROW) {
+          setHidden(true, true);
+        }
+      });
+      nav.addEventListener('click', function (e) {
+        if (e.target.closest && e.target.closest('a') && window.innerWidth <= NARROW) setHidden(true, true);
+      });
+
+      var saved = null;
+      try { saved = localStorage.getItem(KEY); } catch (e) {}
+      setHidden(saved === null ? window.innerWidth <= NARROW : saved === '1', false);
+
+      var ticking = false;
+      function sync() {
+        ticking = false;
+        var y = window.pageYOffset || document.documentElement.scrollTop;
+        var current = 0, i;
+        for (i = 0; i < heads.length; i++) {
+          if (heads[i].getBoundingClientRect().top <= 96) { current = i; } else { break; }
+        }
+        if (window.innerHeight + y >= document.documentElement.scrollHeight - 4) {
+          current = heads.length - 1;
+        }
+        for (i = 0; i < links.length; i++) links[i].classList.toggle('active', i === current);
+
+        if (!body.classList.contains(HIDDEN)) {
+          var el = links[current];
+          var top = el.offsetTop, view = toc.clientHeight;
+          if (top < toc.scrollTop + 24) toc.scrollTop = Math.max(0, top - 24);
+          else if (top + el.offsetHeight > toc.scrollTop + view - 40) toc.scrollTop = top - view + 80;
+        }
+      }
+      function onScroll() {
+        if (!ticking) { ticking = true; window.requestAnimationFrame(sync); }
+      }
+      window.addEventListener('scroll', onScroll, { passive: true });
+      window.addEventListener('resize', onScroll);
+      sync();
+    })();
+  </script>
+</body>
+</html>

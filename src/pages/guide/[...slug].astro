@@ -1,0 +1,49 @@
+---
+/**
+ * /guide/<id>.html — one chapter of the series.
+ *
+ * Every entry with `kind: chapter` gets a URL, including the ones that have
+ * not been written yet. That is deliberate: a "next chapter" link that 404s
+ * would be a lie, and a link to a page that says plainly what the chapter will
+ * cover and what it depends on is useful in itself.
+ */
+import Guide from '../../layouts/Guide.astro';
+import { getCollection, render } from 'astro:content';
+import site from '../../data/site.json';
+
+export async function getStaticPaths() {
+  const entries = await getCollection('guide', ({ data }) => data.kind === 'chapter' && !data.draft);
+  const ordered = entries
+    .slice()
+    .sort((a, b) => a.data.order - b.data.order)
+    .map((e) => ({ id: e.id, title: e.data.title, order: e.data.order }));
+
+  return entries.map((e) => ({
+    params: { slug: e.id },
+    props: { entry: e, chapters: ordered },
+  }));
+}
+
+const { entry, chapters } = Astro.props;
+const { Content } = await render(entry);
+const d = entry.data;
+const cn = ['零', '一', '二', '三', '四', '五', '六', '七', '八', '九', '十'];
+const label = `第${cn[d.order] ?? d.order}章`;
+---
+
+<Guide
+  title={d.title}
+  summary={d.summary}
+  date={d.date}
+  label={label}
+  part={d.part}
+  prereq={d.prereq}
+  reading={d.reading}
+  tags={d.tags}
+  lang={d.lang}
+  placeholder={!d.ready}
+  sourceUrl={`${site.sourceRepo}/blob/main/src/content/guide/${entry.id}.md`}
+  chapters={chapters}
+>
+  <Content />
+</Guide>

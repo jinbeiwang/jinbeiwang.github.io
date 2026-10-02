@@ -39,8 +39,48 @@ export async function getStaticPaths() {
     kind: 'project' as const,
   }));
 
+  // The guide series is indexed under the same tags, so the tag pages it shares
+  // with the note collection stay complete. One row per chapter that exists.
+  const guideEntries = await getCollection('guide', ({ data }) => !data.draft);
+  const guideIndex = guideEntries.find((e) => e.data.kind === 'index');
+  const guideChapterEntries = guideEntries
+    .filter((e) => e.data.kind === 'chapter')
+    .sort((a, b) => a.data.order - b.data.order);
+  const guideSiblings = [
+    ...(guideIndex
+      ? [
+          {
+            href: '/guide/index.html',
+            path: '/guide/',
+            title: guideIndex.data.title,
+            summary: guideIndex.data.summary,
+            date: '',
+            category: 'Guide',
+            tags: guideIndex.data.tags,
+            lang: guideIndex.data.lang,
+            source: `${site.sourceRepo}/blob/main/src/content/guide/${guideIndex.id}.md`,
+            note: 'Guide',
+            kind: 'project' as const,
+          },
+        ]
+      : []),
+    ...guideChapterEntries.map((e) => ({
+      href: `/guide/${e.id}.html`,
+      path: `/guide/${e.id}.html`,
+      title: e.data.title,
+      summary: e.data.summary,
+      date: '',
+      category: 'Guide',
+      tags: e.data.tags,
+      lang: e.data.lang,
+      source: `${site.sourceRepo}/blob/main/src/content/guide/${e.id}.md`,
+      note: 'Guide',
+      kind: 'project' as const,
+    })),
+  ];
+
   const byTag = new Map<string, { label: string; list: any[] }>();
-  for (const item of [...notes, ...siblings]) {
+  for (const item of [...notes, ...siblings, ...guideSiblings]) {
     for (const t of item.tags || []) {
       const slug = tagSlug(t);
       if (!slug) continue;
@@ -60,8 +100,9 @@ const items = [...list].sort((a: any, b: any) =>
   String(b.date || '').localeCompare(String(a.date || ''))
 );
 const noteCount = items.filter((i: any) => i.kind === 'note').length;
-const projectCount = items.length - noteCount;
+const otherCount = items.length - noteCount;
 ---
+
 
 <!DOCTYPE html>
 <html lang="zh-CN">
@@ -77,7 +118,7 @@ const projectCount = items.length - noteCount;
     <header>
       <div class="kicker">Tag</div>
       <h1>{label}</h1>
-      <p class="deck">Tagged in {noteCount} {noteCount === 1 ? 'note' : 'notes'} and {projectCount} external {projectCount === 1 ? 'project' : 'projects'}.</p>
+      <p class="deck">Tagged in {noteCount} {noteCount === 1 ? 'note' : 'notes'} and {otherCount} other {otherCount === 1 ? 'page' : 'pages'}.</p>
       <hr class="rule" />
     </header>
 
@@ -86,7 +127,7 @@ const projectCount = items.length - noteCount;
         <div class="sec-head">
           <h2>{label}</h2>
           <span class="count">{items.length}</span>
-          <span class="hint">Notes first, then external projects</span>
+          <span class="hint">Notes first, then other pages</span>
         </div>
         <div class="body">
           {items.map((n: any) => <Entry {...n} />)}

@@ -1,0 +1,279 @@
+---
+/**
+ * A chapter of the guide series.
+ *
+ * It is Note.astro with two additions, and it keeps Note.astro's contract
+ * exactly — the same structure, the same contents drawer, the same script —
+ * because a chapter should read like every other long-form page on the site.
+ * What it adds:
+ *
+ *   · a series line under the kicker, so you always know which chapter of how
+ *     many you are reading;
+ *   · previous / next navigation, which a standalone note has no use for.
+ *
+ * The two extra bits of state (the ordered chapter list and the neighbours)
+ * are computed here, at build time, from the guide collection. A chapter that
+ * has not been written yet still gets a name and a position — it is a real
+ * page, marked as unwritten — so the "next" link can honestly point forward
+ * without pretending the text exists.
+ */
+import '../styles/base.css';
+import '../styles/note.css';
+import '../styles/guide.css';
+import { getCollection } from 'astro:content';
+import site from '../data/site.json';
+import { fmtDate, tagSlug } from '../lib/notes';
+
+interface Props {
+  title: string;
+  summary?: string;
+  date: Date;
+  /** where this chapter sits in the run, e.g. "第一章" */
+  label: string;
+  part: string;
+  prereq?: string;
+  reading?: string;
+  tags: string[];
+  lang: string;
+  sourceUrl?: string;
+  /** true when this page is a placeholder for an unwritten chapter */
+  placeholder?: boolean;
+  /** ordered list of every chapter, including this one */
+  chapters: { id: string; title: string; order: number }[];
+}
+
+const {
+  title, summary, date, label, part, prereq, reading,
+  tags, lang, sourceUrl, placeholder = false, chapters,
+} = Astro.props;
+
+const htmlLang = lang === 'en' ? 'en' : 'zh-CN';
+const day = fmtDate(date);
+
+const idx = chapters.findIndex((c) => c.title === title);
+const prev = idx > 0 ? chapters[idx - 1] : null;
+const next = idx >= 0 && idx < chapters.length - 1 ? chapters[idx + 1] : null;
+const pad = (n: number) => String(n).padStart(2, '0');
+---
+
+<!DOCTYPE html>
+<html lang={htmlLang}>
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <link rel="icon" href="/favicon.svg" type="image/svg+xml" />
+  <title>{title} — {site.title}</title>
+  {summary && <meta name="description" content={summary} />}
+</head>
+<body>
+  <button class="spn-toggle" type="button" aria-controls="spnToc"
+          aria-expanded="true" title="Show or hide the contents (Esc)">
+    <span class="bars" aria-hidden="true">&#9776;</span><span class="lbl">Contents</span>
+  </button>
+  <aside class="spn-toc" id="spnToc" aria-label="Contents">
+    <div class="spn-toc-title">Contents</div>
+    <nav class="spn-toc-nav"></nav>
+    <div class="spn-toc-foot">目录由正文标题在打开时生成，无需手工维护。</div>
+  </aside>
+  <div class="spn-scrim" aria-hidden="true"></div>
+
+  <div class="wrap">
+    <article class="note">
+      <a class="back" href="/">&#8592; {site.kicker}</a>
+
+      <header>
+        <div class="gseries">
+          <a href="/guide/index.html">计算机科学核心</a><span class="sep">/</span>{part}<span class="sep">/</span>{label}
+        </div>
+        <div class="kicker">{placeholder ? 'Planned chapter' : 'Guide chapter'}</div>
+        <h1>{title}</h1>
+        {summary && <p class="deck">{summary}</p>}
+      </header>
+
+      <div class="note-byline">
+        <span>{day}</span>
+        {tags.length > 0 && (
+          <span class="tagset">
+            {tags.map((t, i) => (
+              <>{i > 0 && ' · '}<a href={`/tags/${tagSlug(t)}.html`}>{t}</a></>
+            ))}
+          </span>
+        )}
+        <button class="spn-print" type="button" title="Save this note as a PDF">Save as PDF</button>
+        {sourceUrl && (
+          <span class="spn-source">
+            <a href={sourceUrl} style="color:var(--accent);text-decoration:none">source</a>
+          </span>
+        )}
+      </div>
+
+      {(prereq || reading) && (
+        <div class="gstrip">
+          {prereq && <span><b>前置</b> &nbsp;{prereq}</span>}
+          {reading && <span><b>篇幅</b> &nbsp;{reading}</span>}
+          {placeholder && <span class="lock">本章尚未动笔，下面是这一章的位置与依赖。</span>}
+        </div>
+      )}
+
+      <div class="prose">
+        <slot />
+
+        {(prev || next) && (
+          <div class="pager">
+            {prev ? (
+              <a href={`/guide/${prev.id}.html`}>
+                <span class="dir">&#8592; 上一章</span>
+                <span class="ttl">{prev.title}</span>
+                <span class="sub">第 {pad(prev.order)} 章</span>
+              </a>
+            ) : (
+              <a class="disabled" href="/guide/index.html">
+                <span class="dir">&#8592; 上一章</span>
+                <span class="ttl">这是第一章</span>
+                <span class="sub">回到系列说明</span>
+              </a>
+            )}
+            {next ? (
+              <a class="next" href={`/guide/${next.id}.html`}>
+                <span class="dir">下一章 &#8594;</span>
+                <span class="ttl">{next.title}</span>
+                <span class="sub">第 {pad(next.order)} 章</span>
+              </a>
+            ) : (
+              <a class="next disabled" href="/guide/index.html">
+                <span class="dir">下一章 &#8594;</span>
+                <span class="ttl">这是最后一章</span>
+                <span class="sub">回到系列说明</span>
+              </a>
+            )}
+          </div>
+        )}
+      </div>
+    </article>
+
+    <footer>
+      <a href="/">&#8592; {site.kicker}</a>
+      <span class="sp">{site.author} · {site.location}</span>
+    </footer>
+  </div>
+
+  <script>
+    /* Contents panel: builds the list from the page's own headings, highlights
+       the one being read, and remembers whether the panel is open. No
+       dependency, no hand-maintained list — a new chapter gets it for free. */
+    (function () {
+      var HIDDEN = 'spn-hidden';
+      var KEY = 'spn.toc.hidden';
+      var NARROW = 1080;
+
+      var body = document.body;
+      var toggle = document.querySelector('.spn-toggle');
+      var toc = document.querySelector('.spn-toc');
+      var nav = document.querySelector('.spn-toc-nav');
+      var scrim = document.querySelector('.spn-scrim');
+      var printBtn = document.querySelector('.spn-print');
+      if (printBtn) printBtn.addEventListener('click', function () { window.print(); });
+      if (!toggle || !toc || !nav) return;
+
+      /* ---------- collect headings ---------- */
+      var heads = [].slice.call(document.querySelectorAll('.note .prose h2, .note .prose h3'))
+        .filter(function (h) { return !h.classList.contains('spn-skip'); });
+
+      if (!heads.length) {                 /* nothing to navigate: get out of the way */
+        toc.style.display = 'none';
+        toggle.style.display = 'none';
+        if (scrim) scrim.style.display = 'none';
+        return;
+      }
+
+      var used = {};
+      function slug(text) {
+        var base = text.toLowerCase()
+          .replace(/[^a-z0-9\s-]/g, '')
+          .trim().replace(/\s+/g, '-').replace(/-+/g, '-');
+        if (!base) base = 'section';
+        var n = used[base] = (used[base] || 0) + 1;
+        return n > 1 ? base + '-' + n : base;
+      }
+      function label(h) {
+        var text = h.textContent.replace(/\s+/g, ' ').trim();
+        var num = h.querySelector('.n');                 /* the "1" / "2" run-in numeral */
+        if (num) {
+          var t = num.textContent.trim();
+          if (t && text.indexOf(t) === 0) text = t + ' ' + text.slice(t.length).trim();
+        }
+        return text;
+      }
+
+      var links = heads.map(function (h) {
+        if (!h.id) h.id = slug(label(h));
+        var a = document.createElement('a');
+        a.href = '#' + h.id;
+        a.textContent = label(h);
+        a.className = h.tagName === 'H3' ? 'spn-h3' : 'spn-h2';
+        nav.appendChild(a);
+        return a;
+      });
+
+      /* ---------- show / hide ---------- */
+      var lbl = toggle.querySelector('.lbl');
+      function paint() {
+        var hidden = body.classList.contains(HIDDEN);
+        if (lbl) lbl.textContent = hidden ? 'Contents' : 'Hide contents';
+        toggle.setAttribute('aria-expanded', String(!hidden));
+        if (scrim) scrim.setAttribute('aria-hidden', String(hidden));
+      }
+      function setHidden(v, remember) {
+        body.classList.toggle(HIDDEN, !!v);
+        paint();
+        if (remember) { try { localStorage.setItem(KEY, v ? '1' : '0'); } catch (e) {} }
+      }
+      toggle.addEventListener('click', function () {
+        setHidden(!body.classList.contains(HIDDEN), true);
+      });
+      if (scrim) scrim.addEventListener('click', function () { setHidden(true, true); });
+      document.addEventListener('keydown', function (e) {
+        if (e.key === 'Escape' && !body.classList.contains(HIDDEN) && window.innerWidth <= NARROW) {
+          setHidden(true, true);
+        }
+      });
+      nav.addEventListener('click', function (e) {
+        if (e.target.closest && e.target.closest('a') && window.innerWidth <= NARROW) setHidden(true, true);
+      });
+
+      /* ---------- restore ---------- */
+      var saved = null;
+      try { saved = localStorage.getItem(KEY); } catch (e) {}
+      setHidden(saved === null ? window.innerWidth <= NARROW : saved === '1', false);
+
+      /* ---------- reading position ---------- */
+      var ticking = false;
+      function sync() {
+        ticking = false;
+        var y = window.pageYOffset || document.documentElement.scrollTop;
+        var current = 0, i;
+        for (i = 0; i < heads.length; i++) {
+          if (heads[i].getBoundingClientRect().top <= 96) { current = i; } else { break; }
+        }
+        if (window.innerHeight + y >= document.documentElement.scrollHeight - 4) {
+          current = heads.length - 1;
+        }
+        for (i = 0; i < links.length; i++) links[i].classList.toggle('active', i === current);
+
+        if (!body.classList.contains(HIDDEN)) {              /* keep it in view inside the panel */
+          var el = links[current];
+          var top = el.offsetTop, view = toc.clientHeight;
+          if (top < toc.scrollTop + 24) toc.scrollTop = Math.max(0, top - 24);
+          else if (top + el.offsetHeight > toc.scrollTop + view - 40) toc.scrollTop = top - view + 80;
+        }
+      }
+      function onScroll() {
+        if (!ticking) { ticking = true; window.requestAnimationFrame(sync); }
+      }
+      window.addEventListener('scroll', onScroll, { passive: true });
+      window.addEventListener('resize', onScroll);
+      sync();
+    })();
+  </script>
+</body>
+</html>

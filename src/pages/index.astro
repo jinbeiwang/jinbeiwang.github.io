@@ -7,6 +7,12 @@ import projects from '../data/projects.json';
 import Entry from '../components/Entry.astro';
 import { fmtDate, noteHref, notePath } from '../lib/notes';
 
+// The guide series is surfaced as a single entry (see the Guide section in the
+// markup below), so the dashboard only needs its size and its progress.
+const guideEntries = await getCollection('guide', ({ data }) => !data.draft);
+const guideChapters = guideEntries.filter((e) => e.data.kind === 'chapter');
+const guideReady = guideChapters.filter((e) => e.data.ready).length;
+
 const notes = (await getCollection('notes', ({ data }) => !data.draft))
   .map((e) => ({
     href: noteHref(e.id),
@@ -39,7 +45,7 @@ const allTags = [...tagCount.entries()].sort(
   (a, b) => b[1] - a[1] || String(a[0]).localeCompare(String(b[0]))
 );
 
-const total = notes.length + projects.length;
+const total = notes.length + projects.length + 1; // +1 is the guide card
 ---
 
 <!DOCTYPE html>
@@ -109,6 +115,40 @@ const total = notes.length + projects.length;
           <span class="hint">Newest first</span>
         </div>
         <div class="body flat-list"></div>
+      </section>
+
+      <!-- The guide is a series, not a note: it is read in order and is being
+           written chapter by chapter, so it gets one link rather than thirteen
+           rows in the note list. -->
+      <section id="guide">
+        <div class="sec-head">
+          <h2>Guide</h2>
+          <span class="count">{guideChapters.length + 1}</span>
+          <span class="hint">Read in order</span>
+        </div>
+        <div class="body">
+          <article class="entry" data-cat="Guide" data-tags="计算机科学|自学路线|教材式笔记|python" data-title="计算机科学核心 一条走得通的自学主线">
+            <div class="t">
+              <a href="/guide/index.html">计算机科学核心：一条走得通的自学主线</a>
+              <span class="tag">ZH</span>
+              <span class="arw">&#8594;</span>
+            </div>
+            <div class="d">
+              按依赖顺序串起八条主线的系列笔记，教材式写法：背景与动机、核心概念、原理推导、示例与类比、易错点、思考题。
+              第一章《编程基础》已完成，其余章节陆续补。
+            </div>
+            <div class="u">
+              <span class="p">/guide/</span>
+              <span class="d">{guideReady} / {guideChapters.length} 章已写完</span>
+              <span class="tg">
+                <a class="tg-link" href="/tags/计算机科学.html">计算机科学</a> ·
+                <a class="tg-link" href="/tags/自学路线.html">自学路线</a> ·
+                <a class="tg-link" href="/tags/教材式笔记.html">教材式笔记</a> ·
+                <a class="tg-link" href="/tags/python.html">Python</a>
+              </span>
+            </div>
+          </article>
+        </div>
       </section>
 
       <section id="projects">

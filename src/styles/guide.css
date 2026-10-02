@@ -1,0 +1,108 @@
+/* ---------------------------------------------------------------------------
+   The guide series — additions on top of note.css
+
+   A chapter is a note with two extra jobs: it has neighbours, and it has a
+   place in a series. Everything about typography, colour and the contents
+   drawer comes from note.css unchanged, so a chapter reads exactly like every
+   other long-form page on the site. This file only adds what is genuinely new:
+
+     .gseries     the series line under the kicker (where am I in the run)
+     .pager       previous / next chapter
+     .gsteps      the contents of the series, on the landing page
+     .gnote/…     the small print that belongs to a progress entry
+     .gcols       the dependency rows on the landing page
+
+   Colour discipline is the note.css one, restated because it is easy to get
+   wrong here: indigo marks structure and anything you click; emerald marks
+   evidence, conclusions and "you are here / you finished this".
+   --------------------------------------------------------------------------- */
+
+/* ---------- the series line in a chapter's masthead ---------- */
+.note .gseries{
+  margin:0 0 10px;font-size:11.5px;font-weight:700;letter-spacing:.06em;
+  text-transform:uppercase;color:var(--emerald);
+}
+.note .gseries a{color:var(--emerald);text-decoration:none;border-bottom:1px solid rgba(15,123,95,.3)}
+.note .gseries a:hover{border-bottom-color:var(--emerald)}
+.note .gseries .sep{color:var(--ink-4);font-weight:400;margin:0 7px}
+
+/* the prerequisite / reading-time strip, sitting where a note's deck would */
+.note .gstrip{
+  margin:14px 0 0;display:flex;flex-wrap:wrap;gap:6px 22px;align-items:baseline;
+  font-size:12.5px;color:var(--ink-2);
+}
+.note .gstrip b{color:var(--emerald);font-weight:600}
+.note .gstrip .lock{color:var(--cav);font-weight:600}
+
+/* ---------- previous / next ---------- */
+.note .pager{
+  margin:48px 0 0;padding-top:18px;border-top:1px solid var(--rule-soft, #eaeef2);
+  display:flex;flex-wrap:wrap;gap:12px 20px;align-items:flex-start;
+}
+.note .pager a{
+  flex:1 1 240px;text-decoration:none;border:1px solid var(--rule-soft, #eaeef2);
+  border-radius:4px;padding:12px 15px;background:#fff;
+}
+.note .pager a:hover{border-color:var(--accent);background:var(--accent-soft)}
+.note .pager .dir{
+  display:block;font-size:10.6px;font-weight:700;letter-spacing:.1em;
+  text-transform:uppercase;color:var(--ink-4);margin-bottom:5px;
+}
+.note .pager .ttl{display:block;font-size:14.5px;font-weight:600;color:var(--accent);line-height:1.4}
+.note .pager .sub{display:block;margin-top:3px;font-size:12.4px;color:var(--ink-2)}
+.note .pager .next{text-align:right}
+.note .pager a.disabled{opacity:.62}
+.note .pager a.disabled:hover{border-color:var(--rule-soft, #eaeef2);background:#fff}
+.note .pager a.disabled .ttl{color:var(--ink-4)}
+
+/* ---------- the series contents (landing page) ---------- */
+.note .gsteps{margin:22px 0 0}
+.note .gsteps .gpart{
+  font-size:10.8px;font-weight:700;letter-spacing:.13em;text-transform:uppercase;
+  color:var(--ink-4);margin:26px 0 2px;padding-bottom:7px;
+  border-bottom:1px solid var(--rule-soft, #eaeef2);
+}
+.note .gsteps .grow{
+  display:flex;flex-wrap:wrap;gap:4px 14px;align-items:baseline;
+  padding:12px 0;border-bottom:1px solid var(--rule-soft, #eaeef2);
+}
+.note .gsteps .gnum{
+  flex:none;width:26px;font-family:var(--mono);font-size:12px;color:var(--ink-4);
+  font-variant-numeric:tabular-nums;
+}
+.note .gsteps .gt{font-size:15px;font-weight:600;color:var(--ink)}
+.note .gsteps a.gt{color:var(--accent);text-decoration:none}
+.note .gsteps a.gt:hover{text-decoration:underline}
+.note .gsteps .gnote{font-size:12.6px;color:var(--ink-2)}
+.note .gsteps .gstate{
+  margin-left:auto;flex:none;font-size:10.6px;font-weight:700;letter-spacing:.07em;
+  text-transform:uppercase;padding:2px 7px;border-radius:3px;border:1px solid;
+  white-space:nowrap;
+}
+/* "current" and "done" are both conclusions about this series — emerald.
+   "next" points at something to do — indigo. "planned" is just absence of
+   evidence, so it stays quiet. */
+.note .gsteps .gstate.current{color:var(--emerald);background:var(--emerald-soft);border-color:#c2ddd4}
+.note .gsteps .gstate.done{color:var(--emerald);background:var(--emerald-soft);border-color:#c2ddd4}
+.note .gsteps .gstate.next{color:var(--accent);background:var(--accent-soft);border-color:#cfdff0}
+.note .gsteps .gstate.planned{color:var(--ink-4);background:#fff;border-color:var(--rule)}
+
+/* ---------- the dependency rows (landing page) ---------- */
+.note .gcols{margin:20px 0 0}
+.note .gcol{
+  display:flex;flex-wrap:wrap;gap:4px 16px;align-items:baseline;
+  padding:14px 0;border-bottom:1px solid var(--rule-soft, #eaeef2);
+}
+.note .gcol .gid{
+  flex:none;width:30px;font-family:var(--mono);font-size:11.5px;color:var(--ink-4);
+}
+.note .gcol .gname{flex:none;width:210px;font-size:14.5px;font-weight:600;color:var(--ink)}
+.note .gcol .gdep{font-size:12.8px;color:var(--ink-2);flex:1 1 220px}
+.note .gcol .gdep b{color:var(--emerald);font-weight:600}
+.note .gcol .gwhy{font-size:12.8px;color:var(--ink-2);flex:1 1 260px}
+
+@media (max-width:600px){
+  .note .gcol .gname{width:auto}
+  .note .pager a{flex:1 1 100%}
+  .note .pager .next{text-align:left}
+}
