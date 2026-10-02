@@ -18,15 +18,16 @@ steps:
       - title: 编程基础
         href: /guide/01-programming-basics.html
         note: 第一章 · 已写完
-        state: next
+        state: done
   - part: 第二部 · 机器侧主干
     items:
       - title: 数据结构与算法
-        note: 第二章
-        state: planned
+        href: /guide/02-data-structures-and-algorithms.html
+        note: 第二章 · 已写完
+        state: done
       - title: 计算机组成与体系结构
-        note: 第三章
-        state: planned
+        note: 第三章 · 下一章
+        state: next
       - title: 操作系统
         note: 第四章
         state: planned
@@ -216,9 +217,12 @@ steps:
 给出标准答案反而会让你跳过推理。如果你需要一个更硬的标准，每章参考资料里都会指向带自动评分或公开评测的课程作业
 （例如算法章的公开 OJ、操作系统章的 MIT 6.1810 labs），那些是真正有反馈的练习。</p>
 
-<div class="box note"><span class="t">当前位置</span><p>目前完成的是<b>第一章 · 编程基础</b>。
-之所以先做这一章，是因为它是唯一的「没有它你连后面章节的代码都读不下去」的一章，也是最容易写砸的一章 ——
-把「变量是什么」讲深很难，讲浅又毫无价值。这一章也是全套笔记的<b>体例样板</b>：后面的章节会按同一密度和结构来写。
+<div class="box note"><span class="t">当前位置</span><p>目前完成的是<b>第一章 · 编程基础</b>与<b>第二章 · 数据结构与算法</b>。
+先做第一章，是因为它是唯一的「没有它你连后面章节的代码都读不下去」的一章，也是最容易写砸的一章 ——
+把「变量是什么」讲深很难，讲浅又毫无价值。第二章则是从「会写程序」到「会设计程序」的分界线，
+它把第一章留下的几处伏笔（二分的循环不变式、<code>list</code> 与 <code>set</code> 的查找代价差）一次结清。
+这两章也共同构成了全套笔记的<b>体例样板</b>：后面的章节会按同一密度和结构来写 ——
+每节先讲动机、再讲原理（带推导或图）、然后拆掉一个流行误解、最后留自测题。
 后续章节会陆续补上，每补一章都会在这里更新。</p></div>
 
 <footer>
