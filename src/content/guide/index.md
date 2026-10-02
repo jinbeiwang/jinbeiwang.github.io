@@ -10,7 +10,7 @@ steps:
   - part: 第零部 · 出发前
     items:
       - title: 学习主线
-        href: /guide/index.html
+        href: /guide.html
         note: 排序依据、用法、依赖图
         state: current
   - part: 第一部 · 地基

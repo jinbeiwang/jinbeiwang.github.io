@@ -3,12 +3,11 @@
  * /guide.html — the series landing page.
  *
  * (`build.format: 'file'` is set site-wide, so this page is emitted as
- * /guide.html rather than /guide/index.html. Every link to it on the site
- * points at /guide/index.html, which GitHub Pages resolves to /guide.html by
- * rewriting extensionless directory requests — the same thing that already
- * makes /notes/site-workflow.html work. Keeping the canonical link spelled
- * with /index.html leaves room to switch the format later without breaking a
- * single published URL.)
+ * /guide.html, not /guide/index.html. Verified against the live site on
+ * 2026-10-03: GitHub Pages does NOT rewrite /guide/index.html to /guide.html
+ * for a project-less user site — it 404s. Every link to this page on the site
+ * therefore spells it /guide.html. If `build.format` is ever changed to
+ * 'directory', change those links back in the same commit.)
  *
  * It renders the single guide entry with `kind: index`, which is where the
  * outline, the dependency table and the progress list are authored. Chapter

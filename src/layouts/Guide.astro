@@ -83,7 +83,7 @@ const pad = (n: number) => String(n).padStart(2, '0');
 
       <header>
         <div class="gseries">
-          <a href="/guide/index.html">计算机科学核心</a><span class="sep">/</span>{part}<span class="sep">/</span>{label}
+          <a href="/guide.html">计算机科学核心</a><span class="sep">/</span>{part}<span class="sep">/</span>{label}
         </div>
         <div class="kicker">{placeholder ? 'Planned chapter' : 'Guide chapter'}</div>
         <h1>{title}</h1>
@@ -127,7 +127,7 @@ const pad = (n: number) => String(n).padStart(2, '0');
                 <span class="sub">第 {pad(prev.order)} 章</span>
               </a>
             ) : (
-              <a class="disabled" href="/guide/index.html">
+              <a class="disabled" href="/guide.html">
                 <span class="dir">&#8592; 上一章</span>
                 <span class="ttl">这是第一章</span>
                 <span class="sub">回到系列说明</span>
@@ -140,7 +140,7 @@ const pad = (n: number) => String(n).padStart(2, '0');
                 <span class="sub">第 {pad(next.order)} 章</span>
               </a>
             ) : (
-              <a class="next disabled" href="/guide/index.html">
+              <a class="next disabled" href="/guide.html">
                 <span class="dir">下一章 &#8594;</span>
                 <span class="ttl">这是最后一章</span>
                 <span class="sub">回到系列说明</span>
