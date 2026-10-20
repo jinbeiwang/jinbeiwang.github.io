@@ -1,6 +1,6 @@
 ---
 title: "ICH E9(R1) 阅读笔记：估计目标与敏感性分析，到底在解决什么问题"
-summary: "从 E9 的 ITT 原则到 2019 年附录：为什么同一份数据能算出两个都「正确」却含义不同的疗效；伴发事件与缺失数据的界线在哪；五种处理策略各自回答什么问题；五个属性如何拼成一个可执行的估计目标；以及敏感性分析为什么管的是假设、不是方法。配糖尿病救急用药、肿瘤换药、疫苗主分层三个案例，与一个真实试验的回顾性再分析。"
+summary: "从 E9 的 ITT 原则到 2019 年附录：为什么同一份数据能算出两个都「正确」却含义不同的疗效；伴发事件与缺失数据的界线在哪；五种处理策略各自回答什么问题；五个属性如何拼成一个可执行的估计目标；以及敏感性分析为什么管的是假设、不是方法。配糖尿病救急用药、肿瘤换药、疫苗主分层三个构造案例，并用 REMoxTB 的回顾性再分析做实景拆解：1785 人、四种估计目标、同一份数据，结论一致但置信区间宽度不同。"
 date: 2026-10-20
 category: Statistical methods
 tags: [ICH E9(R1), 估计目标, 伴发事件, 敏感性分析, 临床试验]
@@ -33,10 +33,11 @@ lang: zh
 <table>
 <thead><tr><th>节点</th><th>时间</th><th>含义</th></tr></thead>
 <tbody>
-<tr><td>E9 Step 4</td><td>1998-02-05</td><td>统计原则母指南定稿 <em class="ev">[doc]</em></td></tr>
+<tr><td>E9 Step 4</td><td>1998-02-05</td><td>统计原则母指南定稿，即现行版本 <em class="ev">[doc]</em></td></tr>
+<tr><td>E9 重新编码</td><td>2005-11</td><td>仅换编码，正文未改 <em class="ev">[doc]</em></td></tr>
 <tr><td>E9(R1) Step 2</td><td>2017-08-30</td><td>附录公开征求意见 <em class="ev">[doc]</em></td></tr>
-<tr><td>E9(R1) Step 4</td><td>2019-11-20</td><td>附录定稿（文件标注 11-17）<em class="ev">[doc]</em></td></tr>
-<tr><td>EMA 生效</td><td>2020-07-30</td><td>CHMP 于 2020-01-30 通过后生效 <em class="ev">[doc]</em></td></tr>
+<tr><td>E9(R1) Step 4</td><td>2019-11-20</td><td>附录定稿（文件本身标注 11 月 17 日）<em class="ev">[doc]</em></td></tr>
+<tr><td>EMA 法定生效</td><td>2020-07-30</td><td>Step 5 文本 2020-02-18 发布 <em class="ev">[doc]</em></td></tr>
 <tr><td>FDA 终版指南</td><td>2021-05</td><td>替代 2017-10-31 草案，联邦公报 2021-05-12 公告 <em class="ev">[doc]</em></td></tr>
 </tbody>
 </table>
@@ -88,6 +89,8 @@ lang: zh
 <tr><td>治疗期间</td><td>在真正接受治疗的那段时间里，效应是多少</td><td>只用事件发生前的测量</td><td>变量属性</td></tr>
 </tbody>
 </table>
+
+<p>最后一列不是我的归类，是 A.3.3 原文括注给出的：治疗条件后面注「见治疗政策与假想策略」，人群后面注「见主分层策略」，变量后面注「见复合变量与治疗期间策略」<em class="ev">[doc]</em>。也就是说，前三种策略是把事件<b>吸收进</b>某个属性里去，剩下吸收不掉的事件，才在第四个属性里单独表态。</p>
 
 <h3>3.1 治疗政策：事件「不算数」</h3>
 
@@ -182,53 +185,41 @@ lang: zh
 <p class="lede">附录把 estimating 拆成三段：估计目标（what）、主要估计量（how）、估计值（result）。三段之间的顺序不能倒。</p>
 
 <figure>
-  <svg viewBox="0 0 680 250" role="img" aria-label="规划序列：试验目的转为估计目标，再选主要估计量与估计值；敏感性分析针对同一估计目标检验假设">
-    <g font-family="-apple-system,BlinkMacSystemFont,'Segoe UI','PingFang SC','Microsoft YaHei',Helvetica,Arial,sans-serif">
-      <rect x="20" y="30" width="120" height="52" rx="3" fill="#eef3f8" stroke="#1b4f8a" stroke-width="1.5"/>
-      <text x="80" y="52" font-size="12.5" font-weight="700" fill="#1b4f8a" text-anchor="middle">试验目的</text>
-      <text x="80" y="69" font-size="10.5" fill="#5b6570" text-anchor="middle">objective</text>
-
-      <path d="M144 56 H172" stroke="#1b4f8a" stroke-width="1.5" fill="none" marker-end="url(#a1)"/>
-
-      <rect x="180" y="30" width="150" height="52" rx="3" fill="#eef3f8" stroke="#1b4f8a" stroke-width="1.5"/>
-      <text x="255" y="50" font-size="12.5" font-weight="700" fill="#1b4f8a" text-anchor="middle">估计目标</text>
-      <text x="255" y="67" font-size="10.5" fill="#5b6570" text-anchor="middle">estimand · 估计什么</text>
-
-      <path d="M334 56 H362" stroke="#1b4f8a" stroke-width="1.5" fill="none" marker-end="url(#a1)"/>
-
-      <rect x="370" y="30" width="150" height="52" rx="3" fill="#eef3f8" stroke="#1b4f8a" stroke-width="1.5"/>
-      <text x="445" y="50" font-size="12.5" font-weight="700" fill="#1b4f8a" text-anchor="middle">主要估计量</text>
-      <text x="445" y="67" font-size="10.5" fill="#5b6570" text-anchor="middle">estimator · 怎么估</text>
-
-      <path d="M524 56 H552" stroke="#1b4f8a" stroke-width="1.5" fill="none" marker-end="url(#a1)"/>
-
-      <rect x="560" y="30" width="100" height="52" rx="3" fill="#f0f7f4" stroke="#0f7b5f" stroke-width="1.5"/>
-      <text x="610" y="50" font-size="12.5" font-weight="700" fill="#0f7b5f" text-anchor="middle">估计值</text>
-      <text x="610" y="67" font-size="10.5" fill="#5b6570" text-anchor="middle">estimate</text>
-
-      <rect x="180" y="152" width="340" height="52" rx="3" fill="#f0f7f4" stroke="#0f7b5f" stroke-width="1.5"/>
-      <text x="350" y="172" font-size="12.5" font-weight="700" fill="#0f7b5f" text-anchor="middle">敏感性分析</text>
-      <text x="350" y="190" font-size="10.5" fill="#5b6570" text-anchor="middle">还是同一个估计目标，只检验主要估计量所依赖的假设</text>
-
-      <path d="M445 84 V146" stroke="#0f7b5f" stroke-width="1.5" stroke-dasharray="5 4" fill="none" marker-end="url(#a2)"/>
-      <path d="M228 150 V88" stroke="#0f7b5f" stroke-width="1.5" stroke-dasharray="5 4" fill="none" marker-end="url(#a2)"/>
-
-      <text x="30" y="230" font-size="10.5" fill="#8b949e">顺序是单向的：先定问题，再选方法。敏感性分析检验的是假设，不是换一个问题。</text>
-
-      <defs>
-        <marker id="a1" markerWidth="8" markerHeight="8" refX="6" refY="4" orient="auto">
-          <path d="M0 0 L8 4 L0 8 z" fill="#1b4f8a"/></marker>
-        <marker id="a2" markerWidth="8" markerHeight="8" refX="6" refY="4" orient="auto">
-          <path d="M0 0 L8 4 L0 8 z" fill="#0f7b5f"/></marker>
-      </defs>
-    </g>
-  </svg>
-  <figcaption><b>图 1 |</b> 附录 A.2 的规划序列。靛蓝是结构与流程，祖母绿是被检验的东西：敏感性分析始终指向同一个估计目标 <em class="ev">[doc]</em>。</figcaption>
+<svg viewBox="0 0 680 258" role="img" aria-label="规划序列：试验目的转为估计目标，再选主要估计量与估计值；敏感性分析针对同一估计目标检验假设">
+  <g font-family="-apple-system,BlinkMacSystemFont,'Segoe UI','PingFang SC','Microsoft YaHei',Helvetica,Arial,sans-serif">
+    <defs>
+      <marker id="ar-blue" markerWidth="9" markerHeight="9" refX="7" refY="4.5" orient="auto"><path d="M0 0 L9 4.5 L0 9 z" fill="#1b4f8a"/></marker>
+      <marker id="ar-green" markerWidth="9" markerHeight="9" refX="7" refY="4.5" orient="auto"><path d="M0 0 L9 4.5 L0 9 z" fill="#0f7b5f"/></marker>
+    </defs>
+    <rect x="18" y="26" width="122" height="54" rx="4" fill="#eef3f8" stroke="#1b4f8a" stroke-width="1.5"/>
+    <text x="79" y="48" font-size="12.5" font-weight="700" fill="#1b4f8a" text-anchor="middle">试验目的</text>
+    <text x="79" y="66" font-size="10.5" fill="#5b6570" text-anchor="middle">objective</text>
+    <path d="M144 53 H176" stroke="#1b4f8a" stroke-width="1.5" fill="none" marker-end="url(#ar-blue)"/>
+    <rect x="180" y="26" width="152" height="54" rx="4" fill="#eef3f8" stroke="#1b4f8a" stroke-width="1.5"/>
+    <text x="256" y="48" font-size="12.5" font-weight="700" fill="#1b4f8a" text-anchor="middle">估计目标</text>
+    <text x="256" y="66" font-size="10.5" fill="#5b6570" text-anchor="middle">estimand · 估计什么</text>
+    <path d="M336 53 H368" stroke="#1b4f8a" stroke-width="1.5" fill="none" marker-end="url(#ar-blue)"/>
+    <rect x="372" y="26" width="152" height="54" rx="4" fill="#eef3f8" stroke="#1b4f8a" stroke-width="1.5"/>
+    <text x="448" y="48" font-size="12.5" font-weight="700" fill="#1b4f8a" text-anchor="middle">主要估计量</text>
+    <text x="448" y="66" font-size="10.5" fill="#5b6570" text-anchor="middle">estimator · 怎么估</text>
+    <path d="M528 53 H560" stroke="#1b4f8a" stroke-width="1.5" fill="none" marker-end="url(#ar-blue)"/>
+    <rect x="564" y="26" width="98" height="54" rx="4" fill="#f0f7f4" stroke="#0f7b5f" stroke-width="1.5"/>
+    <text x="613" y="48" font-size="12.5" font-weight="700" fill="#0f7b5f" text-anchor="middle">估计值</text>
+    <text x="613" y="66" font-size="10.5" fill="#5b6570" text-anchor="middle">estimate</text>
+    <rect x="180" y="152" width="344" height="56" rx="4" fill="#f0f7f4" stroke="#0f7b5f" stroke-width="1.5"/>
+    <text x="352" y="174" font-size="12.5" font-weight="700" fill="#0f7b5f" text-anchor="middle">敏感性分析</text>
+    <text x="352" y="192" font-size="10.5" fill="#5b6570" text-anchor="middle">仍锁同一个估计目标，只检验主要估计量所依赖的假设</text>
+    <path d="M448 84 V146" stroke="#0f7b5f" stroke-width="1.5" stroke-dasharray="5 4" fill="none" marker-end="url(#ar-green)"/>
+    <path d="M232 148 V88" stroke="#0f7b5f" stroke-width="1.5" stroke-dasharray="5 4" fill="none" marker-end="url(#ar-green)"/>
+    <text x="20" y="238" font-size="10.5" fill="#6b7280">顺序单向：先定问题，再选方法。敏感性分析检验假设，不是换一个问题。</text>
+  </g>
+</svg>
+<figcaption><b>图 1 |</b> 附录 A.2 的规划序列。靛蓝是流程，祖母绿是被检验的东西：敏感性分析始终指回同一个估计目标 <em class="ev">[doc]</em>。</figcaption>
 </figure>
 
 <p>原文对这一段的措辞很克制但很硬：要选一个<b>与估计目标对齐</b>的分析方法（估计量），方法所依赖的关键假设必须与估计目标、主要估计量、敏感性估计量一并明示；假设应当可辩护，不可信的假设要避免；结果对假设偏离的稳健性通过敏感性分析评估；<b>依赖大量或强假设的估计，需要更充分的敏感性分析</b>；若偏离的影响无法通过敏感性分析充分考察，这个「估计目标 + 分析方法」的组合可能就不适合用于决策 <em class="ev">[doc]</em>。</p>
 
-<p>还有一句几乎是对统计编程岗位说的：应当<b>从试验目的与临床问题顺序推进，而不是让数据收集方式与分析方法反过来决定估计目标</b> <em class="ev">[doc]</em>。现实里最常见的倒置是——先看手上有什么数据、会跑什么模型，再倒推一个能跑出结果的问题。</p>
+<p>这条链条的方向是写死的：A.2 开篇即说「试验规划应<b>按顺序</b>推进」；A.4 再补一句——试验设计必须与估计目标对齐，<b>适合一个估计目标的设计，未必适合另一个</b> <em class="ev">[doc]</em>。落到日常，最常见的倒置是先看手上有什么数据、会跑什么模型，再倒推一个能跑出结果的问题。</p>
 
 <table>
 <thead><tr><th>策略</th><th>估计时的主要难点</th><th>假设负担</th></tr></thead>
@@ -282,13 +273,72 @@ lang: zh
 
 <p>样本量还有一条反直觉的提醒：如果所有受试者都对分析有贡献，且伴发事件处理策略的影响已经计入目标效应量与预期方差，通常<b>不必</b>再按预期退出比例额外膨胀样本量 <em class="ev">[doc]</em>。这一条与很多模板里的「除以 (1 − 脱落率)」习惯是冲突的，值得在方案讨论时明确一次。</p>
 
-<h3>7.1 一个真实试验的回顾性应用</h3>
+<h3>7.1 一个真实试验的回顾性应用：REMoxTB</h3>
 
-<p>理论之外，看一个已完成的试验怎么被重新拆解。Weir 等人在 2024 年以 REMoxTB（莫西沙星 4 个月方案治疗药物敏感肺结核的 III 期试验）的个体数据做了回顾性再分析：围绕同一个主要终点，按附录框架构造了四种估计目标（结核特异性、复合、可评估、符合方案），并分别用多重插补、逆概率删失加权、Kaplan–Meier、Cochran–Mantel–Haenszel 以及贝叶斯主分层等方法去估计 <em class="ev">[lit]</em>。</p>
+<p>理论之外，看一个已完成的试验怎么被重新拆开。Weir、Dufault 与 Phillips 在 2024 年用 REMoxTB 的个体数据做了一次回顾性再分析 <em class="ev">[lit]</em>。选它的理由很实际：结论是阴性的、伴发事件类型杂、主要终点本身已经是复合终点——正是容易出「同一份数据、两个说法」的场面。</p>
 
-<p>这项工作的意义不在于给出新结论，而在于演示了那个核心命题：<b>同一份数据、同一个终点，四种估计目标给出四组数，每组都对应一个说得清的临床问题</b>。它也顺带说明了为什么「我们当年按 ITT 做过了」不足以回应监管对某个具体临床问题的追问。</p>
+<table>
+<thead><tr><th>项目</th><th>内容</th></tr></thead>
+<tbody>
+<tr><td>设计</td><td>III 期、随机、安慰剂对照、非劣效性</td></tr>
+<tr><td>随机人数</td><td>1931 人，1:1:1 —— 4 个月莫西沙星+异烟肼、4 个月莫西沙星+乙胺丁醇、6 个月标准方案</td></tr>
+<tr><td>主要终点</td><td>随机后 18 个月内发生复合不良结局（细菌学或临床定义的治疗失败或复发）的比例</td></tr>
+<tr><td>非劣效界值</td><td>6 个百分点；双侧 97.5% CI（Bonferroni 校正），GLM（identity link）校正体重分带与研究中心</td></tr>
+<tr><td>原试验结论</td><td>两个 4 个月方案在 mITT 与符合方案分析中<b>均未达非劣效</b></td></tr>
+<tr><td>再分析人群</td><td>1785 人（原 mITT 分析集内）</td></tr>
+</tbody>
+</table>
 
-<div class="box note"><span class="t">从编程侧看这件事</span><p>估计目标最终要落在 ADaM 与 TFL 上。停药原因（DS）、救急/后续用药（CM）、治疗起止与末次给药（ADSL 的 TRTSDT / TRTEDT）、以及停药后是否继续收集终点，直接决定某个估计目标能不能被估出来。若方案里只写了「按 ITT 分析」，编程端没有依据去判断「停药后数据要不要收、收了算不算」，最后往往退化成「有值就用」这个默认动作。</p></div>
+<p>先看伴发事件在这份数据里到底长什么样。1785 人里 1206 人（68%）达到持久治愈，其余 579 人（32%）发生了 17 类伴发事件中的一种 <em class="ev">[lit]</em>：</p>
+
+<table>
+<thead><tr><th>最常见的几类伴发事件</th><th>例数</th></tr></thead>
+<tbody>
+<tr><td>18 个月随访结束时无法产生痰液</td><td>115（6%）</td></tr>
+<tr><td>培养转阴延迟导致的重大治疗改变</td><td>77（4%）</td></tr>
+<tr><td>其他原因的重大治疗改变</td><td>73（4%）</td></tr>
+<tr><td>治疗完成后撤回或失访、末次培养阴性</td><td>66（4%）；三臂分别为 24 / 26 / 16</td></tr>
+<tr><td>细菌学复发导致的结核复发</td><td>65（4%）</td></tr>
+</tbody>
+</table>
+
+<p>最后那 66 人是全文最有说服力的一处细节：在四个估计目标之间，它被<b>至少两种不同的策略</b>处理过 <em class="ev">[lit]</em>。同一批人、同一个数据点，在 A 问题里算「最坏结局」，在 B 问题里算「本来会怎样」。这就是第 3 节那张词汇表在真实试验里的样子。</p>
+
+<p>四个估计目标共享同一套 35 个潜在伴发事件（附在原文补充材料里），治疗、人群、变量三个属性也一致；差别全部落在「这些事件各自怎么处理」上 <em class="ev">[lit]</em>：</p>
+
+<table>
+<thead><tr><th>估计目标</th><th>它问的是哪个问题</th><th>策略组合</th><th>需按假想处理的人数</th></tr></thead>
+<tbody>
+<tr><td>结核特异性疗效</td><td>若人人按方案服药，药物本身的抗结核疗效如何（把疗效与安全性问题拆开）</td><td>治疗政策 + 复合 + 假想</td><td>242（14%）</td></tr>
+<tr><td>复合</td><td>在真实条件下，这套方案最终能不能治好病人（贴近传统 ITT）</td><td>只用复合 + 治疗政策，事件直接赋「最坏情况」</td><td>0（全员可赋结局）</td></tr>
+<tr><td>可评估</td><td>仿照历史结核试验的「可评估人群」分析</td><td>复合 + 治疗政策，但把治疗完成后的失访/撤回单列，用假想</td><td>231（13%）</td></tr>
+<tr><td>符合方案</td><td>在「无论分到哪组都会依从」的那群人中，效应是多少（用因果框架，不是筛亚组）</td><td>以假想 + 主分层为主，个别事件沿用治疗政策与复合</td><td>—（人群由主分层界定）</td></tr>
+</tbody>
+</table>
+
+<p>四个估计目标<b>都没有用「治疗期间」策略</b>。理由原文写得很直白：结核试验要在治疗后长期随访才能判定结局，这个策略在这里没有位置 <em class="ev">[lit]</em>。这一点值得记住——五种策略是词汇表，不是必填项。</p>
+
+<p>接下来是方法侧，也是这份案例最有教学价值的部分：<b>策略一换，能用的估计方法就换了一批</b>。</p>
+
+<table>
+<thead><tr><th>估计目标</th><th>处理伴发事件的方法</th><th>估风险差的方法</th><th>代价</th></tr></thead>
+<tbody>
+<tr><td>复合</td><td>不需要——事件已经映射成「有无持久治愈」</td><td>CMH；KM</td><td>几乎不加统计假设，但「最坏情况」赋值要能自圆其说</td></tr>
+<tr><td>结核特异性</td><td>多重插补（10 个插补数据集）；IPCW</td><td>MI 下用 CMH 与 KM；IPCW 下只能用 KM</td><td>IPCW 权重均值 1.11（异烟肼 vs 对照）、1.09（乙胺丁醇 vs 对照）</td></tr>
+<tr><td>可评估</td><td>多重插补；IPCW</td><td>同左</td><td>权重均值 1.10、1.08</td></tr>
+<tr><td>符合方案</td><td>多重插补 + 贝叶斯主分层模型</td><td>贝叶斯后验风险差</td><td>要额外接受单调性一类的假设与先验设定</td></tr>
+</tbody>
+</table>
+
+<p>插补模型纳入了治疗臂、研究中心、体重分带，以及空洞、HIV 状态、依从性、吸烟、CD4、年龄、性别、BMI、MGIT 阳性天数、耐药等基线特征，并在插补模型下假定伴发事件随机发生；IPCW 以治疗臂与体重分带为协变量，权重在上下 1% 截断 <em class="ev">[lit]</em>。这些不是装饰性细节：<b>假设写在哪、权重怎么截，直接决定了那个区间有多宽。</b></p>
+
+<p>结果分两层看。<b>结论层</b>：四种估计目标、每种估计方法下，两个 4 个月方案都仍未达到非劣效，与原试验分析一致；风险差的点估计在各估计目标与方法之间也很接近，且乙胺丁醇臂 vs 对照的风险差始终大于异烟肼臂 vs 对照 <em class="ev">[lit]</em>。<b>方差层</b>：多重插补给出的方差比 IPCW 与「把事件直接删失」的朴素做法更大，置信区间更宽 <em class="ev">[lit]</em>。</p>
+
+<div class="box finding"><span class="t">这个案例真正说明的事</span><p>它没有推翻任何结论，反而证明了另一件事：<b>同一份数据可以按四个问题去组织，而这四个问题在这里恰好指向同一个方向</b>——这说明原试验的阴性结论是稳的，不是某个策略挑出来的。但注意第二层：点估计几乎不动，区间宽度却随方法变。非劣效判断看的是<b>区间与界值的关系</b>，所以「点估计没变」不等于「结论没风险」。这也是为什么附录要求把假设写在前面，而不是等结果出来再挑一个好看的方法。</p></div>
+
+<div class="box note"><span class="t">关于数字的一点交代</span><p>各估计目标逐项的<b>风险差数值与 97.5% CI</b>，原文只在 Fig. 2 的点区间图里呈现，正文没有列表；本文因此只引用正文可核对的数字（样本量、事件分布、假想策略负担人数、IPCW 权重、方差异同），不复述我核对不到的数值。要引具体 RD，请直接看原文图 2 与补充材料。</p></div>
+
+<p>再看这件事对编程侧的意味。估计目标最终要落在 ADaM 与 TFL 上：停药原因（DS）、救急与后续用药（CM）、治疗起止与末次给药（ADSL 的 TRTSDT / TRTEDT）、以及事件后是否继续收集终点，直接决定某个估计目标能不能被估出来。<b>「失访、末次培养阴性」这 66 人就是一个典型</b>——它在两个估计目标里的身份不同，如果 DS 只记了「失访」而没记「末次培养阴性」，这条区分就丢了，后面无论多想按估计目标切都切不出来。</p>
 
 <div class="box takeaway"><span class="t">本章结论</span><p>估计目标写进方案不是形式主义：它同时约束设计、数据收集、分析与报告四个环节。写清楚一次，后面少吵四轮。</p></div>
 
@@ -323,7 +373,8 @@ lang: zh
 <p>如果把整份附录压成一句：<b>先诚实地说明你要问哪个问题，再证明你答得出这个问题。</b></p>
 
 <footer>
-  <p><strong>验证说明</strong> 条款与原文表述逐一核对自 ICH E9(R1) 正文（Step 4，2019-11-20，文件标注 11-17）：A.1 范围、A.2 框架与图 1、A.3.1 伴发事件、A.3.2 五种策略、A.3.3 五个属性、A.3.4 构造考虑、A.4 设计与实施、A.5.1 主要估计、A.5.2 敏感性分析、A.5.3 补充分析、A.6 文档、术语表。时间节点核对自 ICH 官网 Efficacy Guidelines 页面、EMA 文本页与 FDA 联邦公报 2021-05-12 公告。糖尿病救急用药场景是按文件示例构造的说明性案例，文中已标明，不代表任何真实试验数据。</p>
-  <p><strong>延伸阅读</strong> Kahan 等，《The estimands framework: a primer on the ICH E9(R1) addendum》，BMJ 2024;384:e076316；Weir 等，《Estimands for clinical endpoints in tuberculosis treatment randomized controlled trials: a retrospective application in a completed trial》，Trials 2024，DOI 10.1186/s13063-024-07999-w。</p>
+  <p><strong>验证说明</strong> 条款与原文表述逐一核对自 ICH E9(R1) 正文（Step 4，2019-11-20，文件标注 11-17）：A.1 范围、A.2 框架与图 1、A.3.1 伴发事件、A.3.2 五种策略、A.3.3 五个属性、A.3.4 构造考虑、A.4 设计与实施、A.5.1 主要估计、A.5.2 敏感性分析、A.5.3 补充分析、A.6 文档、术语表。时间节点核对自 ICH 官网与 ICH 数据库 PDF 的 Document History（E9：Step 4 1998-02-05、2005-11 重新编码；E9(R1)：2017-08-30 Step 2、2019-11-20 Step 4），以及 EMA 科学指南页标注的法定生效日 2020-07-30、FDA 联邦公报 2021-05-12 公告。糖尿病救急用药场景与 SAP 声明样例是按文件示例构造的说明性案例，文中已标明，不代表任何真实试验数据。</p>
+  <p><strong>案例来源</strong> 7.1 的样本量、伴发事件分布、四个估计目标的策略映射、估计方法与 IPCW 权重均取自 Weir 等 2024 原文正文；逐项风险差数值与 97.5% CI 仅以该文 Fig. 2 与补充材料呈现，本文未转录。</p>
+  <p><strong>延伸阅读</strong> Kahan BC, Hindley J, Edwards M, Cro S, Morris TP. The estimands framework: a primer on the ICH E9(R1) addendum. <i>BMJ</i> 2024;384:e076316。Weir IR, Dufault SM, Phillips PPJ. Estimands for clinical endpoints in tuberculosis treatment randomized controlled trials: a retrospective application in a completed trial. <i>Trials</i> 2024;25:180. DOI 10.1186/s13063-024-07999-w。原试验主报告：Gillespie 等，<i>N Engl J Med</i> 2014（REMoxTB，PMID 25196020）。</p>
   <p><strong>免责</strong> 本文是对公开指南的阅读笔记，不构成监管、法律或统计审评意见；具体试验的估计目标选择应与监管机构沟通后确定。</p>
 </footer>
