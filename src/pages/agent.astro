@@ -1,0 +1,109 @@
+---
+/**
+ * /agent.html — the landing page of the agent-engineering series.
+ *
+ * Renders the single entry with `kind: index`. The outline, the dependency
+ * table and the progress list are authored there, not here, so adding a
+ * chapter means editing one markdown file.
+ *
+ * (`build.format: 'file'` makes this /agent.html; the same note that applies
+ * to /guide.html applies here — GitHub Pages does not rewrite
+ * /agent/index.html, so every link on the site spells /agent.html.)
+ */
+import '../styles/base.css';
+import '../styles/note.css';
+import '../styles/guide.css';
+import SeriesToc from '../components/SeriesToc.astro';
+import { getCollection, render } from 'astro:content';
+import site from '../data/site.json';
+import { fmtDate, tagSlug } from '../lib/notes';
+
+const entries = await getCollection('agent', ({ data }) => !data.draft);
+const index = entries.find((e) => e.data.kind === 'index');
+if (!index) throw new Error('the agent collection has no index.md entry');
+
+const { Content } = await render(index);
+const { title, summary, date, tags, lang, steps } = index.data;
+
+const htmlLang = lang === 'en' ? 'en' : 'zh-CN';
+const day = fmtDate(date);
+---
+
+<!DOCTYPE html>
+<html lang={htmlLang}>
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <link rel="icon" href="/favicon.svg" type="image/svg+xml" />
+  <title>{title} — {site.title}</title>
+  {summary && <meta name="description" content={summary} />}
+</head>
+<body>
+  <SeriesToc />
+
+  <div class="wrap">
+    <article class="note">
+      <a class="back" href="/">&#8592; {site.kicker}</a>
+
+      <header>
+        <div class="gseries">Agent 工程 · CS329Z<span class="sep">/</span>系列说明</div>
+        <div class="kicker">Guide</div>
+        <h1>{title}</h1>
+        {summary && <p class="deck">{summary}</p>}
+      </header>
+
+      <div class="note-byline">
+        <span>{day}</span>
+        {tags.length > 0 && (
+          <span class="tagset">
+            {tags.map((t, i) => (
+              <>{i > 0 && ' · '}<a href={`/tags/${tagSlug(t)}.html`}>{t}</a></>
+            ))}
+          </span>
+        )}
+        <button class="spn-print" type="button" title="Save this note as a PDF">Save as PDF</button>
+      </div>
+
+      <div class="prose">
+        <Content />
+
+        <h2><span class="n">5</span>系列的进度</h2>
+        <p class="lede">理论线与作业线各自推进。下面这张表是它的真实状态：写完的标「已写完」，没写的标「待写」，不留占位页。</p>
+
+        <div class="gsteps">
+          {steps.map((g) => (
+            <>
+              <div class="gpart">{g.part}</div>
+              {g.items.map((it) => (
+                <div class="grow">
+                  <span class="gnum"></span>
+                  {it.href ? (
+                    <a class="gt" href={it.href}>{it.title}</a>
+                  ) : (
+                    <span class="gt">{it.title}</span>
+                  )}
+                  {it.note && <span class="gnote">{it.note}</span>}
+                  {it.state === 'done' && <span class="gstate done">已写完</span>}
+                  {it.state === 'next' && <span class="gstate next">建议从这里读</span>}
+                  {it.state === 'current' && <span class="gstate current">你在这里</span>}
+                  {it.state === 'planned' && <span class="gstate planned">待写</span>}
+                </div>
+              ))}
+            </>
+          ))}
+        </div>
+
+        <footer>
+          <p><strong>关于取材</strong> 课程骨架取自 Stanford <a href="https://cs329z.stanford.edu/">CS 329Z: Engineering AI Agents</a>（2026 秋）的公开课表与讲义；作业规格取自课程组织的 <a href="https://github.com/cs329z/assignment1-harness">assignment1-harness</a> 及其 26 页 handout。课程仍在更新，讲次与阅读材料以官网为准。</p>
+          <p><strong>截至</strong> {day}。</p>
+        </footer>
+      </div>
+    </article>
+
+    <footer>
+      <a href="/">&#8592; {site.kicker}</a>
+      <span class="sp">{site.author} · {site.location}</span>
+    </footer>
+  </div>
+</body>
+</html>

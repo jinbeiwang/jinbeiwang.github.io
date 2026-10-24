@@ -1,0 +1,55 @@
+---
+/**
+ * /agent/<id>.html — one chapter of the theory track or one assignment.
+ *
+ * Neighbours are computed inside the entry's own track: the pager walks the
+ * theory chapters 01→12, then A0→A6 independently. A page that has not been
+ * written yet still gets a URL and a position, so a "next" link never lies.
+ */
+import SeriesChapter from '../../layouts/SeriesChapter.astro';
+import { getCollection, render } from 'astro:content';
+import site from '../../data/site.json';
+
+export async function getStaticPaths() {
+  const entries = await getCollection('agent', ({ data }) => data.kind !== 'index' && !data.draft);
+
+  const byTrack = (track: string) =>
+    entries
+      .filter((e) => e.data.track === track)
+      .sort((a, b) => a.data.order - b.data.order)
+      .map((e) => ({ id: e.id, title: e.data.title, order: e.data.order }));
+
+  return entries.map((e) => ({
+    params: { slug: e.id },
+    props: {
+      entry: e,
+      siblings: byTrack(e.data.track),
+      sourceUrl: `${site.sourceRepo}/blob/main/src/content/agent/${e.id}.md`,
+    },
+  }));
+}
+
+const { entry, siblings, sourceUrl } = Astro.props;
+const { Content } = await render(entry);
+const d = entry.data;
+---
+
+<SeriesChapter
+  title={d.title}
+  summary={d.summary}
+  date={d.date}
+  label={d.label ?? `第 ${d.order} 章`}
+  part={d.part}
+  kind={d.kind === 'assignment' ? 'assignment' : 'chapter'}
+  prereq={d.prereq}
+  reading={d.reading}
+  problems={d.problems}
+  deliverable={d.deliverable}
+  tags={d.tags}
+  lang={d.lang}
+  placeholder={!d.ready}
+  sourceUrl={sourceUrl}
+  siblings={siblings}
+>
+  <Content />
+</SeriesChapter>

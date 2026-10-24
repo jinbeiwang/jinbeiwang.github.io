@@ -1,0 +1,155 @@
+---
+/**
+ * A page of the agent-engineering series (a theory chapter or an assignment).
+ *
+ * This is Guide.astro for a series that runs two parallel tracks. It is a
+ * separate file rather than a change to Guide.astro because the CS primer's
+ * twelve chapters are published and their markup should not move under them.
+ * Everything visual is shared: note.css and guide.css supply the typography,
+ * the contents drawer, the series strip and the pager, so a page here reads
+ * exactly like a chapter there.
+ *
+ * What differs:
+ *   · the series line names this series, not the CS primer;
+ *   · neighbours come from the same track, so the pager never jumps from the
+ *     last theory chapter into assignment A0;
+ *   · an assignment gets a strip with its problem coverage and deliverable.
+ */
+import '../styles/base.css';
+import '../styles/note.css';
+import '../styles/guide.css';
+import SeriesToc from '../components/SeriesToc.astro';
+import site from '../data/site.json';
+import { fmtDate, tagSlug } from '../lib/notes';
+
+interface Props {
+  title: string;
+  summary?: string;
+  date: Date;
+  label: string;
+  part: string;
+  kind: 'chapter' | 'assignment';
+  prereq?: string;
+  reading?: string;
+  problems?: string;
+  deliverable?: string;
+  tags: string[];
+  lang: string;
+  sourceUrl?: string;
+  placeholder?: boolean;
+  /** every entry of the same track, in order, including this one */
+  siblings: { id: string; title: string; order: number }[];
+}
+
+const {
+  title, summary, date, label, part, kind, prereq, reading,
+  problems, deliverable, tags, lang, sourceUrl,
+  placeholder = false, siblings,
+} = Astro.props;
+
+const htmlLang = lang === 'en' ? 'en' : 'zh-CN';
+const day = fmtDate(date);
+
+const idx = siblings.findIndex((c) => c.title === title);
+const prev = idx > 0 ? siblings[idx - 1] : null;
+const next = idx >= 0 && idx < siblings.length - 1 ? siblings[idx + 1] : null;
+const pad = (n: number) => String(n).padStart(2, '0');
+
+const kicker = kind === 'assignment' ? 'Assignment' : placeholder ? 'Planned chapter' : 'Guide chapter';
+---
+
+<!DOCTYPE html>
+<html lang={htmlLang}>
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <link rel="icon" href="/favicon.svg" type="image/svg+xml" />
+  <title>{title} — {site.title}</title>
+  {summary && <meta name="description" content={summary} />}
+</head>
+<body>
+  <SeriesToc />
+
+  <div class="wrap">
+    <article class="note">
+      <a class="back" href="/">&#8592; {site.kicker}</a>
+
+      <header>
+        <div class="gseries">
+          <a href="/agent.html">Agent 工程 · CS329Z</a><span class="sep">/</span>{part}<span class="sep">/</span>{label}
+        </div>
+        <div class="kicker">{kicker}</div>
+        <h1>{title}</h1>
+        {summary && <p class="deck">{summary}</p>}
+      </header>
+
+      <div class="note-byline">
+        <span>{day}</span>
+        {tags.length > 0 && (
+          <span class="tagset">
+            {tags.map((t, i) => (
+              <>{i > 0 && ' · '}<a href={`/tags/${tagSlug(t)}.html`}>{t}</a></>
+            ))}
+          </span>
+        )}
+        <button class="spn-print" type="button" title="Save this note as a PDF">Save as PDF</button>
+        {sourceUrl && (
+          <span class="spn-source">
+            <a href={sourceUrl} style="color:var(--accent);text-decoration:none">source</a>
+          </span>
+        )}
+      </div>
+
+      {(prereq || reading || problems || deliverable) && (
+        <div class="gstrip">
+          {prereq && <span><b>前置</b> &nbsp;{prereq}</span>}
+          {reading && <span><b>篇幅</b> &nbsp;{reading}</span>}
+          {problems && <span><b>覆盖</b> &nbsp;{problems}</span>}
+          {deliverable && <span><b>交付</b> &nbsp;{deliverable}</span>}
+          {placeholder && <span class="lock">本章尚未动笔。</span>}
+        </div>
+      )}
+
+      <div class="prose">
+        <slot />
+
+        {(prev || next) && (
+          <div class="pager">
+            {prev ? (
+              <a href={`/agent/${prev.id}.html`}>
+                <span class="dir">&#8592; 上一个</span>
+                <span class="ttl">{prev.title}</span>
+                <span class="sub">{prev.order ? pad(prev.order) : ''}</span>
+              </a>
+            ) : (
+              <a class="disabled" href="/agent.html">
+                <span class="dir">&#8592; 上一个</span>
+                <span class="ttl">这一轨的起点</span>
+                <span class="sub">回到系列说明</span>
+              </a>
+            )}
+            {next ? (
+              <a class="next" href={`/agent/${next.id}.html`}>
+                <span class="dir">下一个 &#8594;</span>
+                <span class="ttl">{next.title}</span>
+                <span class="sub">{next.order ? pad(next.order) : ''}</span>
+              </a>
+            ) : (
+              <a class="next disabled" href="/agent.html">
+                <span class="dir">下一个 &#8594;</span>
+                <span class="ttl">这一轨的终点</span>
+                <span class="sub">回到系列说明</span>
+              </a>
+            )}
+          </div>
+        )}
+      </div>
+    </article>
+
+    <footer>
+      <a href="/">&#8592; {site.kicker}</a>
+      <span class="sp">{site.author} · {site.location}</span>
+    </footer>
+  </div>
+</body>
+</html>

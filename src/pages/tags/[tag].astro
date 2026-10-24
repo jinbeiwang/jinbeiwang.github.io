@@ -79,8 +79,49 @@ export async function getStaticPaths() {
     })),
   ];
 
+  // The agent-engineering series is indexed under the same tags for the same
+  // reason: its chapters and assignments carry tags like 检索 / 评测 / 参考实现
+  // that would otherwise point at pages this route never generated.
+  const agentEntries = await getCollection('agent', ({ data }) => !data.draft);
+  const agentIndex = agentEntries.find((e) => e.data.kind === 'index');
+  const agentPages = agentEntries
+    .filter((e) => e.data.kind !== 'index')
+    .sort((a, b) => a.data.order - b.data.order);
+  const agentSiblings = [
+    ...(agentIndex
+      ? [
+          {
+            href: '/agent.html',
+            path: '/agent/',
+            title: agentIndex.data.title,
+            summary: agentIndex.data.summary,
+            date: '',
+            category: 'Agent',
+            tags: agentIndex.data.tags,
+            lang: agentIndex.data.lang,
+            source: `${site.sourceRepo}/blob/main/src/content/agent/${agentIndex.id}.md`,
+            note: 'Agent',
+            kind: 'project' as const,
+          },
+        ]
+      : []),
+    ...agentPages.map((e) => ({
+      href: `/agent/${e.id}.html`,
+      path: `/agent/${e.id}.html`,
+      title: e.data.title,
+      summary: e.data.summary,
+      date: '',
+      category: 'Agent',
+      tags: e.data.tags,
+      lang: e.data.lang,
+      source: `${site.sourceRepo}/blob/main/src/content/agent/${e.id}.md`,
+      note: 'Agent',
+      kind: 'project' as const,
+    })),
+  ];
+
   const byTag = new Map<string, { label: string; list: any[] }>();
-  for (const item of [...notes, ...siblings, ...guideSiblings]) {
+  for (const item of [...notes, ...siblings, ...guideSiblings, ...agentSiblings]) {
     for (const t of item.tags || []) {
       const slug = tagSlug(t);
       if (!slug) continue;
