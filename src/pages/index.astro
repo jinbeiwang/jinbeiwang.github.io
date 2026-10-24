@@ -46,10 +46,15 @@ for (const n of notes) {
 }
 const sections = [...groups.entries()].filter(([, list]) => list.length > 0);
 
-// tag chips cover notes and external projects alike
+// tag chips cover notes, external projects and the series cards alike, so that
+// filtering by "agent" or "评测" does not silently drop the series entry
 const tagCount = new Map();
 for (const item of [...notes, ...projects]) {
   for (const t of item.tags || []) tagCount.set(t, (tagCount.get(t) || 0) + 1);
+}
+// seed the series-only tags without distorting the counts of shared ones
+for (const t of ['agent', 'llm', '检索', '评测', '教材式笔记']) {
+  if (!tagCount.has(t)) tagCount.set(t, 1);
 }
 const allTags = [...tagCount.entries()].sort(
   (a, b) => b[1] - a[1] || String(a[0]).localeCompare(String(b[0]))
@@ -100,6 +105,67 @@ const total = notes.length + projects.length + 2; // +2 are the two series cards
         </section>
       )}
 
+      <!-- The two series come before the note list on purpose: a series is the
+           long-form front door, and a reader arriving at the site should see it
+           without scrolling past every dated note. A series is read in order and
+           is written chapter by chapter, so it gets one link rather than a row
+           per chapter. Tags are lower-cased here because the tag chips compare
+           against lower-cased values. -->
+      <section id="guide">
+        <div class="sec-head">
+          <h2>Series</h2>
+          <span class="count">2</span>
+          <span class="hint">Read in order · {seriesPages} pages</span>
+        </div>
+        <div class="body">
+          <article class="entry" data-cat="Guide" data-tags="agent|llm|检索|评测|教材式笔记" data-title="Agent 工程 从复合系统到可评测的智能体">
+            <div class="t">
+              <a href="/agent.html">Agent 工程：从复合系统到可评测的智能体</a>
+              <span class="tag">ZH</span>
+              <span class="arw">&#8594;</span>
+            </div>
+            <div class="d">
+              以 Stanford CS 329Z 为主线：12 章理论讲清每个决策点的取舍，7 个作业（外加一个前置的 A0）
+              把课程的 17 个 problem 重排成按依赖串行的实战，配一份可跑、可测的参考实现。
+            </div>
+            <div class="u">
+              <span class="p">/agent/</span>
+              <span class="d">
+                {agentChapters.length} 章 + {agentAssignments.length} 个作业 · 已写完 {agentReady}
+              </span>
+              <span class="tg">
+                <a class="tg-link" href="/tags/Agent.html">Agent</a> ·
+                <a class="tg-link" href="/tags/LLM.html">LLM</a> ·
+                <a class="tg-link" href="/tags/检索.html">检索</a> ·
+                <a class="tg-link" href="/tags/评测.html">评测</a>
+              </span>
+            </div>
+          </article>
+
+          <article class="entry" data-cat="Guide" data-tags="计算机科学|自学路线|教材式笔记|python" data-title="计算机科学核心 一条走得通的自学主线">
+            <div class="t">
+              <a href="/guide.html">计算机科学核心：一条走得通的自学主线</a>
+              <span class="tag">ZH</span>
+              <span class="arw">&#8594;</span>
+            </div>
+            <div class="d">
+              按依赖顺序串起八条主线的系列笔记，教材式写法：背景与动机、核心概念、原理推导、示例与类比、易错点、思考题。
+              第一章《编程基础》已完成，其余章节陆续补。
+            </div>
+            <div class="u">
+              <span class="p">/guide/</span>
+              <span class="d">{guideReady} / {guideChapters.length} 章已写完</span>
+              <span class="tg">
+                <a class="tg-link" href="/tags/计算机科学.html">计算机科学</a> ·
+                <a class="tg-link" href="/tags/自学路线.html">自学路线</a> ·
+                <a class="tg-link" href="/tags/教材式笔记.html">教材式笔记</a> ·
+                <a class="tg-link" href="/tags/python.html">Python</a>
+              </span>
+            </div>
+          </article>
+        </div>
+      </section>
+
       <div id="note-sections">
         {sections.map(([name, list]) => {
           const hint = categories.find((c) => c.name === name)?.hint || '';
@@ -125,63 +191,6 @@ const total = notes.length + projects.length + 2; // +2 are the two series cards
           <span class="hint">Newest first</span>
         </div>
         <div class="body flat-list"></div>
-      </section>
-
-      <!-- A series is read in order and is written chapter by chapter, so it
-           gets one link rather than a row per chapter in the note list. -->
-      <section id="guide">
-        <div class="sec-head">
-          <h2>Series</h2>
-          <span class="count">{seriesPages}</span>
-          <span class="hint">Read in order</span>
-        </div>
-        <div class="body">
-          <article class="entry" data-cat="Guide" data-tags="计算机科学|自学路线|教材式笔记|python" data-title="计算机科学核心 一条走得通的自学主线">
-            <div class="t">
-              <a href="/guide.html">计算机科学核心：一条走得通的自学主线</a>
-              <span class="tag">ZH</span>
-              <span class="arw">&#8594;</span>
-            </div>
-            <div class="d">
-              按依赖顺序串起八条主线的系列笔记，教材式写法：背景与动机、核心概念、原理推导、示例与类比、易错点、思考题。
-              第一章《编程基础》已完成，其余章节陆续补。
-            </div>
-            <div class="u">
-              <span class="p">/guide/</span>
-              <span class="d">{guideReady} / {guideChapters.length} 章已写完</span>
-              <span class="tg">
-                <a class="tg-link" href="/tags/计算机科学.html">计算机科学</a> ·
-                <a class="tg-link" href="/tags/自学路线.html">自学路线</a> ·
-                <a class="tg-link" href="/tags/教材式笔记.html">教材式笔记</a> ·
-                <a class="tg-link" href="/tags/python.html">Python</a>
-              </span>
-            </div>
-          </article>
-
-          <article class="entry" data-cat="Guide" data-tags="Agent|LLM|检索|评测|教材式笔记" data-title="Agent 工程 从复合系统到可评测的智能体">
-            <div class="t">
-              <a href="/agent.html">Agent 工程：从复合系统到可评测的智能体</a>
-              <span class="tag">ZH</span>
-              <span class="arw">&#8594;</span>
-            </div>
-            <div class="d">
-              以 Stanford CS 329Z 为主线：12 章理论讲清每个决策点的取舍，7 个作业（外加一个前置的 A0）
-              把课程的 17 个 problem 重排成按依赖串行的实战，配一份可跑、可测的参考实现。
-            </div>
-            <div class="u">
-              <span class="p">/agent/</span>
-              <span class="d">
-                {agentChapters.length} 章 + {agentAssignments.length} 个作业 · 已写完 {agentReady}
-              </span>
-              <span class="tg">
-                <a class="tg-link" href="/tags/Agent.html">Agent</a> ·
-                <a class="tg-link" href="/tags/LLM.html">LLM</a> ·
-                <a class="tg-link" href="/tags/检索.html">检索</a> ·
-                <a class="tg-link" href="/tags/评测.html">评测</a>
-              </span>
-            </div>
-          </article>
-        </div>
       </section>
 
       <section id="projects">
@@ -220,6 +229,7 @@ const total = notes.length + projects.length + 2; // +2 are the two series cards
     const status = document.getElementById('status') as HTMLElement;
     const chipWrap = document.getElementById('chips') as HTMLElement;
     const projectSection = document.getElementById('projects') as HTMLElement;
+    const guideSection = document.getElementById('guide') as HTMLElement;
     const allNotes = document.getElementById('all-notes') as HTMLElement;
     const flatList = allNotes.querySelector('.flat-list') as HTMLElement;
     const noteSections = [...document.querySelectorAll('#note-sections > section')] as HTMLElement[];
@@ -256,6 +266,9 @@ const total = notes.length + projects.length + 2; // +2 are the two series cards
 
       for (const s of noteSections) s.hidden = currentView === 'date' || !anyVisible(s);
       allNotes.hidden = currentView !== 'date' || !anyVisible(flatList);
+      // without this, filtering to an unrelated tag left the "Series" heading
+      // standing over an empty body
+      guideSection.hidden = !anyVisible(guideSection);
       projectSection.hidden = !anyVisible(projectSection);
 
       status.hidden = !(term || activeTag);
