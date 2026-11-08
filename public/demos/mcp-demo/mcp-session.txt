@@ -1,0 +1,34 @@
+MCP stdio 最小会话 · 真实 JSON-RPC 报文（按 2025-06-18 规范手写，零依赖）
+HOST = 本脚本 client 模式（模拟 WorkBuddy 的一部分） | CLIENT = 下面的 send()/1:1 连接 | SERVER = 子进程
+====================================================================================================
+[01] C → S initialize（握手：版本 + 能力协商）
+     {"jsonrpc":"2.0","method":"initialize","id":10652,"params":{"protocolVersion":"2025-06-18","capabilities":{},"clientInfo":{"name":"workbuddy-demo-host","version":"1.0.0"}}}
+[02] S → C initialize（握手：版本 + 能力协商） → 响应
+     {"jsonrpc":"2.0","id":10652,"result":{"protocolVersion":"2025-06-18","capabilities":{"tools":{"listChanged":false}},"serverInfo":{"name":"adam-check-demo","version":"0.1.0"},"instructions":"Demo MCP server: one deterministic ADaM variable checker."}}
+[03] C → S notifications/initialized（通知，规范上不回应）
+     {"jsonrpc":"2.0","method":"notifications/initialized"}
+[04] C → S tools/list（发现能力）
+     {"jsonrpc":"2.0","method":"tools/list","id":10227,"params":{}}
+[05] S → C tools/list（发现能力） → 响应
+     {"jsonrpc":"2.0","id":10227,"result":{"tools":[{"name":"check_required_vars","description":"Check whether an ADaM dataset contains all required variables. Returns a deterministic, machine-readable report with the exact list of missing variables.","inputSchema":{"type":"object","properties":{"dataset":{"type":"string","description":"Dataset name, e.g. ADSL / ADAE"},"present_vars":{"type":"array","items":{"type":"string"},"description":"Variables actually present"},"required_vars":{"type":"array","items":{"type":"string"},"description":"Variables required by the spec"}},"required":["dataset","present_vars","required_vars"]}}]}}
+[06] C → S tools/call（执行确定性核查）
+     {"jsonrpc":"2.0","method":"tools/call","id":10565,"params":{"name":"check_required_vars","arguments":{"dataset":"ADSL","present_vars":["USUBJID","AGE","SEX","RACE"],"required_vars":["USUBJID","AGE","TRT01P","TRT01PN"]}}}
+[07] S → C tools/call（执行确定性核查） → 响应
+     {"jsonrpc":"2.0","id":10565,"result":{"content":[{"type":"text","text":"{\"dataset\":\"ADSL\",\"checked\":4,\"missing\":[\"TRT01P\",\"TRT01PN\"],\"status\":\"FAIL\",\"engine\":\"deterministic-code-v1.0.0\"}"}],"isError":true}}
+[08] C → S tools/call（同样输入，再执行一次）
+     {"jsonrpc":"2.0","method":"tools/call","id":10751,"params":{"name":"check_required_vars","arguments":{"dataset":"ADSL","present_vars":["USUBJID","AGE","SEX","RACE"],"required_vars":["USUBJID","AGE","TRT01P","TRT01PN"]}}}
+[09] S → C tools/call（同样输入，再执行一次） → 响应
+     {"jsonrpc":"2.0","id":10751,"result":{"content":[{"type":"text","text":"{\"dataset\":\"ADSL\",\"checked\":4,\"missing\":[\"TRT01P\",\"TRT01PN\"],\"status\":\"FAIL\",\"engine\":\"deterministic-code-v1.0.0\"}"}],"isError":true}}
+====================================================================================================
+会话结论
+  协商协议版本          : 2025-06-18
+  发现工具数            : 1 → check_required_vars
+  工具 inputSchema 字段 : dataset, present_vars, required_vars
+  首次调用结果          : {"dataset":"ADSL","checked":4,"missing":["TRT01P","TRT01PN"],"status":"FAIL","engine":"deterministic-code-v1.0.0"}
+  两次调用字节级一致    : 是（确定性执行）
+  报文总数              : 9
+====================================================================================================
+注意：上面这些报文里没有一条包含模型推理。模型的工作只有两步：
+  ① 读 tools/list 的 schema，决定要不要调这个工具、参数填什么；
+  ② 读 tools/call 的返回，把它翻译成人话。
+真正的协议交互全部由 host 内的 client 与 server 进程完成。

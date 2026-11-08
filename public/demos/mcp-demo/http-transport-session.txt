@@ -1,0 +1,64 @@
+三种传输的「信封」对照 · 全部在本机 127.0.0.1 完成，无任何外部请求
+====================================================================================================
+【0】先记住一句话：JSON-RPC 是信纸，传输是信封。下面所有请求体，内容和 mcp-session.log 里的是同一类 JSON。
+
+本机临时端口: 12252（只绑 127.0.0.1，符合 MCP 规范对本地 HTTP 的安全要求）
+
+====================================================================================================
+【1】HTTP：每条 JSON-RPC 消息 = 一次独立的 POST 往返
+
+[HTTP 第 1 次调用]  ← 一条 JSON-RPC = 一趟完整往返
+  请求行     : POST /mcp HTTP/1.1
+  Host       : 127.0.0.1:12252
+  Content-Type: application/json
+  Authorization: Bearer ***DEMO_KEY***   ← 每趟都要重新带
+  Mcp-Session-Id: demo-session-1   ← HTTP 本身无状态，靠头维持逻辑会话
+  Content-Length: 163 字节
+  请求体     : {"jsonrpc":"2.0","id":1,"method":"initialize","params":{"protocolVersion":"2025-06-18","capabilities":{},"clientInfo":{"name":"transport-demo","version":"1.0.0"}}}
+  响应行     : HTTP/1.1 200 OK
+  响应体     : {"jsonrpc":"2.0","id":1,"result":{"ok":true,"echo":"initialize"}}
+  —— 本趟结束，TCP 连接可复用但「这一问一答」已完成；下条消息要重新 POST ——
+
+[HTTP 第 2 次调用]  ← 一条 JSON-RPC = 一趟完整往返
+  请求行     : POST /mcp HTTP/1.1
+  Host       : 127.0.0.1:12252
+  Content-Type: application/json
+  Authorization: Bearer ***DEMO_KEY***   ← 每趟都要重新带
+  Mcp-Session-Id: demo-session-1   ← HTTP 本身无状态，靠头维持逻辑会话
+  Content-Length: 58 字节
+  请求体     : {"jsonrpc":"2.0","id":2,"method":"tools/list","params":{}}
+  响应行     : HTTP/1.1 200 OK
+  响应体     : {"jsonrpc":"2.0","id":2,"result":{"tools":[]}}
+  —— 本趟结束，TCP 连接可复用但「这一问一答」已完成；下条消息要重新 POST ——
+
+[HTTP 第 3 次调用]  ← 一条 JSON-RPC = 一趟完整往返
+  请求行     : POST /mcp HTTP/1.1
+  Host       : 127.0.0.1:12252
+  Content-Type: application/json
+  Authorization: Bearer ***DEMO_KEY***   ← 每趟都要重新带
+  Mcp-Session-Id: demo-session-1   ← HTTP 本身无状态，靠头维持逻辑会话
+  Content-Length: 117 字节
+  请求体     : {"jsonrpc":"2.0","id":3,"method":"tools/call","params":{"name":"check_required_vars","arguments":{"dataset":"ADSL"}}}
+  响应行     : HTTP/1.1 200 OK
+  响应体     : {"jsonrpc":"2.0","id":3,"result":{"ok":true,"echo":"tools/call"}}
+  —— 本趟结束，TCP 连接可复用但「这一问一答」已完成；下条消息要重新 POST ——
+
+====================================================================================================
+【2】SSE：只发一次 GET，服务端在同一条连接上连续推 3 条事件
+  请求行     : GET /mcp HTTP/1.1
+  Accept     : text/event-stream
+     响应行   : HTTP/1.1 200 OK
+     Content-Type: text/event-stream   ← 注意：不是 application/json，连接不关闭
+     ↓ 收到一条事件: {"jsonrpc":"2.0","method":"notifications/progress","params":{"progress":1,"total":3,"message":"reading dataset"}}
+     ↓ 收到一条事件: {"jsonrpc":"2.0","method":"notifications/progress","params":{"progress":2,"total":3,"message":"checking variables"}}
+     ↓ 收到一条事件: {"jsonrpc":"2.0","method":"notifications/message","params":{"level":"info","data":"done"}}
+     连接关闭（服务端推完了）
+  （客户端若要说话，得另外发 POST —— SSE 是单向：服务器 → 客户端）
+
+====================================================================================================
+【3】对照结论
+  STDIO : 9 条 JSON-RPC = 0 次网络往返；同一根管道里的 9 行文本，见 mcp-session.log
+  HTTP  : 3 条 JSON-RPC = 3 次 POST 往返；每次重带全套 header
+  SSE   : 1 次 GET 建连 + 同一条连接上推 3 条事件；请求数不随事件数增长
+  三者信纸完全相同，差别只在「怎么送」：本地管道 / 一问一答 / 挂着的单向流。
+====================================================================================================
