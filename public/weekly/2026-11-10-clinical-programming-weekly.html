@@ -1,0 +1,333 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>临床统计编程周报 · 2026-11-10</title>
+<style>
+:root{
+  --paper:#fbfaf7; --card:#ffffff; --ink:#17181a; --muted:#5f6368;
+  --line:#e2e0d9; --line-soft:#eeece6;
+  --accent:#1b4f8a; --accent-soft:#eef3fa;
+  --ev:#0f7b5f; --ev-soft:#eef6f2;
+  --warn:#9a5b12; --warn-soft:#fbf3e8;
+  --maxw:880px;
+}
+*{box-sizing:border-box}
+html{-webkit-text-size-adjust:100%}
+body{
+  margin:0; background:var(--paper); color:var(--ink);
+  font-family:-apple-system,BlinkMacSystemFont,"Segoe UI","PingFang SC","Microsoft YaHei","Hiragino Sans GB",sans-serif;
+  font-size:15.5px; line-height:1.78;
+}
+.wrap{max-width:var(--maxw); margin:0 auto; padding:0 28px 80px}
+header.mast{padding:56px 0 26px; border-bottom:1px solid var(--line)}
+.kicker{font-size:11.5px; letter-spacing:.16em; text-transform:uppercase; color:var(--accent); font-weight:700}
+h1{
+  font-family:Georgia,"Songti SC","SimSun",serif; font-weight:600;
+  font-size:34px; line-height:1.3; margin:14px 0 10px; letter-spacing:.01em;
+}
+.sub{color:var(--muted); font-size:13.5px; margin:0}
+.byline{
+  margin-top:22px; padding-top:14px; font-size:12.5px; color:var(--muted);
+  background-image:linear-gradient(90deg,var(--accent) 0 50%,var(--ev) 50% 100%);
+  background-repeat:no-repeat; background-size:100% 2px; background-position:0 0;
+}
+.byline strong{color:var(--ink); font-weight:600}
+section{margin-top:44px}
+h2{
+  font-family:Georgia,"Songti SC","SimSun",serif; font-size:21px; font-weight:600;
+  margin:0 0 6px; padding-top:18px; border-top:1px solid var(--line);
+}
+h2 .num{color:var(--accent); font-size:14px; margin-right:10px; font-family:system-ui,sans-serif; font-weight:700}
+.section-note{color:var(--muted); font-size:13px; margin:0 0 22px}
+.tldr{background:var(--card); border:1px solid var(--line); border-left:3px solid var(--ev); padding:20px 24px 8px}
+.tldr ol{margin:0; padding-left:20px}
+.tldr li{margin:0 0 14px; padding-left:4px}
+.tldr b{color:var(--ev); font-weight:600}
+.item{
+  background:var(--card); border:1px solid var(--line); border-radius:2px;
+  padding:18px 22px 16px; margin:0 0 14px;
+}
+.item h3{
+  font-size:16px; font-weight:600; line-height:1.55; margin:0 0 9px;
+  font-family:Georgia,"Songti SC","SimSun",serif;
+}
+.item h3 .idx{color:var(--accent); font:700 12px system-ui,sans-serif; margin-right:9px; vertical-align:2px}
+.meta{font-size:12px; color:var(--muted); margin:0 0 12px; display:flex; flex-wrap:wrap; gap:8px; align-items:center}
+.pill{
+  display:inline-block; font-size:10.5px; letter-spacing:.04em; padding:1px 7px;
+  border:1px solid var(--line); border-radius:2px; color:var(--muted); background:#fafaf8;
+  white-space:nowrap;
+}
+.pill.first{color:var(--ev); border-color:#bcdcd0; background:var(--ev-soft)}
+.pill.second{color:var(--warn); border-color:#e8d5b5; background:var(--warn-soft)}
+.pill.date{color:var(--accent); border-color:#c9d9ec; background:var(--accent-soft)}
+.row{display:grid; grid-template-columns:76px 1fr; gap:8px 12px; margin:0 0 9px; font-size:14px}
+.row .lab{color:var(--ev); font-size:12px; font-weight:600; padding-top:3px; white-space:nowrap}
+.row .lab.n{color:var(--accent)}
+.row p{margin:0}
+.links{margin:11px 0 0; padding-top:10px; border-top:1px solid var(--line-soft); font-size:12.5px; word-break:break-all}
+.links a{color:var(--accent); text-decoration:none; border-bottom:1px solid #c9d9ec}
+.links a:hover{border-bottom-color:var(--accent)}
+.links .lbl{color:var(--muted); margin-right:6px}
+.caveat{background:#fff; border:1px solid var(--line); padding:18px 22px 6px}
+.caveat h3{font-size:14px; margin:0 0 8px; color:var(--warn)}
+.caveat ul{margin:0 0 14px; padding-left:20px}
+.caveat li{margin:0 0 8px; font-size:13.5px}
+.watch{list-style:none; padding:0; margin:0}
+.watch li{
+  display:grid; grid-template-columns:104px 1fr; gap:14px;
+  padding:11px 0; border-bottom:1px solid var(--line-soft); font-size:14px;
+}
+.watch li:last-child{border-bottom:0}
+.watch .dt{color:var(--accent); font-weight:600; font-size:12.5px; padding-top:2px}
+.watch a{color:var(--accent); text-decoration:none; border-bottom:1px solid #c9d9ec}
+.empty{color:var(--muted); font-style:normal; background:var(--ev-soft); border-left:2px solid var(--ev); padding:10px 14px; font-size:13.5px; margin:0 0 14px}
+footer{margin-top:52px; padding-top:18px; border-top:1px solid var(--line); font-size:12px; color:var(--muted)}
+footer p{margin:0 0 6px}
+code{font-family:ui-monospace,SFMono-Regular,Consolas,monospace; font-size:.9em; background:#f2f1ec; padding:1px 4px; border-radius:2px}
+@media(max-width:640px){
+  .wrap{padding:0 18px 60px} h1{font-size:27px}
+  .row{grid-template-columns:1fr; gap:2px} .row .lab{padding-top:0}
+  .watch li{grid-template-columns:1fr; gap:2px}
+}
+</style>
+</head>
+<body>
+<div class="wrap">
+
+<header class="mast">
+  <div class="kicker">Clinical Programming Weekly · Jinbei</div>
+  <h1>临床统计编程周报</h1>
+  <p class="sub">覆盖 2026-11-04 — 2026-11-10（含运行当日，共 7 天）｜制药与监管 · 方法学 · 统计编程 · CDISC · AI</p>
+  <div class="byline">
+    生成于 <strong>2026-11-10 21:40 CST</strong>　·　本期收录 <strong>16 条</strong>　·　
+    检索：AnySearch CLI（路径 B，已配 Key）+ 宿主时效性检索交叉验证　·　
+    去重清单：<code>_seen_links.json</code>（本期首次建立）
+  </div>
+</header>
+
+<section>
+  <h2><span class="num">①</span>本周 TL;DR</h2>
+  <p class="section-note">先给判断，后给证据。以下 5 条是编者按「对日常交付的影响」排出的取舍，不是原文结论。</p>
+  <div class="tldr">
+    <ol>
+      <li><b>CDISC 一致性核查的规则本身变了形态。</b>CORE v1.0 与首批生产级 Open Rules 包（SDTMIG 3.2/3.3/3.4 + FDA Business Rules）于 11-10 公开发布，规则开源、机器可执行，理论上可纳入 CI。同时 CDISC 官方时间线已把 SDTM v3.0 / SDTMIG v4.0 的发布窗口推到 2027-02，<b>不要按「2026 Q4 落地」排迁移计划</b>。</li>
+      <li><b>中国端两项口径同周落地。</b>CDE 第 52 号《药物临床试验安全信息报告与风险沟通交流技术指导原则》11-09 发布即施行，强调「风险相称」；同日前后另有 12 项生物等效性指导原则公开征求意见（推进 ICH M13A，意见期 1 个月）。安全性数据流与 BE 统计口径都值得提前对齐。</li>
+      <li><b>ICH 实施节点落在 11-04。</b>加拿大一次性实施 E6(R3) Annex 2、M11 CeSHarP、M13B、M15、E14/S7B Q&amp;A(R1) 五项指南。其中 M11 结构化方案会向下游传导到 SAP 与 ADaM 元数据定义，值得做长期跟踪而非即时改动。</li>
+      <li><b>estimand 框架正式向安全性分析扩张。</b>PSI/EFSPI × PHUSE × ASA BIOP 联合系列第 2 讲（11-10）把 ICH E9(R1) 用于单项与汇总安全性分析，明确讨论竞争风险与信息性删失；配合 FDA 单一关键试验路径对 SAP 的要求（预设主要分析与 estimand 对齐、更严格显著性水平），SAP 模板需要复核。</li>
+      <li><b>AI 侧本周没有可验证的突破。</b>SAS 官方 11-05 演示 agentic AI 经 SAS9py + VS Code 扩展生成 SAS 9.4 代码，属工具演示而非验证性证据；反炒作方向更值得看的是 KDD 2026 ClinicalBench（22 个 LLM 在临床预测任务上仍打不过 11 个传统 ML 模型，代码开源可复现）。</li>
+    </ol>
+  </div>
+</section>
+
+<section>
+  <h2><span class="num">②</span>制药与监管</h2>
+  <p class="section-note">5 条。一手来源优先；本周期 FDA 两项批准、CDE 两项文件、一项 ICH 实施节点。</p>
+
+  <div class="item">
+    <h3><span class="idx">1.1</span>FDA 批准首个 FXIa 抑制剂 Sunharbo（asundexian）用于卒中二级预防</h3>
+    <p class="meta"><span class="pill date">2026-11-09</span><span class="pill first">一手 · FDA 新闻稿</span><span class="pill">OCEANIC-STROKE / NCT05686070</span></p>
+    <div class="row"><div class="lab">要点</div><p>多中心随机双盲安慰剂对照 III 期，入组 12,327 例，中位治疗 14.2 个月，50 mg 每日一次联合抗血小板治疗使缺血性卒中风险相对降低 26%；总体大出血率与安慰剂相近，但 &gt;75 岁及前 90 天亚组升高，胃肠道出血更常见。</p></div>
+    <div class="row"><div class="lab n">为何有用</div><p>典型的大型时间-事件终点 TLF 场景：风险比与置信区间、按年龄/时间窗预设的安全性亚组、以及「总体相近但亚组升高」的呈现方式，都需要在 SAP 里预先定义并与 TLF shell 对齐；亚组结论的口径尤其不能事后追加。</p></div>
+    <p class="links"><span class="lbl">原文</span><a href="https://www.fda.gov/news-events/press-announcements/fda-approves-first-factor-xla-inhibitor-help-prevent-stroke-certain-adults-high-risk">FDA · FDA Approves First Factor XIa Inhibitor to Help Prevent Stroke in Certain Adults at High Risk</a></p>
+  </div>
+
+  <div class="item">
+    <h3><span class="idx">1.2</span>FDA 加速批准 Rybrevant Faspro（头颈部鳞癌）</h3>
+    <p class="meta"><span class="pill date">2026-11-05</span><span class="pill first">一手 · FDA 新闻稿</span><span class="pill">加速批准 / 单臂</span></p>
+    <div class="row"><div class="lab">要点</div><p>基于 102 例开放标签、多中心单臂试验：客观缓解率 42%，缓解者中 56% 缓解持续 ≥6 个月；不含 HPV 相关口咽鳞癌。按加速批准路径以 ORR 与缓解持续时间获批，FDA 要求确证性研究验证临床获益。</p></div>
+    <div class="row"><div class="lab n">为何有用</div><p>单臂 ORR + DoR 的 TLF 与确证性试验的 SAP 是两套写法：缓解者分母（56% 的分母是缓解者而非全部入组者）、最佳总体缓解的判定规则、缺失评估的处理，都必须在 ADaM（ADRS/BDS）里可追溯。中文媒体转述中「与现有治疗约 20% 相比翻倍」并非同一试验内的头对头比较，不应写进输出。</p></div>
+    <p class="links"><span class="lbl">原文</span><a href="https://www.fda.gov/news-events/press-announcements/fda-grants-accelerated-approval-new-treatment-head-and-neck-squamous-cell-carcinoma">FDA · FDA Grants Accelerated Approval to a New Treatment for Head and Neck Squamous Cell Carcinoma</a></p>
+  </div>
+
+  <div class="item">
+    <h3><span class="idx">1.3</span>CDE 发布《药物临床试验安全信息报告与风险沟通交流技术指导原则》（2026 年第 52 号）</h3>
+    <p class="meta"><span class="pill date">发布 2026-11-09（文末落款 11-04）</span><span class="pill first">一手 · CDE 通告</span><span class="pill">自发布之日起施行</span></p>
+    <div class="row"><div class="lab">要点</div><p>规范临床试验各方之间安全性信息的报告流转与风险沟通交流，明确各方职责，强化「风险相称」理念；经国家药监局审查同意后发布即施行，附 PDF 全文。</p></div>
+    <div class="row"><div class="lab n">为何有用</div><p>「风险相称」直接落在安全性数据流上：SUSAR/SAE 的传输时限、揭盲与盲态保持、以及 DSMB 沟通对应的数据集快照时点，都会影响 ADSL/ADAE 的截点定义与 TLF 重跑策略。指导原则全文为 PDF，本次仅核实通告正文，具体条款需读附件后再定影响面。</p></div>
+    <p class="links"><span class="lbl">原文</span><a href="https://www.cde.org.cn/main/news/viewInfoCommon/5cf5f7e3b600373ff6f7d85d164e70e8">CDE · 关于发布《药物临床试验安全信息报告与风险沟通交流技术指导原则》的通告（2026 年第 52 号）</a></p>
+  </div>
+
+  <div class="item">
+    <h3><span class="idx">1.4</span>CDE 就 12 项生物等效性研究技术指导原则公开征求意见（推进 ICH M13A）</h3>
+    <p class="meta"><span class="pill date">2026-11-10</span><span class="pill second">媒体转述 · 需核实 CDE 原文附件</span><span class="pill">意见期 1 个月</span></p>
+    <div class="row"><div class="lab">要点</div><p>为推进 ICH《M13A：口服固体速释制剂的生物等效性》落地，CDE 对《艾曲泊帕乙醇胺片生物等效性研究技术指导原则》等 12 个文件修订形成征求意见稿，意见时限自发布之日起 1 个月，反馈邮箱 <code>qianxx@cde.org.cn</code>、<code>cdem13@cde.org.cn</code>。</p></div>
+    <div class="row"><div class="lab n">为何有用</div><p>BE 统计是少数「口径错了整表重做」的领域：PK 参数（Cmax/AUC）的派生、对数转换后的 90% CI 与 80.00–125.00% 等效界、以及剔除/缺失受试者的处理规则，都写在具体品种指导原则里。意见期是少数可以提交编程口径意见的窗口；按 1 个月推算截止约在 12-10（推算值，以 CDE 通知为准）。</p></div>
+    <p class="links"><span class="lbl">转载全文</span><a href="https://www.cnpharm.com/c/2026-11-10/1110274.shtml">中国食品药品网（注明来源：国家药监局药审中心网站）</a>　·　<span class="lbl">一手</span><a href="https://www.cde.org.cn/">CDE 首页（20261110 条目）</a></p>
+  </div>
+
+  <div class="item">
+    <h3><span class="idx">1.5</span>Health Canada 于 11-04 一次性实施 5 项 ICH 指南</h3>
+    <p class="meta"><span class="pill date">2026-11-04</span><span class="pill first">一手 · Canada.ca 指南表</span><span class="pill">文件号 26-106095–825</span></p>
+    <div class="row"><div class="lab">要点</div><p>官方表格明确列出同日实施：E6(R3) Good Clinical Practice Annex 2、M11 Clinical Electronic Structured Harmonized Protocol（CeSHarP）、M13B（速释固体口服制剂额外规格生物豁免）、M15（模型引导的药物研发一般原则）、E14/S7B Q&amp;A(R1)；E6(R3) 主文件此前已于 2026-04-01 实施。</p></div>
+    <div class="row"><div class="lab n">为何有用</div><p>M11 的结构化方案是上游元数据标准化的起点，长期会传导到 SAP、ADaM 变量与 define.xml 的自动生成链路；M13B 与本期 CDE 的 BE 指导原则征求意见方向一致。这是实施节点而非新指南文本，短期不需要改程序，但值得纳入标准跟踪清单。</p></div>
+    <p class="links"><span class="lbl">原文</span><a href="https://www.canada.ca/en/health-canada/services/drugs-health-products/drug-products/applications-submissions/guidance-documents/international-council-harmonisation/guidelines.html">Health Canada · ICH Guidance Documents（Implementation 表）</a></p>
+  </div>
+</section>
+
+<section>
+  <h2><span class="num">③</span>临床研究与统计方法</h2>
+  <p class="section-note">3 条。本周未检索到新发表的一手方法学定稿指南；学术垂直域返回的多为 2026 年 2–8 月旧文，已剔除（见「口径与存疑」）。</p>
+
+  <div class="item">
+    <h3><span class="idx">2.1</span>PSI/EFSPI × PHUSE × ASA BIOP 联合研讨会第 2 讲：安全性 estimand</h3>
+    <p class="meta"><span class="pill date">2026-11-10（11:00–12:30 EST）</span><span class="pill first">一手 · PSI 活动页</span><span class="pill">系列 2/4</span><span class="pill">DOI 10.1002/pst.2472</span></p>
+    <div class="row"><div class="lab">要点</div><p>把 ICH E9(R1) estimand 框架用于临床安全性数据的单项与跨试验汇总分析，讨论不同安全性问题如何转成 estimand 并与 estimator 对齐；明确涉及伴随事件处理、竞争风险与信息性删失，以及肿瘤领域 AE 发生率估计与「某 AE 是否构成药物不良反应」的判断。讲者含前 FDA CDER 统计审评负责人。</p></div>
+    <div class="row"><div class="lab n">为何有用</div><p>安全性 TLF 长期是「描述性统计默认、无显式 estimand」的灰区。一旦汇总分析（ISS/ISE）要求显式 estimand，ADAE/ADSL 的分析集标志、风险时间窗、以及竞争风险下的累积发生率口径都要重写；建议先核对现有 SAP 模板是否预留了安全性 estimand 章节。</p></div>
+    <p class="links"><span class="lbl">原文</span><a href="https://psiweb.org/events/event-item/2026/11/10/default-calendar/joint-psi-efspi--phuse--asa-safety-working-group-webinar-series--scientific-evaluation-of-safety-data--a-learning-and-decision-making-approach">PSI · Scientific Evaluation of Safety Data: A Learning and Decision-Making Approach（Session 2）</a>　·　<span class="lbl">佐证</span><a href="https://community.amstat.org/biop/workinggroups/safety-home/safety-presentations">ASA BIOP Safety WG 日程</a></p>
+  </div>
+
+  <div class="item">
+    <h3><span class="idx">2.2</span>arXiv 新预印本：分层生存终点的双稳健 win statistics</h3>
+    <p class="meta"><span class="pill date">2026-11-04 提交（v1）</span><span class="pill first">一手 · arXiv:2611.05853</span><span class="pill">stat.ME</span></p>
+    <div class="row"><div class="lab">要点</div><p>Xi Fang、Fan Li 提出在固定限制时间下定义 win/loss/tie 概率，把优先复合终点的 win estimand 从个体随机扩展到整群随机（区分整群平均与个体平均 estimand）；用 IPCW 加权结合联合结局模型构造双稳健估计量，在协变量依赖删失下只要删失模型或结局模型之一设定正确即一致，并给出渐近正态性与解析方差。</p></div>
+    <div class="row"><div class="lab n">为何有用</div><p>「删失导致未决对」是 win ratio 类分析最容易被忽略的偏倚来源——把未决对当平局会让统计量依赖删失分布。若项目里已用 DOOR/win ratio，这篇给出了可实现的估计量与方差形式；但它是 11-04 的预印本、未经同行评议，不宜直接进递交材料。</p></div>
+    <p class="links"><span class="lbl">原文</span><a href="https://arxiv.org/abs/2611.05853">arXiv:2611.05853 · Doubly robust win statistics for hierarchical survival endpoints</a></p>
+  </div>
+
+  <div class="item">
+    <h3><span class="idx">2.3</span>律所深度解读：FDA「substantial evidence」修订草案对 SAP 的五类要求</h3>
+    <p class="meta"><span class="pill date">评论 2026-11-05</span><span class="pill second">二手 · 律所评论，需核实原文</span><span class="pill">指南原文 2026-06-24（非本周）</span></p>
+    <div class="row"><div class="lab">要点</div><p>Reed Smith / Drug and Device Law 逐条梳理 FDA 修订草案：评估证据强度的五个因素（设计、实施、分析计划、结果、整体研发计划）与三条路径，其中「单个充分且良好对照的试验 + 确证性证据」要求预设主要分析与有临床意义的 estimand 对齐；先验证据弱时要求更严格的显著性水平；实施维度点名缺失数据管理与受试者脱落。</p></div>
+    <div class="row"><div class="lab n">为何有用</div><p>把「单试验路径」翻译成编程动作就是：α 分配与多重性策略、缺失数据主分析与敏感性分析的预设、以及 estimand 到 ADaM 派生规则的逐条映射都要在 SAP 定稿前锁死。<b>注意</b>：本周新增的只是律所评论，指南本身是 2026-06-24 修订草案、意见期已于 2026-09-22 截止，不能当本周新规引用。</p></div>
+    <p class="links"><span class="lbl">评论</span><a href="https://www.reedsmith.com/our-insights/blogs/drug-and-device-law/47242/fdas-draft-guidance-on-demonstrating-substantial-evidence-of-effectiveness">Reed Smith · FDA's Draft Guidance on Demonstrating Substantial Evidence of Effectiveness</a>　·　<span class="lbl">指南原文</span><a href="https://www.federalregister.gov/documents/2026/06/24/2026-12622/demonstrating-substantial-evidence-of-effectiveness-for-human-drug-and-biological-products-revised">Federal Register（2026-06-24）</a></p>
+  </div>
+</section>
+
+<section>
+  <h2><span class="num">④</span>统计编程（SAS / R / Python）</h2>
+  <p class="section-note">3 条。本周没有 admiral、rtables、tern 等 pharmaverse 包或 R/Python 主版本的新 release；核查到的仍是 admiral 1.5.0（2026-06-12）、R 4.6.2（2026-10），均属窗口外，未计入。</p>
+
+  <div class="item">
+    <h3><span class="idx">3.1</span>SAS Viya 自 2026.11 cadence 起支持 Kubernetes Gateway API</h3>
+    <p class="meta"><span class="pill date">约 2026-11-04（日期为推定，见存疑）</span><span class="pill first">一手 · SAS Communities 技术公告</span><span class="pill">2026.11 cadence</span></p>
+    <div class="row"><div class="lab">要点</div><p>SAS_TSNEWS 公告：Viya 平台自 2026.11 版本起支持 Kubernetes Gateway API 作为 Contour 之外的一种 ingress 方案；依赖规范中的会话保持（session persistence）能力，而该能力目前被 Kubernetes 标记为 experimental，规范演进可能导致 Viya 实现随之调整。</p></div>
+    <div class="row"><div class="lab n">为何有用</div><p>对递交环境是变更控制问题而非功能问题：验证过的 Viya 部署若切换 ingress，需要重新确认会话保持行为、审计追踪与安装确认（IQ/OQ）证据；把「依赖 experimental 规范特性」写进环境风险评估，比事后排查长任务断连更省事。</p></div>
+    <p class="links"><span class="lbl">原文</span><a href="https://communities.sas.com/t5/Administration-and-Deployment/SAS-Viya-platform-introduces-Gateway-API-support/td-p/995769">SAS Communities · SAS Viya platform introduces Gateway API support</a></p>
+  </div>
+
+  <div class="item">
+    <h3><span class="idx">3.2</span>SAS 官方 Ask the Expert：agentic AI 实时生成 SAS 9.4 代码</h3>
+    <p class="meta"><span class="pill date">2026-11-05（原直播，现为点播）</span><span class="pill first">一手 · SAS 官网</span><span class="pill">工具演示，非验证性研究</span></p>
+    <div class="row"><div class="lab">要点</div><p>SAS 页面明确标注「Originally presented: Nov. 5, 2026」：演示通过 SAS Extension for Visual Studio Code 与 <code>SAS9py</code> 包，让 agentic AI 生成 SAS 9 代码，并给出使用上的最佳实践；社区同步有 Ask the Expert 帖。</p></div>
+    <div class="row"><div class="lab n">为何有用</div><p>这是目前最容易在 SAS 9.4（而非 Viya）本地环境复现的一条 AI 编程链路，适合做小范围沙盒试验。但它是厂商演示：没有独立验证、没有错误率指标，不能作为 GxP 下 AI 生成代码可直接使用的依据；提交服务器的 SAS 源码仍须全 ASCII、并保留独立复核与 PROC COMPARE 双重编程证据。</p></div>
+    <p class="links"><span class="lbl">原文</span><a href="https://www.sas.com/en_us/webinars/ate-claude-the-programmer.html">SAS · Claude the SAS Programmer: Watch Agentic AI Write SAS 9 Code</a>　·　<span class="lbl">社区帖</span><a href="https://communities.sas.com/t5/Ask-the-Expert/Claude-the-SAS-Programmer-Watch-Agentic-AI-Write-SAS-9-Code-in/ta-p/995893">SAS Communities · Ask the Expert</a></p>
+  </div>
+
+  <div class="item">
+    <h3><span class="idx">3.3</span>咨询方梳理「SAS Clinical Acceleration」：PROC R 版本与统一受治理环境</h3>
+    <p class="meta"><span class="pill date">约 2026-11-04（相对时间推定）</span><span class="pill second">二手 · 咨询方博客，需核实 SAS 官方文档</span></p>
+    <div class="row"><div class="lab">要点</div><p>Katalyzedata 文章提出评估「SAS、R、Python 在同一受治理环境」时应问什么，并给出一条具体版本线索：PROC R 在 Viya Stable 2026.03 发布、两版之后进入 LTS 2026.03。</p></div>
+    <div class="row"><div class="lab n">为何有用</div><p>混合语言交付最大的风险是「同一份 ADaM 两套引擎、结果不一致」。若考虑上 Viya 统一环境，需要明确 R/Python 运行时的版本锁定、包清单冻结与验证证据如何进 ADRG。文章是咨询方立场，PROC R 的版本信息本次未从 SAS 官方文档核实，仅作线索。</p></div>
+    <p class="links"><span class="lbl">原文</span><a href="https://katalyzedata.com/insights/sas-clinical-acceleration-what-it-is-and-what-to-ask-when-evaluating/">Katalyzedata · SAS Clinical Acceleration: what it is and what to ask when evaluating</a></p>
+  </div>
+</section>
+
+<section>
+  <h2><span class="num">⑤</span>CDISC</h2>
+  <p class="section-note">3 条。本周是 CDISC 侧信息量最集中的一週，且三条都直接改变交付动作。</p>
+
+  <div class="item">
+    <h3><span class="idx">4.1</span>CDISC Open Rules / CORE v1.0 发布：首批生产级一致性规则包开源</h3>
+    <p class="meta"><span class="pill date">发布公告约 2026-11-05；公开发布会 2026-11-10</span><span class="pill first">一手 · CDISC 官网</span><span class="pill">SDTMIG 3.2 / 3.3 / 3.4 + FDA Business Rules</span></p>
+    <div class="row"><div class="lab">要点</div><p>CDISC 公开发布会公告首批生产级 Open Rules 包：覆盖 SDTMIG v3.2、3.3、3.4 及 FDA Business Rules（Clinical/SDTMIG），同时发布开源参考实现 CORE v1.0（CDISC Open Rules Engine）。议程含「仍待补齐的规则包」与未来的机器可读规则模型；11-05 前后合作方 Verisian / CDISC 人士已在社区宣布 CORE 1.0 与 GitHub 开源规则。</p></div>
+    <div class="row"><div class="lab n">为何有用</div><p>规则从工具内黑盒变成可版本化、可 diff、可放进 CI 的文本资产后，SDTM/ADaM 的一致性核查就能前移到每次数据集构建，而不是等递交前跑一次 Pinnacle 21。可先做只读评估：用 <code>cdisc-org/cdisc-rules-engine</code> 对现有研究跑一遍，与现行 P21 报告对比差异，再决定是否纳入流程——未经验证不要直接替换既有核查链。</p></div>
+    <p class="links"><span class="lbl">原文</span><a href="https://www.cdisc.org/events/webinar/cdisc-open-rules-core-v1-0-release-public-webinar">CDISC · Open Rules / CORE v1.0 Release Public Webinar（2026-11-10）</a>　·　<span class="lbl">代码</span><a href="https://github.com/cdisc-org/cdisc-rules-engine">GitHub · cdisc-org/cdisc-rules-engine</a>　·　<span class="lbl">公告</span><a href="https://www.cdisc.org/events/webinars/upcoming">CDISC Upcoming Webinars</a></p>
+  </div>
+
+  <div class="item">
+    <h3><span class="idx">4.2</span>CDISC TMF Standard Model v1 社区评审：截止延至 11-30，结构改为「证据驱动」</h3>
+    <p class="meta"><span class="pill date">页面状态于本周检索确认；延期公告日期未标注</span><span class="pill first">一手 · CDISC 评审页</span><span class="pill second">延期日期存疑</span></p>
+    <div class="row"><div class="lab">要点</div><p>评审页现列「Comments Due By 30 November 2026」，并说明截止日已由原 11-20 延长。V1 草案要点：按 Zones / Record Groups / Record Types 组织、以证据而非工件驱动；取消 Core / Recommended 分类以对齐 ICH E6(R3) 的风险相称思路；新增 Zone 12 eClinical 容纳研究专属临床系统记录； communications 与 Notes to File 不再设通用归档位，改按其所证明的活动归类。</p></div>
+    <div class="row"><div class="lab n">为何有用</div><p>TMF 与递交包的一致性是 ADRG / define.xml 常被追问的环节。Zone 12 明确覆盖临床系统的实施、配置、测试、运行与监督记录，意味着编程侧的验证证据（环境确认、脚本版本、复核记录）需要能被按「证明了什么」检索到，而不只是按文件名堆放。</p></div>
+    <p class="links"><span class="lbl">原文</span><a href="https://www.cdisc.org/public-review/cdisc-tmf-standard-model-v1-community-review">CDISC · TMF Standard Model v1 - Community Review</a></p>
+  </div>
+
+  <div class="item">
+    <h3><span class="idx">4.3</span>CDISC 官方标准时间线：SDTM v3.0 / SDTMIG v4.0 发布窗口推到 2027-02</h3>
+    <p class="meta"><span class="pill date">时间线页面现状（本周核对）</span><span class="pill first">一手 · CDISC Standards Timeline</span><span class="pill second">「推迟」判断含二手解读</span></p>
+    <div class="row"><div class="lab">要点</div><p>官方时间线列出：SDTMIG v4.0 with Rules / SDTM v3.0 的 Public Review 为 2026-02-05 至 2027-01-29，Publication 为 2027-02-01 至 2027-03-01；SENDIG v4.0 的 Public Review 截止 2026-11-24、发布窗口 2026-11-27 至 2027-01-29；CDASHIG v3.0 / Model v2.0 的公开评审则排到 2027-06。行业简报据此指出，相较 2 月公开评审会上给出的 Q4 2026 目标已实质推迟。</p></div>
+    <div class="row"><div class="lab n">为何有用</div><p>直接影响标准迁移排期：不要为「2026 Q4 上线 SDTMIG v4.0」预留转换工作量；当前仍按 SDTMIG 3.3/3.4 与 2026-09-25 版受控词表准备递交。近期真正需要盯的截止是 11-24 的 SENDIG v4.0 公开评审。「推迟」这一表述来自行业简报解读，官方页面只给时间区间。</p></div>
+    <p class="links"><span class="lbl">原文</span><a href="https://www.cdisc.org/standards/timeline">CDISC · Standards Timeline</a>　·　<span class="lbl">二手解读</span><a href="https://utanohub.com/news/">Utano Clinical · The Register（本周条目）</a></p>
+  </div>
+</section>
+
+<section>
+  <h2><span class="num">⑥</span>AI（LLM / Agent 在临床编程中的可验证应用）</h2>
+  <p class="section-note">2 条。按既定筛选口径（可核查出处或可复现代码、剔除纯营销与「颠覆式」表述），本周合格新增确实很少。</p>
+
+  <div class="item">
+    <h3><span class="idx">5.1</span>ClinicalBench（KDD 2026）：22 个 LLM 在临床预测任务上仍不敌 11 个传统 ML 模型</h3>
+    <p class="meta"><span class="pill date">本周行业简报收录（约 11-06）</span><span class="pill second">二手解读 + 一手代码</span><span class="pill">原始论文 2026-08，非本周首发</span></p>
+    <div class="row"><div class="lab">要点</div><p>基准在两个数据库、三项临床预测任务（住院时长、死亡、再入院）上比较 14 个通用 LLM、8 个医学 LLM 与 11 个传统 ML/DL 方法；结论是无论提示策略还是微调，LLM 仍打不过 XGBoost/SVM。代码与数据在 GitHub 开源、项目页公开。</p></div>
+    <div class="row"><div class="lab n">为何有用</div><p>给「AI 能不能替代统计分析」提供了一条可复现的反证，而不是立场。对编程实践的含义是：把 LLM 用在代码生成、规格解析、日志审阅这类有确定性校验器的环节（可用 PROC COMPARE、双编程、规则引擎验收），不要用在需要模型给出数值结论的环节。<b>口径</b>：本周新增仅为行业简报收录与点评，基准论文为 2026 年 8 月 KDD 成果，不计为本周首发。</p></div>
+    <p class="links"><span class="lbl">代码</span><a href="https://github.com/canyuchen/ClinicalBench">GitHub · canyuchen/ClinicalBench</a>　·　<span class="lbl">项目页</span><a href="https://clinicalbench.github.io/">ClinicalBench 项目页</a>　·　<span class="lbl">收录</span><a href="https://utanohub.com/news/">Utano Clinical · The Register</a></p>
+  </div>
+
+  <div class="item">
+    <h3><span class="idx">5.2</span>新教程：GxP 边界内的 LLM（AI in Validated Environments）</h3>
+    <p class="meta"><span class="pill date">2026-11-04</span><span class="pill second">仅标题与日期可核查 · 正文未取得</span></p>
+    <div class="row"><div class="lab">要点</div><p>临床数据科学从业者 Jaime Yan 的站点于 11-04 列出两篇新内容：「Clinical R in Practice: The Open-Source Stack in Pharma」与「AI in Validated Environments: LLMs Inside the GxP Boundary」教程。本次检索仅确认标题与日期，未取得正文。</p></div>
+    <div class="row"><div class="lab n">为何有用</div><p>「LLM 在 GxP 边界内如何留痕」正是 AI 辅助编程落地时最缺的一块：意图用途定义、提示与输出的版本化、人工复核证据、以及模型变更后的再验证。这里只登记线索，不对其结论作任何转述；建议读完全文后再判断是否纳入内部 SOP。</p></div>
+    <p class="links"><span class="lbl">出处</span><a href="https://jaimeyan.com/">jaimeyan.com（2026-11-04 条目）</a></p>
+  </div>
+
+  <p class="empty">本周其余 AI 条目未计入：BMJ 关于 LLM 干预临床试验报告完整性的系统综述（2026-10-13）、ISPE「AI 与 GxP 五层验证框架」（约 2026-06）、ClinAgent 预印本（2026-01）、CDISC-mcp 等 MCP 服务器项目（发布日期未获一手确认），以及 MWSUG 2026 双 LLM 独立生成 + PROC COMPARE 验证论文（论文页 10-15、会议 11-15 起，列入下期关注）。均为窗口外旧闻、日期不明或与营销内容混杂。</p>
+</section>
+
+<section>
+  <h2><span class="num">⑦</span>口径与存疑</h2>
+  <p class="section-note">事实与推测严格分开：上文中「来源 + 日期」为事实，「为何对 SAS 临床统计编程有用」及 TL;DR 的判断均为编者推测/建议，不是原文结论。</p>
+  <div class="caveat">
+    <h3>媒体转述与二手来源（需核实原文）</h3>
+    <ul>
+      <li><b>CDE 12 项 BE 指导原则</b>：正文取自中国食品药品网 2026-11-10 16:17 的转载（页面注明「来源：国家药监局药审中心网站」），并与 CDE 首页 20261110 条目交叉核对；12 个指导原则的具体文本与修订差异未逐份核实。</li>
+      <li><b>FDA substantial evidence 解读</b>：Reed Smith / Drug and Device Law 2026-11-05 为律所评论；所指指南是 2026-06-24 修订草案、意见期 2026-09-22 已截止。本周新增的是评论，不是新指南。</li>
+      <li><b>Katalyzedata、Utano Register</b>：分别为咨询方博客与行业简报，其 PROC R 版本信息、SDTM v3.0「推迟」判断均为二手，一手应查 SAS 官方文档与 CDISC Standards Timeline。</li>
+      <li>FDA 两项批准另见中文媒体转述（医学百科、Nuaxia 等）及企业新闻稿（Bayer、J&amp;J），本报告一律以 FDA 新闻稿为准；Rybrevant 的「较现有治疗翻倍」不是同一试验内的头对头比较，未采信。</li>
+    </ul>
+    <h3>未获一手确认 / 日期为推定</h3>
+    <ul>
+      <li><b>SAS Viya Gateway API 帖</b>与 SAS Communities Ask-the-Expert 帖：正文抓取返回 API Error，日期依据搜索索引的相对时间（「Posted Wednesday」「6 days ago」）与 SAS 官网点播页明确的「Nov. 5, 2026」交叉推定，精确发布日期未从页面直接读到。</li>
+      <li><b>CDISC TMF SM v1 评审延期</b>：官网页面只显示「Comments Due By 30 November 2026」并说明已延期，未标注延期公告日期；不能断定延期动作发生在本周，只记录本周确认的页面状态。</li>
+      <li><b>Jaime Yan 两条 11-04 内容</b>：仅从站点首页确认标题与日期，正文未取得，未据此展开任何结论。</li>
+      <li><b>Vir Biotechnology ECLIPSE-1 III 期达标</b>（公司新闻稿，2026-11-09）：正文提取为空，摘要中「124 例、79%」等数值未经核实，本期<b>未收录</b>，仅登记待核。</li>
+      <li><b>ClinicalBench</b>：原始成果为 ACM KDD 2026（2026-08-08）/ arXiv 2411.06469v2（2026-06-08），本周仅为行业简报收录，不作本周首发成果。</li>
+      <li><b>CDE 征求意见截止约 12-10</b>：按通知「自发布之日起 1 个月」推算，非官方明示日期。</li>
+    </ul>
+    <h3>检索方式与降级说明</h3>
+    <ul>
+      <li>本次按技能约定先运行 <code>get_sub_domains</code> 查证合法子域与必填参数，再走路径 B（本机 <code>.env</code> 已配 Key）的 <code>batch_search</code> / <code>search</code> / <code>extract</code>；<b>未降级</b>到宿主内置检索，宿主 <code>freshness=d7</code> 仅用于时效性交叉验证。</li>
+      <li>两个垂直域存在实际限制：<code>finance.news</code>（type=general, period=7d）两次返回均为与本主题无关的财经快讯（Nvidia、BOXABL 等），已整体弃用；<code>code.doc</code>（library=admiral）仅返回 GitHub 文档片段，无发布日期。<code>social_media</code> 用查证过的合法 type（reddit_post / wechatmp）探测，返回多为 2021–2024 旧帖与课程软文，未收录。</li>
+      <li>SAS Communities 两页与 Utano RSS 的正文提取返回 API Error，改用搜索索引 + 官方页面交叉验证；<code>github.com/*/releases</code> 页面返回动态加载错误，未能确认本周是否有新 release，故主题 ③ 明确写明「本周无新 release」而非推断。</li>
+      <li>剔除的窗口外旧闻：ICH E6(R3) Annex 2 定稿（2026-06/07）、FDA Bayesian 草案（2026-01）、FDA 三项肿瘤试验入组标准终稿（2026-07）、ICH M14 Step 4（2025-09）、EMA 10 月 CHMP 结论、admiral 1.5.0（2026-06-12）、R 4.6.2（2026-10）、CDISC 受控词表 2026-09-25 版。</li>
+      <li>本报告不含个股买卖或投资操作建议；所有链接为公开来源，摘要为编者概括，不含原文全文。</li>
+    </ul>
+  </div>
+</section>
+
+<section>
+  <h2><span class="num">⑧</span>下期关注点（未来 1–2 周）</h2>
+  <p class="section-note">均为有一手依据的已知节点；标注「推算」者为按公开规则推算。</p>
+  <ul class="watch">
+    <li><span class="dt">11-12</span><span>EMA CHMP 11 月全会（9–12 日）结束，随后发布 meeting highlights；本周已公开议程与附件。<a href="https://www.ema.europa.eu/en/committees/committee-medicinal-products-human-use-chmp">EMA CHMP 页面</a></span></li>
+    <li><span class="dt">11-15 — 11-18</span><span><a href="https://events.phuse.global/event/EUConnect26/summary">PHUSE EU Connect 2026</a>（Glasgow SEC）：CDISC / 统计编程 / 开源工具相关论文集通常于会后放出，是下期主要材料来源。</span></li>
+    <li><span class="dt">11-15 — 11-17</span><span><a href="https://www.mwsug.org/2026/papers/">MWSUG 2026</a>（Madison, WI）：论文页已列「两个 LLM 分别生成 production 与 validation 程序、以 PROC COMPARE 比对」的双重编程验证方案，以及 SAS 9.4 M10 路线图（计划 2027），值得按可复现性口径复核。</span></li>
+    <li><span class="dt">11-17</span><span><a href="https://www.cdisc.org/events/webinars/upcoming">CDISC「BC Grouping Launch and BC Versioning Update」网络研讨会</a>： biomedical concepts 分组与版本化/变更日志，关系后续 SDTM 映射与元数据版本管理。</span></li>
+    <li><span class="dt">11-24</span><span><a href="https://www.cdisc.org/standards/timeline">SENDIG v4.0 公开评审截止</a>；官方给出的发布窗口自 11-27 起（至 2027-01-29），非临床统计编程团队也需关注受控词表联动。</span></li>
+    <li><span class="dt">11-30</span><span><a href="https://www.cdisc.org/public-review/cdisc-tmf-standard-model-v1-community-review">CDISC TMF Standard Model v1 社区评审截止</a>（已由 11-20 延期）。</span></li>
+    <li><span class="dt">约 12-10（推算）</span><span>CDE 12 项 BE 指导原则征求意见截止，按 11-10 起 1 个月推算；以 CDE 通知为准。</span></li>
+  </ul>
+</section>
+
+<footer>
+  <p>本期共收录 16 条　|　覆盖 2026-11-04 — 2026-11-10　|　生成 2026-11-10 21:40 CST</p>
+  <p>本简报是对公开来源的摘要与链接汇编，不含原文全文，版权归原作者及来源网站所有。摘要由 AI 概括，事实以原文为准；涉及监管决定与标准版本时，请以监管机构 / 标准组织的一手文件为准。</p>
+  <p>文件：<code>2026-11-10-clinical-programming-weekly.html</code> · <code>2026-11-10-clinical-programming-weekly.md</code> · <code>_seen_links.json</code></p>
+</footer>
+
+</div>
+</body>
+</html>
