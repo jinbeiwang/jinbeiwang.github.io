@@ -117,7 +117,7 @@ code{font-family:ui-monospace,SFMono-Regular,Consolas,monospace; font-size:.9em;
       <li><b>中国端两项口径同周落地。</b>CDE 第 52 号《药物临床试验安全信息报告与风险沟通交流技术指导原则》11-09 发布即施行，强调「风险相称」；同日前后另有 12 项生物等效性指导原则公开征求意见（推进 ICH M13A，意见期 1 个月）。安全性数据流与 BE 统计口径都值得提前对齐。</li>
       <li><b>ICH 实施节点落在 11-04。</b>加拿大一次性实施 E6(R3) Annex 2、M11 CeSHarP、M13B、M15、E14/S7B Q&amp;A(R1) 五项指南。其中 M11 结构化方案会向下游传导到 SAP 与 ADaM 元数据定义，值得做长期跟踪而非即时改动。</li>
       <li><b>estimand 框架正式向安全性分析扩张。</b>PSI/EFSPI × PHUSE × ASA BIOP 联合系列第 2 讲（11-10）把 ICH E9(R1) 用于单项与汇总安全性分析，明确讨论竞争风险与信息性删失；配合 FDA 单一关键试验路径对 SAP 的要求（预设主要分析与 estimand 对齐、更严格显著性水平），SAP 模板需要复核。</li>
-      <li><b>AI 侧本周没有可验证的突破。</b>SAS 官方 11-05 演示 agentic AI 经 SAS9py + VS Code 扩展生成 SAS 9.4 代码，属工具演示而非验证性证据；反炒作方向更值得看的是 KDD 2026 ClinicalBench（22 个 LLM 在临床预测任务上仍打不过 11 个传统 ML 模型，代码开源可复现）。</li>
+      <li><b>AI 侧本周没有可验证的突破。</b>SAS 官方 11-05 演示 agentic AI 经 SASPy + VS Code 扩展生成 SAS 9.4 代码，属工具演示而非验证性证据；反炒作方向更值得看的是 KDD 2026 ClinicalBench（22 个 LLM 在临床预测任务上仍打不过 11 个传统 ML 模型，代码开源可复现）。</li>
     </ol>
   </div>
 </section>
@@ -211,7 +211,7 @@ code{font-family:ui-monospace,SFMono-Regular,Consolas,monospace; font-size:.9em;
   <div class="item">
     <h3><span class="idx">3.2</span>SAS 官方 Ask the Expert：agentic AI 实时生成 SAS 9.4 代码</h3>
     <p class="meta"><span class="pill date">2026-11-05（原直播，现为点播）</span><span class="pill first">一手 · SAS 官网</span><span class="pill">工具演示，非验证性研究</span></p>
-    <div class="row"><div class="lab">要点</div><p>SAS 页面明确标注「Originally presented: Nov. 5, 2026」：演示通过 SAS Extension for Visual Studio Code 与 <code>SAS9py</code> 包，让 agentic AI 生成 SAS 9 代码，并给出使用上的最佳实践；社区同步有 Ask the Expert 帖。</p></div>
+    <div class="row"><div class="lab">要点</div><p>SAS 页面明确标注「Originally presented: Nov. 5, 2026」：演示通过 SAS Extension for Visual Studio Code 与 <code>SASPy</code> 包，让 agentic AI 生成 SAS 9 代码，并给出使用上的最佳实践；社区同步有 Ask the Expert 帖。</p></div>
     <div class="row"><div class="lab n">为何有用</div><p>这是目前最容易在 SAS 9.4（而非 Viya）本地环境复现的一条 AI 编程链路，适合做小范围沙盒试验。但它是厂商演示：没有独立验证、没有错误率指标，不能作为 GxP 下 AI 生成代码可直接使用的依据；提交服务器的 SAS 源码仍须全 ASCII、并保留独立复核与 PROC COMPARE 双重编程证据。</p></div>
     <p class="links"><span class="lbl">原文</span><a href="https://www.sas.com/en_us/webinars/ate-claude-the-programmer.html">SAS · Claude the SAS Programmer: Watch Agentic AI Write SAS 9 Code</a>　·　<span class="lbl">社区帖</span><a href="https://communities.sas.com/t5/Ask-the-Expert/Claude-the-SAS-Programmer-Watch-Agentic-AI-Write-SAS-9-Code-in/ta-p/995893">SAS Communities · Ask the Expert</a></p>
   </div>
