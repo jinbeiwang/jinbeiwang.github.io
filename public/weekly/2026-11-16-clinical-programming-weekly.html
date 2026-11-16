@@ -1,0 +1,296 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>临床统计编程周报 · 2026-11-16</title>
+<style>
+:root{
+  --paper:#fbfaf7; --card:#ffffff; --ink:#17181a; --muted:#5f6368;
+  --line:#e2e0d9; --line-soft:#eeece6;
+  --accent:#1b4f8a; --accent-soft:#eef3fa;
+  --ev:#0f7b5f; --ev-soft:#eef6f2;
+  --warn:#9a5b12; --warn-soft:#fbf3e8;
+  --maxw:880px;
+}
+*{box-sizing:border-box}
+html{-webkit-text-size-adjust:100%}
+body{
+  margin:0; background:var(--paper); color:var(--ink);
+  font-family:-apple-system,BlinkMacSystemFont,"Segoe UI","PingFang SC","Microsoft YaHei","Hiragino Sans GB",sans-serif;
+  font-size:15.5px; line-height:1.78;
+}
+.wrap{max-width:var(--maxw); margin:0 auto; padding:0 28px 80px}
+header.mast{padding:56px 0 26px; border-bottom:1px solid var(--line)}
+.kicker{font-size:11.5px; letter-spacing:.16em; text-transform:uppercase; color:var(--accent); font-weight:700}
+h1{
+  font-family:Georgia,"Songti SC","SimSun",serif; font-weight:600;
+  font-size:34px; line-height:1.3; margin:14px 0 10px; letter-spacing:.01em;
+}
+.sub{color:var(--muted); font-size:13.5px; margin:0}
+.byline{
+  margin-top:22px; padding-top:14px; font-size:12.5px; color:var(--muted);
+  background-image:linear-gradient(90deg,var(--accent) 0 50%,var(--ev) 50% 100%);
+  background-repeat:no-repeat; background-size:100% 2px; background-position:0 0;
+}
+.byline strong{color:var(--ink); font-weight:600}
+section{margin-top:44px}
+h2{
+  font-family:Georgia,"Songti SC","SimSun",serif; font-size:21px; font-weight:600;
+  margin:0 0 6px; padding-top:18px; border-top:1px solid var(--line);
+}
+h2 .num{color:var(--accent); font-size:14px; margin-right:10px; font-family:system-ui,sans-serif; font-weight:700}
+.section-note{color:var(--muted); font-size:13px; margin:0 0 22px}
+.tldr{background:var(--card); border:1px solid var(--line); border-left:3px solid var(--ev); padding:20px 24px 8px}
+.tldr ol{margin:0; padding-left:20px}
+.tldr li{margin:0 0 14px; padding-left:4px}
+.tldr b{color:var(--ev); font-weight:600}
+.item{
+  background:var(--card); border:1px solid var(--line); border-radius:2px;
+  padding:18px 22px 16px; margin:0 0 14px;
+}
+.item h3{
+  font-size:16px; font-weight:600; line-height:1.55; margin:0 0 9px;
+  font-family:Georgia,"Songti SC","SimSun",serif;
+}
+.item h3 .idx{color:var(--accent); font:700 12px system-ui,sans-serif; margin-right:9px; vertical-align:2px}
+.meta{font-size:12px; color:var(--muted); margin:0 0 12px; display:flex; flex-wrap:wrap; gap:8px; align-items:center}
+.pill{
+  display:inline-block; font-size:10.5px; letter-spacing:.04em; padding:1px 7px;
+  border:1px solid var(--line); border-radius:2px; color:var(--muted); background:#fafaf8;
+  white-space:nowrap;
+}
+.pill.first{color:var(--ev); border-color:#bcdcd0; background:var(--ev-soft)}
+.pill.second{color:var(--warn); border-color:#e8d5b5; background:var(--warn-soft)}
+.pill.date{color:var(--accent); border-color:#c9d9ec; background:var(--accent-soft)}
+.row{display:grid; grid-template-columns:76px 1fr; gap:8px 12px; margin:0 0 9px; font-size:14px}
+.row .lab{color:var(--ev); font-size:12px; font-weight:600; padding-top:3px; white-space:nowrap}
+.row .lab.n{color:var(--accent)}
+.row p{margin:0}
+.links{margin:11px 0 0; padding-top:10px; border-top:1px solid var(--line-soft); font-size:12.5px; word-break:break-all}
+.links a{color:var(--accent); text-decoration:none; border-bottom:1px solid #c9d9ec}
+.links a:hover{border-bottom-color:var(--accent)}
+.links .lbl{color:var(--muted); margin-right:6px}
+.caveat{background:#fff; border:1px solid var(--line); padding:18px 22px 6px}
+.caveat h3{font-size:14px; margin:0 0 8px; color:var(--warn)}
+.caveat ul{margin:0 0 14px; padding-left:20px}
+.caveat li{margin:0 0 8px; font-size:13.5px}
+.watch{width:100%; border-collapse:collapse; font-size:13.5px; background:#fff}
+.watch th,.watch td{border-bottom:1px solid var(--line-soft); padding:10px 10px; text-align:left; vertical-align:top}
+.watch th{color:var(--muted); font-size:12px; font-weight:600; background:#fafaf8; border-top:1px solid var(--line)}
+.watch td:first-child{color:var(--accent); font-weight:600; font-size:12.5px; white-space:nowrap}
+.watch a{color:var(--accent); text-decoration:none; border-bottom:1px solid #c9d9ec}
+.empty{color:var(--muted); font-style:normal; background:var(--ev-soft); border-left:2px solid var(--ev); padding:10px 14px; font-size:13.5px; margin:0 0 14px}
+footer{margin-top:52px; padding-top:18px; border-top:1px solid var(--line); font-size:12px; color:var(--muted)}
+footer p{margin:0 0 6px}
+code{font-family:ui-monospace,SFMono-Regular,Consolas,monospace; font-size:.9em; background:#f2f1ec; padding:1px 4px; border-radius:2px}
+@media(max-width:640px){
+  .wrap{padding:0 18px 60px} h1{font-size:27px}
+  .row{grid-template-columns:1fr; gap:2px} .row .lab{padding-top:0}
+  .watch td:first-child{white-space:normal}
+}
+</style>
+</head>
+<body>
+<div class="wrap">
+
+<header class="mast">
+  <div class="kicker">Clinical Programming Weekly · Jinbei</div>
+  <h1>临床统计编程周报</h1>
+  <p class="sub">覆盖 2026-11-10 — 2026-11-16（含运行当日，共 7 天）｜制药与监管 · 方法学 · 统计编程 · CDISC · AI</p>
+  <div class="byline">
+    生成于 <strong>2026-11-16 10:26 CST</strong>　·　本期收录 <strong>14 条</strong>　·　
+    检索：实时检索（垂直域先查证合法子域与必填参数）+ 宿主近 7 天时效性检索交叉核验，一律回溯一手官网确认日期　·　
+    去重：跨期去重清单（启动时 24 条上期链接，全部跳过）
+  </div>
+</header>
+
+<section>
+  <h2><span class="num">①</span>本周 TL;DR</h2>
+  <p class="section-note">先给判断，后给证据。以下 5 条是编者按「对日常交付的影响」排出的取舍，不是原文结论。</p>
+  <div class="tldr">
+    <ol>
+      <li><b>FDA 两份文件把「可核查性」同时推到设计端与数据端。</b>11-11 发布 / 11-12 刊登《实体瘤早期 IND 试验方案建议》草案，把「SAP 需论证扩展队列最大样本量并含停止规则」「单臂不足以刻画 OS/PFS，时间-事件终点一般需随机研究」「RP2D 不应仅由 MTD 决定」写成设计期望；同日 RFI 就 RWD/RWE 患者级数据可及性征求意见，明确指出 FDA 目前不接受外部数据库链接、可复现的分析不能替代可核查的原始记录。<b>判断：SAP 模板与数据溯源链要在方案阶段定死，别等锁库再补。</b></li>
+      <li><b>CDISC 一致性核查本周最值得读的是「自我划边界」。</b>JMIR 11-13 的实施成熟度模型自陈「概念框架、未经实证验证、部分数字来自单一机构或厂商分析」；R 包 <code>coreval</code> 11-11 上 CRAN，自陈「非 CDISC 关联、非 CORE 认证、非合格验证软件」，并把 <code>$findings</code> 与 <code>$skipped</code> 分开输出——<b>空 findings 可能是规则根本没跑</b>。判断：这类工具只能做开发期提示，不能替代合格验证系统；把「未检查」误读为「通过」是当前最现实的踩坑点。</li>
+      <li><b>AI 侧三篇可复现预印本一致给出「有界」结论，没有颠覆。</b>TrialDesignBench（617 个 I/II 期剂量探索试验）中 5 个前沿 LLM 无一匹配专家参考设计；Med Evidence Bench 在真实场景的证据可追溯分仅 0.182–0.447；SPARK 在缺测试用例场景下把代码生成共识验证提升最多 4.1%。判断：LLM 用于统计设计、证据检索、代码生成仍须人工复核与可核查基准，不宜按「颠覆式」叙事排能力计划。</li>
+      <li><b>SAS 官方两篇博客给出一条 GxP 友好的架构线。</b>11-10 的案例中既有 SAS 优化程序用 <code>%include</code> 原样复用、不重写建模逻辑，AI 只做前端与编排、人在环审批每次变更；11-12 的架构文明确「分析执行留在 SAS Viya，AI 助手只做协调；治理、审计、访问控制留在平台内，内部端点不暴露给 LLM」。判断：这比「让 AI 直接生成生产 SAS 代码」更接近可验证实践。</li>
+      <li><b>监管与标准组织本周无重量级新标准发布。</b>EMA CHMP 11 月会议是常规审评结果（7 个新药推荐、11 项适应症扩展），CDISC 官网 Newsroom 最新条目仍为 9 月，受控词表现行版本仍是 9-25 的 P62。判断：本周把精力放在草案意见期、现行 CT 版本核对与工具边界上，比追逐标题更划算。</li>
+    </ol>
+  </div>
+</section>
+
+<section>
+  <h2><span class="num">②</span>制药与监管</h2>
+  <p class="section-note">4 条。两份 FDA 联邦公报文件、两项本周批准、一次 EMA CHMP 例会；草案与 RFI 均非现行强制要求。</p>
+
+  <div class="item">
+    <h3><span class="idx">1.1</span>FDA 发布《实体瘤早期 IND 试验方案建议》草案指南（含明确统计设计口径）</h3>
+    <div class="meta"><span class="pill date">2026-11-11 发布 / 11-12 刊登</span><span class="pill first">一手</span><span class="pill">Federal Register 91 FR 72873</span><span class="pill">草案</span></div>
+    <div class="row"><span class="lab">要点</span><p>由 FDA 肿瘤卓越中心（OCE）联合 CDER、CBER 起草，服务 HHS「Operation TrialBlazer」；覆盖首次人体试验的入排标准、剂量递增、扩展队列、RP2D 与伴随诊断。明确要求<b>扩展队列的统计分析计划论证最大样本量并设置停止规则</b>、单臂试验不足以充分刻画总生存或无进展生存（时间-事件终点一般需随机研究）、RP2D 应基于多个剂量水平与 PK/安全性/有效性 totality 而非最大耐受剂量单值；剂量递增幅度一般不超过 100%（小分子与 ADC）或半对数（多数其他生物制品），出现 ≥2 级不良事件后单患者加速滴定队列应转为至少 3 人。不适用于血液系统恶性肿瘤。评论截止 2027-01-11。</p></div>
+    <div class="row"><span class="lab n">为何有用</span><p>这是本周对统计编程最直接的一份文件——「最大样本量依据」「停止规则」「单臂 vs 随机」都直接落到 SAP 章节与 TLF shell。若项目有 FIH / 剂量扩展，建议现在就用草案条目比对现有 SAP 模板，把样本量论证与期中停止规则的推导写成可复核文档；「提交时安全性数据不足可先只写剂量递增、扩展队列后续以修订案补充」一条会改变数据集版本与重跑策略。</p></div>
+    <div class="links"><span class="lbl">Federal Register</span><a href="https://www.federalregister.gov/d/2026-22970">https://www.federalregister.gov/d/2026-22970</a><br><span class="lbl">FDA 草案 PDF</span><a href="https://www.fda.gov/media/196814/download">https://www.fda.gov/media/196814/download</a>　·　<span class="lbl">RAPS 解读（11-11）</span><a href="https://www.raps.org/resource/fda-issues-draft-guidance-on-early-phase-ind-studies-for-solid-tumors.html">raps.org</a></div>
+  </div>
+
+  <div class="item">
+    <h3><span class="idx">1.2</span>FDA 就 RWD/RWE 递交中的患者级数据可及性发布信息征询（RFI）</h3>
+    <div class="meta"><span class="pill date">2026-11-12</span><span class="pill first">一手</span><span class="pill">91 FR 72875</span><span class="pill">RFI · 非指南</span></div>
+    <div class="row"><span class="lab">要点</span><p>FDA 就「含真实世界数据的药品/生物制品申请如何提交患者级数据」征求四类意见；文件明确 sponsor 常不拥有所用 RWD、无授权向 FDA 提交患者级记录，FDA 不能签署与其法定留存/披露义务冲突的数据使用协议，<b>目前不接受指向外部数据库的链接</b>；现行可行路径是第三方以 pre-IND 或 Type V DMF 提供数据、sponsor 出具授权信。文件特别要求保留「实际用于分析的提取物、派生历史与源数据关系」，并指出现有机制不改变 21 CFR 314.50 / 601.2 的义务。评论截止 2027-01-11；这是 RFI，不是指南、不是规则，不新增豁免。</p></div>
+    <div class="row"><span class="lab n">为何有用</span><p>把「可复现分析」与「可核查记录」拆成两条独立依赖，正是临床统计编程最容易被忽视的分工。外对照 / RWE 项目在数据采购或方案锁库前应做一次可及性评估：逐数据源记录分析授权、患者级数据提供责任、源记录可供核查、留存与后续审阅条款四项，并保留提交版本与实际分析版本的对账链。把「可复现」当成「可递交」是常见误读。</p></div>
+    <div class="links"><span class="lbl">Federal Register</span><a href="https://www.federalregister.gov/d/2026-22996">https://www.federalregister.gov/d/2026-22996</a>　·　<span class="lbl">RAPS 解读</span><a href="https://www.raps.org/resource/fda-seeks-input-on-addressing-patient-level-data-challenges-for-rwd-rwe.html">raps.org</a></div>
+  </div>
+
+  <div class="item">
+    <h3><span class="idx">1.3</span>FDA 本周两项新药批准：pimicotinib 与首个原发性膜性肾病成人用药</h3>
+    <div class="meta"><span class="pill date">2026-11-10 / 11-13</span><span class="pill first">一手</span><span class="pill second">仅核实标题与日期</span></div>
+    <div class="row"><span class="lab">要点</span><p>两项均为 FDA 官网药品动态页列出的本周批准：11-10 pimicotinib（症状性腱鞘巨细胞瘤，列「肿瘤药物批准」栏目）、11-13 首个用于成人原发性膜性肾病的药物。同期 11-12 为两则健康欺诈公众通告，11-13 另有 Orange Book 更新。<b>本条仅核实到官方动态页的标题与日期，未逐页读取各批准全文的试验设计、样本量与终点数据</b>，故不引述具体疗效数字。</p></div>
+    <div class="row"><span class="lab n">为何有用</span><p>TGCT 与膜性肾病都是「小人群 + 替代/时间-事件终点」的典型场景，值得关注后续公开审评资料里的终点定义、缓解判定规则与缺失随访处理；但在拿到一手批准全文前，不宜把任何数字写进内部模板。此处按证据分层只报「发生了什么」，不推测「效果如何」。</p></div>
+    <div class="links"><span class="lbl">FDA 动态页</span><a href="https://www.fda.gov/drugs/news-events-human-drugs/whats-new-related-drugs">fda.gov/whats-new-related-drugs</a><br><span class="lbl">pimicotinib</span><a href="https://www.fda.gov/drugs/cancer-approvals/fda-approves-pimicotinib-symptomatic-tenosynovial-giant-cell-tumor">FDA 批准页</a>　·　<span class="lbl">膜性肾病</span><a href="https://www.fda.gov/drugs/news-events-human-drugs/fda-approves-first-drug-treat-adults-primary-membranous-nephropathy">FDA 批准页</a></div>
+  </div>
+
+  <div class="item">
+    <h3><span class="idx">1.4</span>EMA CHMP 2026 年 11 月会议要点（9–12 日会议，13 日发布）</h3>
+    <div class="meta"><span class="pill date">2026-11-13</span><span class="pill first">EMA 一手</span><span class="pill second">数值来自企业稿</span></div>
+    <div class="row"><span class="lab">要点</span><p>CHMP 推荐 7 个新药上市许可（Aumseqa/aumolertinib、Baxfendy/baxdrostat、Zybrivo/sintilimab、两个胰岛素门冬生物类似药 Garzulys / Donrafylix、两个仿制药 Fondaparinux sodium Evumed / Ruxolitinib Krka），另推荐 11 项适应症扩展，其中 Gazyvaro（obinutuzumab）用于中重度活动性系统性红斑狼疮；2 项复审后维持拒绝、2 项申请撤回；并就 Mounjaro（tirzepatide）可能影响口服避孕药可靠性通过 DHPC。官方口径 2026 年累计：新药正面意见 79、负面 8、适应症扩展 108、撤回 12。Roche 企业稿给出的 ALLEGORY III 期数据为 52 周 SRI-4 应答 76.7% vs 53.5%（调整差 23.1%，95% CI 12.5–33.6，p&lt;0.001）。</p></div>
+    <div class="row"><span class="lab n">为何有用</span><p>典型的「一个主要终点 + 一串关键次要终点 + 多重性控制 + 复合应答指数（SRI-4 / BICLA / DORIS 缓解 / LLDAS）」TLF 场景；复合指数的组分定义、缺失访视处理、以及「达标」判定规则都必须在 ADaM（ADRS / BDS 类）里可追溯。注意企业稿数值未经 EMA 官方文件复核，不宜作为口径依据。</p></div>
+    <div class="links"><span class="lbl">EMA 会议要点</span><a href="https://www.ema.europa.eu/en/news/meeting-highlights-committee-medicinal-products-human-use-chmp-9-12-november-2026">ema.europa.eu</a>　·　<span class="lbl">Roche 企业稿（需核实）</span><a href="https://assets.roche.com/f/176343/bad70b492b/01-media-investor-release-gazyva-sle-chmp-english.pdf">PDF</a></div>
+  </div>
+</section>
+
+<section>
+  <h2><span class="num">③</span>临床研究与统计方法</h2>
+  <div class="empty">本周未检索到新发表的一手方法学定稿指南或正式监管口径文件；上期已收录的 PSI/EFSPI × PHUSE × ASA BIOP 联合系列第 2 讲「安全性 estimand」（活动日 11-10）按去重不重复计入。学术垂直域返回的 estimand / 缺失数据 / 多重性论文，日期解码后集中在 2026 年 1–8 月（见「口径与存疑」），非本周新增，已剔除。本节仅收 2 条本周确有一手出处的材料，不凑数。</div>
+
+  <div class="item">
+    <h3><span class="idx">2.1</span>NIH Pragmatic Trials Collaboratory「实用临床试验的终点策略」研讨会全套材料上线</h3>
+    <div class="meta"><span class="pill date">2026-11-12</span><span class="pill first">一手</span><span class="pill">Rethinking Clinical Trials</span></div>
+    <div class="row"><span class="lab">要点</span><p>两日线上研讨会「Endpoint Strategy in Pragmatic Trials: From Big Questions to Meaningful Outcomes」的<b>研讨会总结、幻灯片与录像</b>全部开放。与统计编程直接相关的专场：Session 2「The Estimands Framework: Aligning Objectives, Endpoints, and Analyses」（Liz Turner 主持，含 E. Colantuoni、Fan Li、Hulin Wu）、Session 3「Working With Multiple Outcomes: Multicomponent Endpoints and Beyond」（Emily O'Brien 主持，含 Pamela Shaw、Qilu Yu）、Session 4「Unpacking Uncertainty, Meaningfulness, and Magnitude」（含 Laura Lee Johnson）。覆盖终点与「有意义性」的对应关系、复杂终点情形的统计分析考量、治疗效应的解释。</p></div>
+    <div class="row"><span class="lab n">为何有用</span><p>estimand 五属性要与目标、终点、分析三者对齐，最终都落到 SAP 文字与 ADaM 变量派生上；多组分终点与「不确定性 / 幅度」的讨论直接影响 TLF 里效应量、置信区间与敏感性分析的呈现口径。这是免费、可直接用于内部 SAP 模板复核的一手教学材料，比二手解读更值得排进团队学习清单。</p></div>
+    <div class="links"><span class="lbl">发布页</span><a href="https://rethinkingclinicaltrials.org/news/november-12-2026-workshop-summary-now-available-for-endpoint-strategy-in-pragmatic-trials">rethinkingclinicaltrials.org</a>　·　<span class="lbl">全套材料</span><a href="https://rethinkingclinicaltrials.org/news/endpoint-strategy-in-pragmatic-trials-nih-collaboratory-virtual-workshop-september-2026/">材料入口</a></div>
+  </div>
+
+  <div class="item">
+    <h3><span class="idx">2.2</span>PumasAI 网络研讨会：模型引导的肿瘤早期 Go/No-Go 决策</h3>
+    <div class="meta"><span class="pill date">2026-11-12</span><span class="pill second">厂商演示 · 非同行评议</span><span class="pill">PumasAI 官方活动页</span></div>
+    <div class="row"><span class="lab">要点</span><p>用 DeepPumas 把非线性混合效应（NLME）与科学机器学习结合刻画早期肿瘤生长动力学（TGD），再叠加 OS 模型，从期中数据预测各臂生存曲线；用基于真实试验入组间隔分布重采样生成的合成早期试验，估计 go/no-go 分类器的真阳性率与假阳性率，据此校准决策阈值并判断「多少期中数据才够可靠」。讲者 Lorenzo Contento（PumasAI）、Lu Chen（BMS）。<b>厂商主办的演示型活动，方法细节以官方后续发布为准。</b></p></div>
+    <div class="row"><span class="lab n">为何有用</span><p>它把「期中决策规则」显式化为可模拟、可校准的统计量（TPR/FPR、阈值、所需随访量），与本期 1.1 草案要求的「最大样本量依据 + 停止规则」是同一类问题。对统计编程的启发是：模拟生成的数据、重采样种子、阈值与判定规则都要像递交级产物一样留版本与可复现记录，否则 go/no-go 结论无法复核。<b>注意这是建模与模拟演示，不是监管接受的决策标准。</b></p></div>
+    <div class="links"><span class="lbl">活动页</span><a href="https://pumas.ai/events/early-go-no-go">https://pumas.ai/events/early-go-no-go</a></div>
+  </div>
+</section>
+
+<section>
+  <h2><span class="num">④</span>统计编程</h2>
+  <p class="section-note">3 条。两篇 SAS 官方博客给出可验证性边界，一个 R 包把 CDISC 一致性核查前置到开发期。</p>
+
+  <div class="item">
+    <h3><span class="idx">3.1</span>SAS 官方博客：以 Claude 为「开发者在环」在 SAS Viya 上搭建工厂优化规划器</h3>
+    <div class="meta"><span class="pill date">2026-11-10</span><span class="pill first">一手</span><span class="pill">blogs.sas.com</span></div>
+    <div class="row"><span class="lab">要点</span><p>应用通过 <code>%include</code> 直接运行文件共享上的既有 SAS 优化程序、<b>完全不改建模逻辑</b>；求解状态取自 <code>&amp;_OROPTMODEL_</code> 宏变量以区分最优解与不可行解；结果由 SAS 以标记行（<code>PLANROW:</code> / <code>REVROW:</code> / <code>SOLSTATUS:</code>）写入作业日志、浏览器端解析。示例中一次约 12 秒的运行返回最优方案，边际贡献从 $13,919,401 升至 $14,187,032（+1.9%）。作者明确「由人引导并批准每一次变更」，并把可复用经验沉淀为共享标准（如重载前从两个作用域删除 CAS 表、把共享 logo 放在 SAS Content 以符合安全策略）。</p></div>
+    <div class="row"><span class="lab n">为何有用</span><p>一个具体的、可验证的边界实践——<b>AI 生成界面与编排，已验证的 SAS 分析逻辑保持字节不变</b>。对提交环境尤其关键：源码稳定性、日志即结果通道、宏变量即状态源，都比「让模型改写生产程序」更容易做双人复核与变更留痕。可借鉴「标记行 + 日志解析」做内部工具的轻量结果回传；但示例属制造业优化场景，不是临床递交产物。</p></div>
+    <div class="links"><span class="lbl">原文</span><a href="https://blogs.sas.com/content/subconsciousmusings/2026/11/10/building-a-factory-optimization-planner-on-sas-viya-with-claude-as-the-developer-in-the-loop">blogs.sas.com（2026/11/10）</a></div>
+  </div>
+
+  <div class="item">
+    <h3><span class="idx">3.2</span>SAS 官方博客：SAS Viya MCP Server 的「AI 编排、平台执行」治理架构</h3>
+    <div class="meta"><span class="pill date">2026-11-12</span><span class="pill first">一手</span><span class="pill second">架构主张 · 非合规认证</span></div>
+    <div class="row"><span class="lab">要点</span><p>以 10 分钟演示介绍 SAS Viya MCP Server 与 Claude Cowork 的组合：把 Viya 能力暴露为标准化 MCP 工具，AI 助手负责发现与编排（数据接入、数据画像与治理审阅、自动机器学习、模型评估比较、发布、运营打分），<b>分析执行始终留在 SAS Viya 这一可信执行环境</b>；治理、可审计性与访问控制由既有 SAS 能力强制实施，企业内部端点与平台细节不直接暴露给底层 LLM，模型发布前保留人工审批。博文面向公共部门场景，但明确把「问责、可回答『用了哪些数据 / 哪个模型 / 谁批准』」作为架构约束。</p></div>
+    <div class="row"><span class="lab n">为何有用</span><p>几乎是 GxP 环境下讨论 AI 时最需要的一组边界条件：确定性执行与概率性编排分离、审计轨迹留在受控平台、数据源与模型版本可回答、人工放行不可省略。若团队在评估 Agent 辅助统计编程，可把这几条直接写进评估清单；但该文是架构演示与治理主张，<b>不是 SAS 的合规认证声明，也不构成监管认可的验证路径</b>。</p></div>
+    <div class="links"><span class="lbl">原文</span><a href="https://blogs.sas.com/content/subconsciousmusings/2026/11/12/agentic-ai-government-workflows">blogs.sas.com（2026/11/12）</a></div>
+  </div>
+
+  <div class="item">
+    <h3><span class="idx">3.3</span>R 包 <code>coreval</code> 0.4.0 上 CRAN：在 R 内离线核查 CDISC Open Rules / CORE 规则</h3>
+    <div class="meta"><span class="pill date">2026-11-11</span><span class="pill first">CRAN 一手</span><span class="pill second">作者声明非验证软件</span></div>
+    <div class="row"><span class="lab">要点</span><p><code>check_dataset()</code> / <code>check_study()</code> 可在不离开 R 的环境下，用内置的 CORE 1.0（SDTM）与 CDISC Open Rules（SEND / TIG / USDM）规则检查一致性；可读取 <code>.xpt</code>、<code>sas7bdat</code>、CSV、<b>Dataset-JSON</b>，并在存在时读取 <code>define.xml</code> 与 USDM 研究设计文档；规则随包内置，不联网、不需 API Key、数据不出本机。输出 <code>$findings</code>（发现项，定位到具体行与变量）与 <code>$skipped</code>（未能检查的规则及原因）两张表，<code>write_findings()</code> 可导出 Excel / CSV。包页与参考手册<b>明确声明</b>：个人开源项目，与 CDISC、Verisian 无关联或背书，非 CORE 认证的一致性引擎、非合格/验证软件，「每个结果只是提示，不是裁决」，空 <code>$findings</code> 既可能是数据干净、也可能是规则从未运行。</p></div>
+    <div class="row"><span class="lab n">为何有用</span><p>本周最贴合「可验证性 + 口径透明」的工具：把一致性检查前置到写 SDTM/ADaM 派生代码的当口，且 <code>$skipped</code> 的设计直接避免「没跑 = 通过」的误判。适合作为开发期快速自检或 CI 前置门禁；<b>但绝不能替代已验证的核查系统与人工复核</b>，也不宜把其输出作为递交依据。若引入，建议同时固定包版本与规则版本，并把 <code>$skipped</code> 一并归档留痕。</p></div>
+    <div class="links"><span class="lbl">CRAN</span><a href="https://CRAN.R-project.org/package=coreval">https://CRAN.R-project.org/package=coreval</a>　·　<span class="lbl">源码</span><a href="https://github.com/hrach-gevorgyan/coreval">github.com/hrach-gevorgyan/coreval</a>　·　<span class="lbl">文档站</span><a href="https://hrach-gevorgyan.github.io/coreval/">coreval 文档</a></div>
+  </div>
+</section>
+
+<section>
+  <h2><span class="num">⑤</span>CDISC</h2>
+  <div class="empty">本周 CDISC 官网 Newsroom 无新公告（最新条目仍为 2026-09-04），无新标准或受控词表发布；上期已收录的 CORE v1.0 / 首批生产级 Open Rules 包、SDTM v3.0 时间线等不重复计入。本节收 1 条本周新发表论文 + 1 条现行状态核实（明确标注为状态核实，非本周新闻）。</div>
+
+  <div class="item">
+    <h3><span class="idx">5.1</span>JMIR Medical Informatics 发表「CDISC 实施成熟度模型（CIMM）」观点文章</h3>
+    <div class="meta"><span class="pill date">2026-11-13</span><span class="pill first">PubMed 一手</span><span class="pill second">观点文章 · 未经实证验证</span></div>
+    <div class="row"><span class="lab">要点</span><p>JMIR Med Inform. 2026 Nov 13;14:e105990，doi 10.2196/105990，PMID 43024851，作者 A. Kamble（独立研究者）。提出以分阶段「实施成熟度」视角替代孤立单点技术修补，用流程标准化、自动化覆盖、术语治理、验证集成、制度化知识分布等可评估指标描述组织的 CDISC 实施水平；讨论 CDISC CORE、Dataset-JSON 与 360i 的衔接，指出元数据驱动流水线可在生成 XPT 的同时产出 Dataset-JSON、迁移摩擦较低。<b>作者主动列出局限</b>：概念框架，未经代表性样本实证验证；分级边界未经组织实测、无评分者间信度；依据多为会议论文与大申办方/FDA、PMDA 导向的从业者叙述；部分量化数字来自单一机构或厂商分析、无对照比较；检索为目的性抽样而非可复现检索。</p></div>
+    <div class="row"><span class="lab n">为何有用</span><p>把「工具能否用」提升到「组织流程是否支撑」的层面，对制定 SDTM/ADaM/define.xml 的自动化与验证路线有参考价值；更值得学的是它自陈局限的写法——把「概念框架」「未经实证」「数字来自单一来源」明确标出，正是内部评估新工具/新流程时应有的证据分层口径。<b>不要把它当成已验证的评分标准或监管期望。</b></p></div>
+    <div class="links"><span class="lbl">PubMed</span><a href="https://pubmed.ncbi.nlm.nih.gov/43024851/">pubmed.ncbi.nlm.nih.gov/43024851</a>　·　<span class="lbl">期刊全文</span><a href="https://medinform.jmir.org/2026/1/e105990">medinform.jmir.org/2026/1/e105990</a>　·　<span class="lbl">DOI</span><a href="https://doi.org/10.2196/105990">10.2196/105990</a></div>
+  </div>
+
+  <div class="item">
+    <h3><span class="idx">5.2</span>状态核实｜CDISC 受控词表现行版本与在途公开评审（截至 2026-11-16）</h3>
+    <div class="meta"><span class="pill date">核实于 2026-11-16</span><span class="pill">现行版本 2026-09-25</span><span class="pill second">非本周新发布</span></div>
+    <div class="row"><span class="lab">要点</span><p>CDISC 官网 Controlled Terminology 页面本周核实时显示的现行版本发布日为 <b>2026-09-25（P62）</b>，覆盖 ADaM、CDASH、CDISC Glossary DDF、Define-XML、MRCT、SDTM、SEND，含约 102 个新 QRS 术语与 656 个新术语，并更新 13 份 Codetable Mapping（CV、DS、DV、GF、GI、IS、MK、Oncology、RE、RP、SC、TS、VS）、4 份术语开发规则文档、Unit-UCUM 映射、被拒绝请求清单、出版计划及 ADaM/SDTM/SEND 配对视图文件；官方说明这些文件替换所有更早的同名文件。同页列出「中文翻译受控词表」公开评审，意见截止 2026-12-31。</p></div>
+    <div class="row"><span class="lab n">为何有用</span><p>受控词表版本是 define.xml 与 SDTM/ADaM 一致性检查的隐含基线；项目锁定 CT 版本时若与别处混用，会出现「同一变量在不同包里 codelist 不同」的假性缺陷。建议本周顺手核对在研项目固定的 CT 版本是否为 P62，并留意中文翻译公开评审（12-31 截止）对本地化映射规范的影响。</p></div>
+    <div class="links"><span class="lbl">CDISC CT 页</span><a href="https://www.cdisc.org/standards/terminology/controlled-terminology">cdisc.org/standards/terminology/controlled-terminology</a>　·　<span class="lbl">中文翻译评审</span><a href="https://www.cdisc.org/public-review/chinese-translations-controlled-terminology">公开评审页</a></div>
+  </div>
+</section>
+
+<section>
+  <h2><span class="num">⑥</span>AI</h2>
+  <p class="section-note">3 条。只收有可核查出处或可复现代码/数据的本周预印本；纯营销稿、厂商「颠覆式」主张、无日期论坛观点一概不收。三篇均为 arXiv v1，提交时间为 UTC，按北京时间均落在 2026-11-10（见「口径与存疑」）。</p>
+
+  <div class="item">
+    <h3><span class="idx">6.1</span>TrialDesignBench：617 个 I 期剂量探索试验的 LLM 设计能力基准</h3>
+    <div class="meta"><span class="pill date">2026-11-09 16:15 UTC（北京时间 11-10）</span><span class="pill first">arXiv 一手</span><span class="pill">代码开源</span></div>
+    <div class="row"><span class="lab">要点</span><p>arXiv:2611.12640，作者 Yihan Hank Tang 等（宾大、MD Anderson），NeurIPS 2026 WMHS Workshop poster。以 617 个 I/II 期肿瘤剂量探索试验为样本，每个配一个「与 FDA Project Optimus 等最新监管倡议一致、经专家验证」的参考设计；评估 5 个前沿 LLM，<b>无一达到参考标准</b>。消融把差距归于两点：从试验原文推断未被记录的潜在设计决定因素（补齐后分类别平衡准确率 +0.22），以及结构化决策树推理（+0.24）。作者指出近年监管与方法学变化已使许多既往设计过时，需一个「当代标准」的可复现评测目标。</p></div>
+    <div class="row"><span class="lab n">为何有用</span><p>对「AI 能替统计师选试验设计」最直接、可复现的反证，且把失败原因定位到<b>隐性设计决定因素</b>（往往只存在于方案讨论与监管沟通中，不在公开文本里）。含义是：设计决策依据必须显式写进 SAP/方案并留痕，否则人与模型都无法复核；该基准可作为内部评估 AI 辅助设计能力的起点，不宜据任何单点演示下结论。</p></div>
+    <div class="links"><span class="lbl">arXiv</span><a href="https://arxiv.org/abs/2611.12640">https://arxiv.org/abs/2611.12640</a>　·　<span class="lbl">代码与数据</span><a href="https://github.com/hanktang-research/TrialDesignBench">github.com/hanktang-research/TrialDesignBench</a></div>
+  </div>
+
+  <div class="item">
+    <h3><span class="idx">6.2</span>Med Evidence Bench：把每条判分标准锚定到带版本原文片段的临床推理基准</h3>
+    <div class="meta"><span class="pill date">2026-11-10 04:28 UTC</span><span class="pill first">arXiv 一手</span><span class="pill">基准站点上线</span></div>
+    <div class="row"><span class="lab">要点</span><p>arXiv:2611.13562，山东大学等多机构团队，25 页 / 8 图 / 4 表。构建 1,536 个医师编制条目，分三层（指南知识、标准化临床场景、真实世界实验室场景），<b>每条陈述医学主张的判分标准都链接到一个带版本的原文片段</b>；10 个 LLM 的证据可追溯分（ETS）：指南知识 0.975–0.997、标准化场景 0.292–0.658、真实场景 0.182–0.447，且排名随层级变化。真实场景中「识别临床信息」（均值 0.770）显著高于「匹配证据」（0.165）与「形成建议」（0.160）。1,296 条准则级判定上，自动评分与三名医师多数票一致度 macro-F1 0.930（95% CI 0.915–0.945），证据应用类一致度更低。作者明确结论：中文材料上「能背指南」不保证患者特异性证据使用，且<b>本研究不确立临床有效性</b>。</p></div>
+    <div class="row"><span class="lab n">为何有用</span><p>「每条断言链接到带版本的源文本片段」可迁移到统计编程文档自动化——SAP、TLF shell、define.xml 的计算方法说明都应能指回带版本的依据，而不是只给一句结论。量化警示也清楚：越接近真实场景，证据链越容易断；因此任何 AI 生成的统计文档，复核重点应放在「依据是否可指回源、版本是否一致」，而非语句是否流畅。</p></div>
+    <div class="links"><span class="lbl">arXiv</span><a href="https://arxiv.org/abs/2611.13562">https://arxiv.org/abs/2611.13562</a>　·　<span class="lbl">基准站点</span><a href="https://www.medevidencebench.org.cn/">medevidencebench.org.cn</a></div>
+  </div>
+
+  <div class="item">
+    <h3><span class="idx">6.3</span>SPARK：缺少测试用例时，用语义保持改写 + 共识验证提升代码生成可靠性</h3>
+    <div class="meta"><span class="pill date">2026-11-10 00:29 UTC</span><span class="pill first">arXiv 一手</span><span class="pill">CASCON 2026 已接收</span></div>
+    <div class="row"><span class="lab">要点</span><p>arXiv:2611.13401，Alireza Daghigh 等 6 人。针对「真实场景缺少测试用例、LLM 生成代码无法自动验证、只能人工校验」的问题，在共识验证（同时生成候选解与测试、按功能一致性评估）之上加入<b>语义保持改写</b>（复述、语法调整、函数重命名等），对每个改写描述生成一组代码与测试，用跨改写的一致性衡量解的质量；在 LiveCodeBench、BigCodeBench、DLBench 三个基准、o4-mini / DeepSeek-R1-Basic / Gemini-2.5-Pro 三个模型上，相比既有共识验证方法最多提升 4.1%。</p></div>
+    <div class="row"><span class="lab n">为何有用</span><p>把「同一需求换几种说法、看多份实现是否收敛」形式化为可执行的验证信号，与临床编程里双编程 / 独立复核的思路同构，可作为 AI 辅助写代码时的轻量自检层。但这是在通用代码基准上的有限幅度改进，<b>不能等同于 GxP 环境下的程序验证</b>——生成的测试仍是模型生成、未经独立确认；提升幅度也说明该方向远未成熟。</p></div>
+    <div class="links"><span class="lbl">arXiv</span><a href="https://arxiv.org/abs/2611.13401">https://arxiv.org/abs/2611.13401</a></div>
+  </div>
+</section>
+
+<section>
+  <h2><span class="num">⑦</span>口径与存疑</h2>
+  <div class="caveat">
+    <ul>
+      <li><b>媒体转述 / 需核实原文</b>：① 上期 1.4 收录的「CDE 就 12 项生物等效性研究技术指导原则公开征求意见（推进 ICH M13A，2026-11-10）」当时标注「需核实 CDE 原文附件」，本期已核实到 CDE 官网一手通知页（含 12 份 PDF 与修订说明、意见期自发布起 1 个月），<b>作为上期标注的闭环，不重复计为本期条目</b>。② EMA 两份草案（人用药品生殖与哺乳风险评估 Rev.1、预测性生物标志物检测）细节来自行业媒体与注册信息转载，EMA 原文 PDF 链接已确认存在但全文未逐条阅读，故<b>未列为本期条目</b>，仅在关注点提示意见期。③ 1.4 中 Gazyvaro 的 ALLEGORY III 期具体数值来自 Roche 企业新闻稿，非 EMA 官方文件。④ 中国四部门创新药配备使用通知、11 月下旬起 PDUFA 目标日期汇总、ICH E6(R3) Annex 2 生效解读等均为媒体转述或旧闻解读，未列条目。</li>
+      <li><b>未获一手确认的说法</b>：arXiv:2611.17239《When Both Sides Adapt》（离线基准与在线 A/B 指向不同 estimand、排序反转）仅见第三方内容站的长篇二手解读，未核实 arXiv 原文；AACR GENIE BPC 的 agentic LLM 数据分析 42.37% 准确率仅见会议摘要条目、无确切发布日期；两者均未列条目。同理，「LLM 自动复现性检查与人工一致率 86%」「LLM Agent 复现率 53.2%」等预印本时间戳解码为 2026-06，非本周，已剔除。</li>
+      <li><b>检索工具的实测限制（本期同样遇到）</b>：学术垂直域 <code>academic.paper</code> 返回结果的 <code>published_at</code> 多为 2026 年 1–6 月旧文（Trials 适应性试验 estimand 系统综述 2026-02-06、J Clin Epidemiol estimand 入门 2026-01、arXiv:2604.03863 2026-04、Eur J Cardiovasc Nurs 缺失数据 2026-05、PsyArXiv/Zenodo 复现性工件 2026-06），均未计入本周；<code>code.doc</code> 不返回发布日期；<code>social_media</code> 域多返回无日期旧帖（如 r/biostatistics 关于「R 用于 CDISC 递交」的讨论，观点有参考价值但无法锚定日期，未列条目）；GitHub releases 页动态加载、SAS Communities 与行业 RSS 正文抽取失败。因此<b>一律改用一手官网页面 + 宿主近 7 天时效性检索交叉核验日期</b>，未据工具摘要直接下结论。垂直域检索前均已先查证合法子域与必填参数。</li>
+      <li><b>时间口径</b>：本期窗口严格为 2026-11-10 至 11-16。三篇 arXiv 的 v1 提交时间为 UTC，按北京时间均落在 11-10，故计入并在条目中同时标注 UTC 原始时间；EMA 两份草案公开征求意见始于 11-09（窗口前一日），本周仍在意见期内但未列条目；FDA GLP-1 RA 安全标签变更与首个 FXIa 抑制剂批准（均 11-09）属窗口前一日 / 上期已收录，不重复；FDA《细胞与基因治疗产品效力保证》最终指南发布日为 11-02，非本周，仅其 12-10 实施研讨会出现在关注点。</li>
+      <li><b>事实与推测三分</b>：各条「来源 + 日期」「一句话要点」为可回溯的原文事实或原文明确声明；「为什么对 SAS 临床统计编程有用」与 TL;DR 的「判断」均为编者推测与建议，不是原文结论。厂商演示（2.2）、企业新闻稿（1.4 数值）、观点性论文（5.1）、个人开源项目（3.3）的性质已逐条标注；5.2 明确标为状态核实而非本周新闻。本期不含个股买卖或投资操作建议。</li>
+      <li><b>去重</b>：启动时读取跨期去重清单（24 条上期链接），全部跳过；上期已收录的 CDE 12 项 BE 指导原则、PSI/EFSPI 安全性 estimand 研讨会（11-10）、CDISC CORE v1.0 / Open Rules、SDTM 时间线、ClinicalBench 等主题不重复计入。本期新增清单只收条目原文链接，不含「下期关注点」里的会议、意见期落地页。</li>
+    </ul>
+  </div>
+</section>
+
+<section>
+  <h2><span class="num">⑧</span>下期关注点</h2>
+  <p class="section-note">优先列未来 1–2 周内有明确依据的节点；超出该窗口但已确定日期的长周期节点另列并注明。推算日期一律标注「推算」。</p>
+  <table class="watch">
+    <thead><tr><th>时间</th><th>节点与依据</th></tr></thead>
+    <tbody>
+      <tr><td>2026-11-20（周五）09:00</td><td>西安交大线上报告《Precision generalized phase I-II designs》（赵赛骏，美国印第安纳大学）：按预后分层 / 疾病亚型 / 生物标志物定义亚组的贝叶斯剂量优化设计，做亚组特异的停药、随机化或最优剂量决策。<b>高校通知页，一手</b>；与本期 1.1「剂量优化」「亚组」及 estimand 口径相关。</td></tr>
+      <tr><td>约 12-10 / 12-13（推算）</td><td>CDE 两份征求意见稿 1 个月意见期届满：12 项 BE 指导原则（11-10 发布）、新冠 mRNA 疫苗平台技术药学指导原则（11-13 发布）。CDE 官网通知均写「自发布之日起 1 个月」；<b>具体截止日以 CDE 通知为准，属推算</b>。</td></tr>
+      <tr><td>2026-12-10</td><td>FDA 就 11-02 最终指南《Potency Assurance for Cellular and Gene Therapy Products》举办实施网络研讨会。行业媒体（The Medicine Maker 2026 年 11 月号）报道，<b>需核实 FDA 官方日程</b>。</td></tr>
+      <tr><td>2026-12-31</td><td>CDISC 受控词表中文翻译公开评审意见截止（<a href="https://www.cdisc.org/public-review/chinese-translations-controlled-terminology">CDISC 官网</a>，一手）。超出 1–2 周窗口，提前登记。</td></tr>
+      <tr><td>2027-01-11</td><td>FDA 两份 FR 文件评论截止：实体瘤早期 IND 草案（FDA-2026-D-13432）、RWD/RWE 患者级数据 RFI（FDA-2026-N-10742）。Federal Register 明确日期；长周期，可提前准备统计口径意见。</td></tr>
+      <tr><td>2027-02-28 / 03-31</td><td>EMA 两份草案意见期截止：生殖与哺乳风险评估 Rev.1、预测性生物标志物检测。行业媒体转述的 EMA 草案页面，<b>需核实 EMA 官方原文</b>；长周期。</td></tr>
+    </tbody>
+  </table>
+</section>
+
+<footer>
+  <p>本期共收录 <strong>14 条</strong>　|　生成时间 2026-11-16 10:26 CST　|　覆盖 2026-11-10 — 2026-11-16</p>
+  <p><strong>声明</strong>：本简报是对公开资料的摘要、判断与链接汇编，不含原文全文，版权归原作者及来源网站所有。摘要由 AI 概括、取舍由编者判断；如需准确信息请阅读原文，尤其标注「需核实原文」「推算」「厂商演示」「企业稿」的条目。</p>
+</footer>
+
+</div>
+</body>
+</html>
