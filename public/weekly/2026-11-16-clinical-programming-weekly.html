@@ -99,7 +99,7 @@ code{font-family:ui-monospace,SFMono-Regular,Consolas,monospace; font-size:.9em;
   <h1>临床统计编程周报</h1>
   <p class="sub">覆盖 2026-11-10 — 2026-11-16（含运行当日，共 7 天）｜制药与监管 · 方法学 · 统计编程 · CDISC · AI</p>
   <div class="byline">
-    生成于 <strong>2026-11-16 10:26 CST</strong>　·　本期收录 <strong>14 条</strong>　·　
+    生成于 <strong>2026-11-16 10:26 CST</strong>　·　本期收录 <strong>15 条</strong>（11-16 14:25 补录 1 条）　·　
     检索：实时检索（垂直域先查证合法子域与必填参数）+ 宿主近 7 天时效性检索交叉核验，一律回溯一手官网确认日期　·　
     去重：跨期去重清单（启动时 24 条上期链接，全部跳过）
   </div>
@@ -113,7 +113,7 @@ code{font-family:ui-monospace,SFMono-Regular,Consolas,monospace; font-size:.9em;
       <li><b>FDA 两份文件把「可核查性」同时推到设计端与数据端。</b>11-11 发布 / 11-12 刊登《实体瘤早期 IND 试验方案建议》草案，把「SAP 需论证扩展队列最大样本量并含停止规则」「单臂不足以刻画 OS/PFS，时间-事件终点一般需随机研究」「RP2D 不应仅由 MTD 决定」写成设计期望；同日 RFI 就 RWD/RWE 患者级数据可及性征求意见，明确指出 FDA 目前不接受外部数据库链接、可复现的分析不能替代可核查的原始记录。<b>判断：SAP 模板与数据溯源链要在方案阶段定死，别等锁库再补。</b></li>
       <li><b>CDISC 一致性核查本周最值得读的是「自我划边界」。</b>JMIR 11-13 的实施成熟度模型自陈「概念框架、未经实证验证、部分数字来自单一机构或厂商分析」；R 包 <code>coreval</code> 11-11 上 CRAN，自陈「非 CDISC 关联、非 CORE 认证、非合格验证软件」，并把 <code>$findings</code> 与 <code>$skipped</code> 分开输出——<b>空 findings 可能是规则根本没跑</b>。判断：这类工具只能做开发期提示，不能替代合格验证系统；把「未检查」误读为「通过」是当前最现实的踩坑点。</li>
       <li><b>AI 侧三篇可复现预印本一致给出「有界」结论，没有颠覆。</b>TrialDesignBench（617 个 I/II 期剂量探索试验）中 5 个前沿 LLM 无一匹配专家参考设计；Med Evidence Bench 在真实场景的证据可追溯分仅 0.182–0.447；SPARK 在缺测试用例场景下把代码生成共识验证提升最多 4.1%。判断：LLM 用于统计设计、证据检索、代码生成仍须人工复核与可核查基准，不宜按「颠覆式」叙事排能力计划。</li>
-      <li><b>SAS 官方两篇博客给出一条 GxP 友好的架构线。</b>11-10 的案例中既有 SAS 优化程序用 <code>%include</code> 原样复用、不重写建模逻辑，AI 只做前端与编排、人在环审批每次变更；11-12 的架构文明确「分析执行留在 SAS Viya，AI 助手只做协调；治理、审计、访问控制留在平台内，内部端点不暴露给 LLM」。判断：这比「让 AI 直接生成生产 SAS 代码」更接近可验证实践。</li>
+      <li><b>SAS 官方两篇博客给出一条 GxP 友好的架构线。</b>11-10 的案例中既有 SAS 优化程序用 <code>%include</code> 原样复用、不重写建模逻辑，AI 只做前端与编排、人在环审批每次变更；11-12 的架构文明确「分析执行留在 SAS Viya，AI 助手只做协调；治理、审计、访问控制留在平台内，内部端点不暴露给 LLM」。判断：这比「让 AI 直接生成生产 SAS 代码」更接近可验证实践；本期补录的 6.4（PHUSE 上海 SDE 演讲资料）给出中文社区里同一架构线的不同实现，可对照着看。</li>
       <li><b>监管与标准组织本周无重量级新标准发布。</b>EMA CHMP 11 月会议是常规审评结果（7 个新药推荐、11 项适应症扩展），CDISC 官网 Newsroom 最新条目仍为 9 月，受控词表现行版本仍是 9-25 的 P62。判断：本周把精力放在草案意见期、现行 CT 版本核对与工具边界上，比追逐标题更划算。</li>
     </ol>
   </div>
@@ -229,7 +229,7 @@ code{font-family:ui-monospace,SFMono-Regular,Consolas,monospace; font-size:.9em;
 
 <section>
   <h2><span class="num">⑥</span>AI</h2>
-  <p class="section-note">3 条。只收有可核查出处或可复现代码/数据的本周预印本；纯营销稿、厂商「颠覆式」主张、无日期论坛观点一概不收。三篇均为 arXiv v1，提交时间为 UTC，按北京时间均落在 2026-11-10（见「口径与存疑」）。</p>
+  <p class="section-note">4 条。前三篇为有可核查出处或可复现代码 / 数据的本周预印本（均为 arXiv v1，UTC 提交时间按北京时间落在 2026-11-10）；6.4 是 11-16 补录的主办方回顾稿与本周上线的一手演讲资料，性质为企业案例 / 厂商演示，已单独标注时间分层（见「口径与存疑」）。纯营销稿、「颠覆式」主张、无日期论坛观点一概不收。</p>
 
   <div class="item">
     <h3><span class="idx">6.1</span>TrialDesignBench：617 个 I 期剂量探索试验的 LLM 设计能力基准</h3>
@@ -254,6 +254,14 @@ code{font-family:ui-monospace,SFMono-Regular,Consolas,monospace; font-size:.9em;
     <div class="row"><span class="lab n">为何有用</span><p>把「同一需求换几种说法、看多份实现是否收敛」形式化为可执行的验证信号，与临床编程里双编程 / 独立复核的思路同构，可作为 AI 辅助写代码时的轻量自检层。但这是在通用代码基准上的有限幅度改进，<b>不能等同于 GxP 环境下的程序验证</b>——生成的测试仍是模型生成、未经独立确认；提升幅度也说明该方向远未成熟。</p></div>
     <div class="links"><span class="lbl">arXiv</span><a href="https://arxiv.org/abs/2611.13401">https://arxiv.org/abs/2611.13401</a></div>
   </div>
+
+  <div class="item">
+    <h3><span class="idx">6.4</span>补录｜PHUSE 上海 SDE 2026 演讲资料本周上线：Agentic AI 在受监管临床编程里的落地边界</h3>
+    <div class="meta"><span class="pill date">会议 11-06（属上期）</span><span class="pill date">PDF 上线 11-10 / 11-13</span><span class="pill date">回顾稿 11-16 10:00</span><span class="pill first">主办方一手</span><span class="pill">企业演示</span><span class="pill">发布后补录</span></div>
+    <div class="row"><span class="lab">要点</span><p>会议于 2026-11-06 在上海强生新研大厦举行，主题 「Agentic AI in Production: Building Trusted, Traceable and Submission-Ready Clinical Evidence」，PHUSE 官方公众号回顾稿称 110 余位参会者，Co-chairs 为强生 Xiaobin Chen 与阿斯利康 Zhanjian Dong。<b>会议本身在本期窗口之外（属上期，上期未收录），本条收录的是本周新增的可核查材料</b>：PHUSE 官网活动页现列出 10 份演讲 PDF，实测均返回 HTTP 200，S3 对象 Last-Modified 显示 PRE_Shanghai01–08 为 2026-11-10 16:57 GMT（北京 11-11）、09–10 为 2026-11-13 12:52 GMT，即分两批于本周上线；PHUSE 官方公众号于 2026-11-16 10:00（北京）发布回顾稿。演讲内容覆盖：R Validation Hub 用 riskmetric 量化开源 R 包风险、riskassessment 记录评估与决策；用可验证的 Specification Language 描述 SDTM→ADaM 转换，并做语法 / 语义检查与独立实现的结果比对；以 PDS 编程数据规范为输入让 AI 起草 SDTM / ADaM 独立 QC 程序并标出规范疑问，由人员运行、比对、签核；S3C 从原始数据独立生成 SDTM 再与研究交付版比对；用规范、元数据与人工编写的参考 SAS 程序基准评估 ATLAS 临床 TFL 输出是否够格进入 QC；Posit 侧以审计日志、Git 审批合并后触发作业、renv 锁定环境、Connect 受控发布与版本回滚留痕；以及从 DVP 生成 SAS/R 核查代码、元数据驱动 SDTM/SEND。现场讨论明确「每个小步骤都要人工确认会抵消自动化价值，但缺少边界和监督也无法核实输出」。</p></div>
+    <div class="row"><span class="lab n">为何有用</span><p>补上本期 AI 节三篇预印本缺的中文落地材料，且与 3.2 的 SAS「AI 编排、平台执行、人工审批」是同一架构线的不同实现：把规范 / 元数据当机器可读输入、把独立实现比对当验证信号、把人工签核留在关键决策点。可直接拿来对照内部 QC 与 TLF 自动化流水线的可追溯设计，尤其是「参考 SAS 程序 + 领域专家判定输出能否进入 QC」这一评估口径。<b>但全部为企业案例与厂商方案，非同行评议、非监管口径；Last-Modified 是 S3 对象头时间，不等于官方公告发布日；公众号回顾属主办方自述、参会人数为自报；带签名的微信链接可能过期。</b>引用具体做法请以 PDF 原文为准，不要把会议结论当成已验证标准。</p></div>
+    <div class="links"><span class="lbl">官网资料</span><a href="https://events.phuse.global/event/SDE27/shanghai-china">PHUSE 上海 SDE 活动页（10 份 PDF）</a>　·　<span class="lbl">回顾稿</span><a href="http://mp.weixin.qq.com/s?__biz=MzAwMjgyNTc2MQ==&mid=2655324843&idx=1&sn=914a2c9a9736199ed834f9449524ebfa&chksm=80e51161b4ac691644d0fcfaaf043ff917eb230b735f9ec77bd29d21180ec2e373756bcb6347#rd">PHUSE 公众号 11-16 10:00</a>　·　<span class="lbl">举例 PDF</span><a href="https://phuse.s3.eu-central-1.amazonaws.com/Archive/2026/SDE/APAC/Shanghai/PRE_Shanghai01.pdf">R Validation Hub</a> / <a href="https://phuse.s3.eu-central-1.amazonaws.com/Archive/2026/SDE/APAC/Shanghai/PRE_Shanghai05.pdf">ATLAS 临床 TFL 基准</a>　·　<span class="lbl">其余</span><a href="https://phuse.s3.eu-central-1.amazonaws.com/Archive/2026/SDE/APAC/Shanghai/">PRE_Shanghai02–10（同目录）</a></div>
+  </div>
 </section>
 
 <section>
@@ -266,6 +274,7 @@ code{font-family:ui-monospace,SFMono-Regular,Consolas,monospace; font-size:.9em;
       <li><b>时间口径</b>：本期窗口严格为 2026-11-10 至 11-16。三篇 arXiv 的 v1 提交时间为 UTC，按北京时间均落在 11-10，故计入并在条目中同时标注 UTC 原始时间；EMA 两份草案公开征求意见始于 11-09（窗口前一日），本周仍在意见期内但未列条目；FDA GLP-1 RA 安全标签变更与首个 FXIa 抑制剂批准（均 11-09）属窗口前一日 / 上期已收录，不重复；FDA《细胞与基因治疗产品效力保证》最终指南发布日为 11-02，非本周，仅其 12-10 实施研讨会出现在关注点。</li>
       <li><b>事实与推测三分</b>：各条「来源 + 日期」「一句话要点」为可回溯的原文事实或原文明确声明；「为什么对 SAS 临床统计编程有用」与 TL;DR 的「判断」均为编者推测与建议，不是原文结论。厂商演示（2.2）、企业新闻稿（1.4 数值）、观点性论文（5.1）、个人开源项目（3.3）的性质已逐条标注；5.2 明确标为状态核实而非本周新闻。本期不含个股买卖或投资操作建议。</li>
       <li><b>去重</b>：启动时读取跨期去重清单（24 条上期链接），全部跳过；上期已收录的 CDE 12 项 BE 指导原则、PSI/EFSPI 安全性 estimand 研讨会（11-10）、CDISC CORE v1.0 / Open Rules、SDTM 时间线、ClinicalBench 等主题不重复计入。本期新增清单只收条目原文链接，不含「下期关注点」里的会议、意见期落地页。</li>
+      <li><b>补录与时间分层（6.4）</b>：会议 2026-11-06 属上期窗口（11-04—11-10），上期未收录，本条<b>不把它写成本周会议新闻</b>；本期新增的是 ① PHUSE 官网 10 份演讲 PDF（S3 Last-Modified 2026-11-10 16:57 GMT 与 11-13 12:52 GMT，实测 HTTP 200；<b>属对象头时间，不是官方公告发布日</b>）、② PHUSE 官方公众号 2026-11-16 10:00 北京发布的回顾稿（主办方自述，非媒体转述；110+ 参会人数为自报）。演讲内容多为企业案例 / 厂商方案，非同行评议、非监管口径；带签名的公众号链接可能失效。微信垂直域 <code>type=wechatmp</code> 本次返回 Facebook / LinkedIn 等无关通用结果（又一次静默降级），日期未采信该域，改以公众号页面时间戳与官网对象头为准。本条为 11-16 14:25 发布后补录，本地 HTML / MD 与网页已同步，条数 14 → 15。</li>
     </ul>
   </div>
 </section>
@@ -282,12 +291,13 @@ code{font-family:ui-monospace,SFMono-Regular,Consolas,monospace; font-size:.9em;
       <tr><td>2026-12-31</td><td>CDISC 受控词表中文翻译公开评审意见截止（<a href="https://www.cdisc.org/public-review/chinese-translations-controlled-terminology">CDISC 官网</a>，一手）。超出 1–2 周窗口，提前登记。</td></tr>
       <tr><td>2027-01-11</td><td>FDA 两份 FR 文件评论截止：实体瘤早期 IND 草案（FDA-2026-D-13432）、RWD/RWE 患者级数据 RFI（FDA-2026-N-10742）。Federal Register 明确日期；长周期，可提前准备统计口径意见。</td></tr>
       <tr><td>2027-02-28 / 03-31</td><td>EMA 两份草案意见期截止：生殖与哺乳风险评估 Rev.1、预测性生物标志物检测。行业媒体转述的 EMA 草案页面，<b>需核实 EMA 官方原文</b>；长周期。</td></tr>
+      <tr><td>2026 年 11 月内</td><td>PHUSE 官方公众号计划发布本次上海 SDE 全部演讲资料（据 11-16 回顾稿原文）；官网活动页目前已列出 10 份 PDF，可关注后续资料与摘要。<b>主办方计划，非确定日期</b>。</td></tr>
     </tbody>
   </table>
 </section>
 
 <footer>
-  <p>本期共收录 <strong>14 条</strong>　|　生成时间 2026-11-16 10:26 CST　|　覆盖 2026-11-10 — 2026-11-16</p>
+  <p>本期共收录 <strong>15 条</strong>　|　生成时间 2026-11-16 10:26 CST　|　11-16 14:25 补录 6.4（1 条）　|　覆盖 2026-11-10 — 2026-11-16</p>
   <p><strong>声明</strong>：本简报是对公开资料的摘要、判断与链接汇编，不含原文全文，版权归原作者及来源网站所有。摘要由 AI 概括、取舍由编者判断；如需准确信息请阅读原文，尤其标注「需核实原文」「推算」「厂商演示」「企业稿」的条目。</p>
 </footer>
 
